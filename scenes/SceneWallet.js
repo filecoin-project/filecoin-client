@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as Strings from "~/common/strings";
 import * as Constants from "~/common/constants";
-import * as SVG from "~/components/system/svg";
+import * as SVG from "~/components/system/util/svg";
 import * as Fixtures from "~/common/fixtures";
 import * as System from "~/components/system";
 import * as SchemaTable from "~/common/schema-table";
