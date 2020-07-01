@@ -1,8 +1,8 @@
 import { css } from '@emotion/react';
 
 import * as React from 'react';
-import * as Constants from '~/common/constants';
-import * as SVG from '~/common/svg';
+import * as Constants from './util/constants';
+import * as SVG from './util/svg';
 
 const STYLES_VIEW_SOURCE_LINK = css`
   font-size: 14px;

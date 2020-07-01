@@ -1,8 +1,8 @@
 import Head from 'next/head';
 
 import * as React from 'react';
-import * as SVG from '~/common/svg';
-import * as Constants from '~/common/constants';
+import * as SVG from './util/svg';
+import * as Constants from './util/constants';
 
 import { css } from '@emotion/react';
 
