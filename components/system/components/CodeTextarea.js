@@ -1,9 +1,9 @@
 import * as React from 'react';
-import * as Constants from '~/common/constants';
+import * as Constants from '../util/constants';
 
 import { css } from '@emotion/react';
 
-import TextareaAutoSize from '~/vendor/react-textarea-autosize';
+import TextareaAutoSize from '../util/vendor/react-textarea-autosize';
 
 const STYLES_CODE_TEXTAREA = css`
   font-family: 'mono';

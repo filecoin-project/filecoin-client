@@ -1,11 +1,11 @@
 import * as React from 'react';
-import * as Constants from '~/common/constants';
-import * as SVG from '~/components/system/svg';
-import * as Strings from '~/common/strings';
+import * as Constants from '../util/constants';
+import * as SVG from '../util/svg';
+import * as Strings from '../util/strings';
 
 import { css } from '@emotion/react';
 
-import { DescriptionGroup } from '~/components/system/components/fragments/DescriptionGroup';
+import { DescriptionGroup } from './fragments/DescriptionGroup';
 
 const STYLES_NOTIFICATION = css`
   background-color: ${Constants.system.white};

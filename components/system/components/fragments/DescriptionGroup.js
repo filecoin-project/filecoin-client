@@ -1,10 +1,10 @@
 import * as React from 'react';
-import * as Constants from '~/common/constants';
-import * as Strings from '~/common/strings';
+import * as Constants from '../../util/constants';
+import * as Strings from '../../util/strings';
 
 import { css } from '@emotion/react';
 
-import { TooltipAnchor } from '~/components/system/components/fragments/TooltipAnchor';
+import { TooltipAnchor } from './TooltipAnchor';
 
 const STYLES_DESCRIPTION_GROUP_LABEL = css`
   font-family: 'inter-semi-bold';

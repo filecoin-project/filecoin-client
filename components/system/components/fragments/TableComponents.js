@@ -1,13 +1,12 @@
 import * as React from 'react';
-import * as Constants from '~/common/constants';
-import * as SVG from '~/components/system/svg';
-import * as OldSVG from '~/common/svg';
-import * as Strings from '~/common/strings';
+import * as Constants from '../../util/constants';
+import * as SVG from '../../util/svg';
+import * as Strings from '../../util/strings';
 
 import { css } from '@emotion/react';
 import { Tooltip } from 'react-tippy';
 
-import Avatar from '~/components/core/Avatar';
+import Avatar from '../Avatar';
 
 const STORAGE_DEAL_STATES = {
   '0': 'Local file only.',
@@ -31,7 +30,7 @@ const RETRIEVAL_DEAL_STATES = {
 
 const COMPONENTS_ICON = {
   PNG: <SVG.FileImage height="24px" />,
-  FOLDER: <OldSVG.Folder height="24px" />,
+  FOLDER: <SVG.Folder height="24px" />,
 };
 
 const STYLES_TABLE_TAG = css`

@@ -1,10 +1,10 @@
 import * as React from 'react';
-import * as Constants from '~/common/constants';
-import * as SVG from '~/components/system/svg';
+import * as Constants from '../util/constants';
+import * as SVG from '../util/svg';
 
 import { css } from '@emotion/react';
 
-import { DescriptionGroup } from '~/components/system/components/fragments/DescriptionGroup';
+import { DescriptionGroup } from './fragments/DescriptionGroup';
 
 const INPUT_STYLES = `
   -webkit-appearance: none;
