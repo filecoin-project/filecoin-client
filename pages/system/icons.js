@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as System from '~/components/system';
-import * as SVG from '~/components/system/svg';
+import * as SVG from '~/components/system/util/svg';
 import * as OldSVG from '~/common/svg';
 import * as Constants from '~/common/constants';
 
@@ -64,7 +64,7 @@ export default class SystemPageIcons extends React.Component {
         <System.P>Import the SVG components.</System.P>
         <br />
         <System.CodeBlock>
-          {`import * as SVG from '~/components/system/svg';
+          {`import * as SVG from '~/components/system/util/svg';
 
 import * as OldSVG from '~/common/svg';`}
         </System.CodeBlock>
