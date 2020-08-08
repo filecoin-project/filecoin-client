@@ -14,6 +14,7 @@ export default class SystemPageTooltips extends React.Component {
         description="..."
         url="https://slate.host/_/system/tooltips"
       >
+        <System.GlobalTooltip />
         <System.H1>
           Tooltips <ViewSourceLink file="system/tooltips.js" />
         </System.H1>
@@ -24,25 +25,52 @@ export default class SystemPageTooltips extends React.Component {
           information in a message that appears when they interact with an
           element.
         </System.P>
+
         <br />
         <br />
         <br />
         <System.H2>Imports</System.H2>
         <hr />
         <br />
-        <System.P>Import React and the TooltipAnchor Component.</System.P>
+        <System.P>
+          Import React and the TooltipAnchor and GlobalTooltip Components.
+        </System.P>
         <br />
         <br />
         <CodeBlock>
           {`import * as React from "react";
-import { TooltipAnchor } from "slate-react-system";`}
+import { TooltipAnchor, GlobalTooltip } from "slate-react-system";`}
         </CodeBlock>
         <br />
         <br />
         <System.H2>Usage</System.H2>
         <hr />
         <br />
-        <System.P>Declare the Tooltip component.</System.P>
+        <System.P>
+          Declare the <System.CodeText>GlobalTooltip</System.CodeText> at the
+          root level of your document (e.g. in index.js or App.js) so it is
+          accessible throughout and will not get buried in the DOM tree.
+        </System.P>
+        <br />
+        <CodeBlock>
+          {`class App extends React.Component {
+  render() {
+    return (
+      <React.Fragment>
+        <GlobalTooltip style={{ backgroundColor: "black" }} />
+      </React.Fragment>
+    );
+  }
+}`}
+        </CodeBlock>
+        <br />
+        <System.P>
+          Then, declare the <System.CodeText>TooltipAnchor</System.CodeText>{" "}
+          component anywhere you would like a tooltip to appear.
+        </System.P>
+        <br />
+        <System.TooltipAnchor tooltip="Hello friends!!" />
+        <br />
         <br />
         <CodeBlock>{`class ExampleOne extends React.Component {
   render() {
@@ -50,18 +78,19 @@ import { TooltipAnchor } from "slate-react-system";`}
   }
 }`}</CodeBlock>
         <br />
-        <br />
-        <System.H2>Output</System.H2>
-        <hr />
-        <br />
-        <System.TooltipAnchor tooltip="Hello friends!!" />
-        <br />
+        <System.P>
+          Optionally, use the <System.CodeText>style</System.CodeText> prop on
+          the <System.CodeText>GlobalTooltip</System.CodeText> component to
+          apply a style to all tooltip bubbles. To style a single tooltip
+          bubble, use the <System.CodeText>style</System.CodeText> prop on that
+          bubble's <System.CodeText>TooltipAnchor</System.CodeText>.
+        </System.P>
         <br />
         <br />
         <System.H2>Accepted React Properties</System.H2>
         <hr />
         <br />
-        <Group title="Tooltip">
+        <Group title="TooltipAnchor">
           <System.Table
             data={{
               columns: [
@@ -76,14 +105,38 @@ import { TooltipAnchor } from "slate-react-system";`}
                   a: "tooltip",
                   b: "string",
                   c: "null",
-                  d: "Output text on the tooltip",
+                  d: "Output text on the tooltip bubble.",
                 },
                 {
                   id: 2,
                   a: "height",
                   b: "number",
                   c: "24px",
-                  d: "Height of the tooltip",
+                  d: "Height of the tooltip anchor icon.",
+                },
+                {
+                  id: 2,
+                  a: "style",
+                  b: "Object",
+                  c: "null",
+                  d:
+                    "Style applied to the tooltip. Apply this prop to GlobalTooltip to apply to all tooltips, and apply it to a given TooltipAnchor to apply only to that tooltip.",
+                },
+                {
+                  id: 2,
+                  a: "anchorStyle",
+                  b: "Object",
+                  c: "null",
+                  d:
+                    "Style applied to the tooltip anchor. Apply this to the TooltipAnchor component.",
+                },
+                {
+                  id: 2,
+                  a: "children",
+                  b: "SVG",
+                  c: "null",
+                  d:
+                    "Will be rendered instead of the default question mark SVG as the tooltip anchor icon.",
                 },
               ],
             }}
