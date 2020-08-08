@@ -71,7 +71,10 @@ import {
 // NOTE(jim): Fragments
 import { Boundary } from "~/components/system/components/fragments/Boundary";
 import { CodeText } from "~/components/system/components/fragments/CodeText";
-import { TooltipAnchor } from "~/components/system/components/fragments/TooltipAnchor";
+import {
+  TooltipAnchor,
+  GlobalTooltip,
+} from "~/components/system/components/fragments/Tooltip";
 import { DescriptionGroup } from "~/components/system/components/fragments/DescriptionGroup";
 import {
   TableContent,
@@ -137,6 +140,7 @@ export {
   // NOTE(jim): Fragments, not meant to be used.
   Boundary,
   TooltipAnchor,
+  GlobalTooltip,
   DescriptionGroup,
   TableContent,
   TableColumn,
