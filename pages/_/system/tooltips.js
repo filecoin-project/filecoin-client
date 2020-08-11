@@ -10,6 +10,14 @@ import CodeBlock from "~/components/system/CodeBlock";
 import { dispatchCustomEvent } from "~/common/custom-events";
 import { css } from "@emotion/react";
 
+const STYLES_DEMO_TOOLTIP = {
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  height: "200px",
+  width: "100%",
+};
+
 const STYLES_TOOLTIP_BUBBLE = css`
   display: inline-flex;
   align-items: center;
@@ -76,6 +84,7 @@ export default class SystemPageTooltips extends React.Component {
           information in a message that appears when they interact with an
           element.
         </System.P>
+        <System.GlobalTooltip />
         <br />
         <br />
         <br />
@@ -193,28 +202,6 @@ import { GlobalTooltip, TooltipWrapper, TooltipAnchor } from "slate-react-system
           id="another-unique-tooltip-id"
           tooltip="Hello friends!"
         />
-        <System.TooltipWrapper
-          id="another-unique-tooltip-id-2"
-          content={content}
-          type="body"
-        >
-          <span
-            onMouseEnter={() => {
-              dispatchCustomEvent({
-                name: "show-tooltip",
-                detail: { id: "another-unique-tooltip-id-2" },
-              });
-            }}
-            onMouseLeave={() => {
-              dispatchCustomEvent({
-                name: "hide-tooltip",
-                detail: { id: "another-unique-tooltip-id-2" },
-              });
-            }}
-          >
-            <System.SVG.Information height="24px" />
-          </span>
-        </System.TooltipWrapper>
         <br />
         <br />
         <CodeBlock>
@@ -267,15 +254,7 @@ import { GlobalTooltip, TooltipWrapper, TooltipAnchor } from "slate-react-system
             ))}
           </div>
           {this.state.show ? (
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "200px",
-                width: "100%",
-              }}
-            >
+            <div style={STYLES_DEMO_TOOLTIP}>
               <System.TooltipWrapper
                 id="orientation-tester-tooltip"
                 content={content}

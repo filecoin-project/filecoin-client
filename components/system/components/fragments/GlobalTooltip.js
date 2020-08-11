@@ -17,8 +17,6 @@ export class GlobalTooltip extends React.Component {
   };
 
   componentDidMount = () => {
-    console.log(this.props.elementRef);
-    console.log(this.props.allowedTypes);
     window.addEventListener("add-tooltip", this._handleAdd);
     window.addEventListener("remove-tooltip", this._handleRemove);
     window.addEventListener("show-tooltip", this._handleShow);
@@ -33,10 +31,12 @@ export class GlobalTooltip extends React.Component {
   };
 
   getStyle = (rect, bubbleRect, vertical, horizontal) => {
-    let yOffset = this.props.elementRef.scrollTop;
-    console.log(yOffset);
-    let xOffset = this.props.elementRef.scrollLeft;
-    console.log(xOffset);
+    let yOffset = this.props.elementRef
+      ? this.props.elementRef.scrollTop
+      : window.pageYOffset;
+    let xOffset = this.props.elementRef
+      ? this.props.elementRef.scrollLeft
+      : window.pageXOffset;
     let style = { position: "absolute" };
     switch (vertical) {
       case "above":
@@ -80,8 +80,12 @@ export class GlobalTooltip extends React.Component {
   };
 
   getOrientation = (rect, bubbleRect, vertical, horizontal) => {
-    let yOffset = this.props.elementRef.scrollTop;
-    let xOffset = this.props.elementRef.scrollLeft;
+    let yOffset = this.props.elementRef
+      ? this.props.elementRef.scrollTop
+      : window.pageYOffset;
+    let xOffset = this.props.elementRef
+      ? this.props.elementRef.scrollLeft
+      : window.pageXOffset;
     if (!vertical) {
       if (bubbleRect.height > rect.top + yOffset) {
         vertical = "below";
@@ -102,11 +106,11 @@ export class GlobalTooltip extends React.Component {
   };
 
   _handleAdd = (e) => {
-    console.log("add");
-    console.log(e.detail.type);
-    console.log(this.props.allowedTypes);
-    if (!this.props.allowedTypes.includes(e.detail.type)) return;
-    console.log(e.detail.type);
+    if (
+      this.props.allowedTypes &&
+      !this.props.allowedTypes.includes(e.detail.type)
+    )
+      return;
     let style = this.getOrientation(
       e.detail.rect,
       e.detail.bubbleRect,
@@ -124,7 +128,11 @@ export class GlobalTooltip extends React.Component {
   };
 
   _handleRemove = (e) => {
-    if (!this.props.allowedTypes.includes(e.detail.type)) return;
+    if (
+      this.props.allowedTypes &&
+      !this.props.allowedTypes.includes(e.detail.type)
+    )
+      return;
     if (this.state.tooltips[e.detail.id]) {
       let tooltips = this.state.tooltips;
       delete tooltips[e.detail.id];
@@ -133,7 +141,11 @@ export class GlobalTooltip extends React.Component {
   };
 
   _handleShow = (e) => {
-    if (!this.props.allowedTypes.includes(e.detail.type)) return;
+    if (
+      this.props.allowedTypes &&
+      !this.props.allowedTypes.includes(e.detail.type)
+    )
+      return;
     if (this.state.tooltips[e.detail.id]) {
       let tooltips = this.state.tooltips;
       tooltips[e.detail.id].show = true;
@@ -142,7 +154,11 @@ export class GlobalTooltip extends React.Component {
   };
 
   _handleHide = (e) => {
-    if (!this.props.allowedTypes.includes(e.detail.type)) return;
+    if (
+      this.props.allowedTypes &&
+      !this.props.allowedTypes.includes(e.detail.type)
+    )
+      return;
     if (this.state.tooltips[e.detail.id]) {
       let tooltips = this.state.tooltips;
       tooltips[e.detail.id].show = false;

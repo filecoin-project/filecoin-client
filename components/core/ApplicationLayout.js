@@ -3,6 +3,7 @@ import * as Constants from "~/common/constants";
 import * as SVG from "~/components/system/svg";
 
 import { css } from "@emotion/react";
+import { GlobalTooltip } from "~/components/system/components/fragments/GlobalTooltip";
 
 const STYLES_SCROLL = css`
   -webkit-overflow-scrolling: touch;
@@ -132,7 +133,45 @@ const STYLES_BLOCK = css`
   }
 `;
 
+// export default class ApplicationLayout extends React.Component {
+//   render() {
+//     let sidebarElements = null;
+//     if (this.props.sidebar) {
+//       sidebarElements = (
+//         <React.Fragment>
+//           <div css={STYLES_SIDEBAR_HEADER}>
+//             <div css={STYLES_BLOCK} onClick={this.props.onDismissSidebar}>
+//               <SVG.Dismiss height="24px" />
+//             </div>
+//           </div>
+//           <div css={STYLES_SIDEBAR_CONTENT}>{this.props.sidebar}</div>
+//         </React.Fragment>
+//       );
+//     }
+
+//     return (
+//       <div css={STYLES_LAYOUT}>
+//         <div css={STYLES_NAVIGATION}>{this.props.navigation}</div>
+//         <div css={STYLES_CONTENT}>
+//           <div css={STYLES_HEADER}>{this.props.header}</div>
+//           <div css={STYLES_BODY_WEB}>{this.props.children}</div>
+//           <div css={STYLES_BODY_MOBILE}>
+//             {this.props.sidebar ? sidebarElements : this.props.children}
+//           </div>
+//         </div>
+//         {this.props.sidebar ? (
+//           <div css={STYLES_SIDEBAR_WEB}>{sidebarElements}</div>
+//         ) : null}
+//       </div>
+//     );
+//   }
+// }
+
 export default class ApplicationLayout extends React.Component {
+  _sidebar;
+  _navigation;
+  _body;
+
   render() {
     let sidebarElements = null;
     if (this.props.sidebar) {
@@ -144,19 +183,52 @@ export default class ApplicationLayout extends React.Component {
             </div>
           </div>
           <div css={STYLES_SIDEBAR_CONTENT}>{this.props.sidebar}</div>
+          <GlobalTooltip
+            elementRef={this._sidebar}
+            allowedTypes={["sidebar"]}
+          />
         </React.Fragment>
       );
     }
-
     return (
       <div css={STYLES_LAYOUT}>
-        <div css={STYLES_NAVIGATION}>{this.props.navigation}</div>
+        <div
+          css={STYLES_NAVIGATION}
+          ref={(c) => {
+            this._navigation = c;
+          }}
+        >
+          {this.props.navigation}
+          <GlobalTooltip
+            elementRef={this._navigation}
+            allowedTypes={["navigation"]}
+          />
+        </div>
         <div css={STYLES_CONTENT}>
           <div css={STYLES_HEADER}>{this.props.header}</div>
-          <div css={STYLES_BODY_WEB}>{this.props.children}</div>
-          <div css={STYLES_BODY_MOBILE}>{this.props.sidebar ? sidebarElements : this.props.children}</div>
+          <div
+            css={STYLES_BODY_WEB}
+            ref={(c) => {
+              this._body = c;
+            }}
+          >
+            {this.props.children}
+          </div>
+          <div css={STYLES_BODY_MOBILE}>
+            {this.props.sidebar ? sidebarElements : this.props.children}
+          </div>
+          <GlobalTooltip elementRef={this._body} allowedTypes={["body"]} />
         </div>
-        {this.props.sidebar ? <div css={STYLES_SIDEBAR_WEB}>{sidebarElements}</div> : null}
+        {this.props.sidebar ? (
+          <div
+            css={STYLES_SIDEBAR_WEB}
+            ref={(c) => {
+              this._sidebar = c;
+            }}
+          >
+            {sidebarElements}
+          </div>
+        ) : null}
       </div>
     );
   }
