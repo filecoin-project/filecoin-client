@@ -14,8 +14,6 @@ const STYLES_DEMO_TOOLTIP = {
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
-  height: "200px",
-  width: "100%",
 };
 
 const STYLES_TOOLTIP_BUBBLE = css`
@@ -23,7 +21,7 @@ const STYLES_TOOLTIP_BUBBLE = css`
   align-items: center;
   background-color: ${Constants.system.black};
   color: ${Constants.system.white};
-  opacity: 80%;
+  opacity: 70%;
   border-radius: 4px;
   padding: 4px 8px;
   height: 48px;
@@ -228,20 +226,6 @@ import { GlobalTooltip, TooltipWrapper, TooltipAnchor } from "slate-react-system
         </System.P>
         <br />
         <div>
-          <System.P>Vertical</System.P>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            {["above", "up", "center", "down", "below"].map((dir) => (
-              <System.ButtonPrimary
-                style={{ width: "100px" }}
-                onClick={(e) => {
-                  this._handleClick(e, "vertical", dir);
-                }}
-              >
-                {dir}
-              </System.ButtonPrimary>
-            ))}
-          </div>
-          <br />
           <System.P>Horizontal</System.P>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             {["far-left", "left", "center", "right", "far-right"].map((dir) => (
@@ -255,29 +239,54 @@ import { GlobalTooltip, TooltipWrapper, TooltipAnchor } from "slate-react-system
               </System.ButtonPrimary>
             ))}
           </div>
-          {this.state.show ? (
-            <div style={STYLES_DEMO_TOOLTIP}>
-              <System.TooltipWrapper
-                id="orientation-tester-tooltip"
-                content={content}
-                horizontal={this.state.horizontal}
-                vertical={this.state.vertical}
-                type="body"
-              >
-                <span>
+          <br />
+          <div style={{ display: "grid", gridTemplateColumns: "1fr auto" }}>
+            {this.state.show ? (
+              <div style={STYLES_DEMO_TOOLTIP}>
+                <System.TooltipWrapper
+                  id="orientation-tester-tooltip"
+                  content={content}
+                  horizontal={this.state.horizontal}
+                  vertical={this.state.vertical}
+                  type="body"
+                >
                   <System.SVG.Information height="24px" />
-                </span>
-              </System.TooltipWrapper>
+                </System.TooltipWrapper>
+              </div>
+            ) : null}
+            <div>
+              <System.P>Vertical</System.P>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  height: "300px",
+                }}
+              >
+                {["above", "up", "center", "down", "below"].map((dir) => (
+                  <System.ButtonPrimary
+                    style={{ width: "100px" }}
+                    onClick={(e) => {
+                      this._handleClick(e, "vertical", dir);
+                    }}
+                  >
+                    {dir}
+                  </System.ButtonPrimary>
+                ))}
+              </div>
             </div>
-          ) : null}
+          </div>
         </div>
+        <br />
+        <br />
         <CodeBlock>{`class ExampleThree extends React.Component {
   render() {
     return (
       <TooltipAnchor
         id="yet-another-unique-tooltip-id"
         tooltip="Hello friends!"
-        style={{ opacity: "80%" }}
+        style={{ opacity: "70%" }}
         horizontal="${this.state.horizontal}"
         vertical="${this.state.vertical}"
       />
