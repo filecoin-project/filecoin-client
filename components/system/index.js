@@ -72,9 +72,10 @@ import {
 import { Boundary } from "~/components/system/components/fragments/Boundary";
 import { CodeText } from "~/components/system/components/fragments/CodeText";
 import {
-  TooltipAnchor,
   GlobalTooltip,
-} from "~/components/system/components/fragments/Tooltip";
+  TooltipAnchor,
+  TooltipWrapper,
+} from "~/components/system/components/fragments/GlobalTooltip";
 import { DescriptionGroup } from "~/components/system/components/fragments/DescriptionGroup";
 import {
   TableContent,
@@ -139,11 +140,12 @@ export {
   LI,
   // NOTE(jim): Fragments, not meant to be used.
   Boundary,
-  TooltipAnchor,
-  GlobalTooltip,
   DescriptionGroup,
+  GlobalTooltip,
   TableContent,
   TableColumn,
+  TooltipAnchor,
+  TooltipWrapper,
   // NOTE(jim): System values
   Constants,
   SVG,

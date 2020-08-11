@@ -87,6 +87,9 @@ export default class SlatePage extends React.Component {
           <WebsitePrototypeFooter style={{ marginTop: 88 }} />
         </div>
         <System.GlobalCarousel />
+        <System.GlobalTooltip />
+        <System.GlobalModal />
+        <System.GlobalNotification />
       </WebsitePrototypeWrapper>
     );
   }

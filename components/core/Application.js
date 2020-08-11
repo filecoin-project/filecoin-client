@@ -530,6 +530,7 @@ export default class ApplicationPage extends React.Component {
     const description = "This is an early preview.";
     const url = "https://slate.host/_";
 
+    console.log("render application");
     return (
       <React.Fragment>
         <WebsitePrototypeWrapper

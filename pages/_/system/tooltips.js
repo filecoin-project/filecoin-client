@@ -1,20 +1,71 @@
 import * as React from "react";
 import * as System from "~/components/system";
+import * as Constants from "~/common/constants";
 
 import Group from "~/components/system/Group";
 import SystemPage from "~/components/system/SystemPage";
 import ViewSourceLink from "~/components/system/ViewSourceLink";
 import CodeBlock from "~/components/system/CodeBlock";
 
+import { dispatchCustomEvent } from "~/common/custom-events";
+import { css } from "@emotion/react";
+
+const STYLES_TOOLTIP_BUBBLE = css`
+  display: inline-flex;
+  align-items: center;
+  background-color: ${Constants.system.black};
+  color: ${Constants.system.white};
+  opacity: 80%;
+  border-radius: 4px;
+  padding: 4px 8px;
+  height: 48px;
+  width: 160px;
+  font-size: 0.8em;
+`;
+
 export default class SystemPageTooltips extends React.Component {
+  state = {
+    horizontal: "center",
+    vertical: "above",
+    show: true,
+  };
+
+  _handleClick = (e, orientation, dir) => {
+    this.setState({ show: false, [orientation]: dir }, () => {
+      this.setState({ show: true }, () => {
+        dispatchCustomEvent({
+          name: "show-tooltip",
+          detail: {
+            id: "orientation-tester-tooltip",
+            type: "body",
+          },
+        });
+      });
+    });
+  };
+
+  componentWillUnmount = () => {
+    dispatchCustomEvent({
+      name: "remove-tooltip",
+      detail: {
+        id: "orientation-tester-tooltip",
+        type: "body",
+      },
+    });
+  };
+
   render() {
+    let content = (
+      <div css={STYLES_TOOLTIP_BUBBLE}>
+        horizontal: "{this.state.horizontal}", vertical: "{this.state.vertical}"
+      </div>
+    );
     return (
       <SystemPage
         title="SDS: Tooltips"
         description="..."
         url="https://slate.host/_/system/tooltips"
       >
-        <System.GlobalTooltip />
         <System.H1>
           Tooltips <ViewSourceLink file="system/tooltips.js" />
         </System.H1>
@@ -25,7 +76,6 @@ export default class SystemPageTooltips extends React.Component {
           information in a message that appears when they interact with an
           element.
         </System.P>
-
         <br />
         <br />
         <br />
@@ -33,17 +83,18 @@ export default class SystemPageTooltips extends React.Component {
         <hr />
         <br />
         <System.P>
-          Import React and the TooltipAnchor and GlobalTooltip Components.
+          Import the GlobalTooltip, TooltipWrapper, and optionally the
+          TooltipAnchor Components.
         </System.P>
         <br />
         <br />
         <CodeBlock>
           {`import * as React from "react";
-import { TooltipAnchor, GlobalTooltip } from "slate-react-system";`}
+import { GlobalTooltip, TooltipWrapper, TooltipAnchor } from "slate-react-system";`}
         </CodeBlock>
         <br />
         <br />
-        <System.H2>Usage</System.H2>
+        <System.H2>Tooltip</System.H2>
         <hr />
         <br />
         <System.P>
@@ -57,7 +108,7 @@ import { TooltipAnchor, GlobalTooltip } from "slate-react-system";`}
   render() {
     return (
       <React.Fragment>
-        <GlobalTooltip style={{ backgroundColor: "black" }} />
+        <GlobalTooltip />
       </React.Fragment>
     );
   }
@@ -65,32 +116,200 @@ import { TooltipAnchor, GlobalTooltip } from "slate-react-system";`}
         </CodeBlock>
         <br />
         <System.P>
-          Then, declare the <System.CodeText>TooltipAnchor</System.CodeText>{" "}
-          component anywhere you would like a tooltip to appear.
+          Then, wrap your desired anchor with a{" "}
+          <System.CodeText>TooltipWrapper</System.CodeText>. The wrapper's id
+          should match the id in the dispatchCustomEvent call. This id must be
+          unique for each tooltip.
         </System.P>
         <br />
-        <System.TooltipAnchor tooltip="Hello friends!!" />
+        <System.P>
+          The tooltip component, passed in as{" "}
+          <System.CodeText>content</System.CodeText> to{" "}
+          <System.CodeText>TooltipWrapper</System.CodeText>, will be displayed
+          when a dispatchCustomEvent is called with its id.
+        </System.P>
+        <br />
+        <System.TooltipAnchor
+          type="body"
+          id="tooltip-hello-friends"
+          tooltip="Hello friends!! This is a tooltip from the slate-react-system"
+        />
         <br />
         <br />
         <CodeBlock>{`class ExampleOne extends React.Component {
+  _handleMouseEnter = (e) => {
+    dispatchCustomEvent({
+      name: "show-tooltip",
+      detail: {
+        id: "unique-tooltip-id",
+      },
+    });
+  };
+
+  _handleMouseLeave = (e) => {
+    dispatchCustomEvent({
+      name: "hide-tooltip",
+      detail: {
+        id: "unique-tooltip-id",
+      },
+    });
+  };
+
   render() {
-    return <TooltipAnchor tooltip="Hello friends!!" />;
+    let content = (
+      <div css={STYLES_TOOLTIP_BUBBLE}>
+        {this.props.tooltip}
+      </div>
+    );
+    return (
+      <TooltipWrapper
+        id="unique-tooltip-id"
+        content={content}
+      >
+        <span
+          onMouseEnter={this._handleMouseEnter}
+          onMouseLeave={this._handleMouseLeave}
+        >
+          <SVG.Information height="24px" />
+        </span>
+      </TooltipWrapper>
+    )
   }
 }`}</CodeBlock>
         <br />
+        <br />
+        <br />
+        <System.H2>Tooltip Anchor</System.H2>
+        <hr />
+        <br />
         <System.P>
-          Optionally, use the <System.CodeText>style</System.CodeText> prop on
-          the <System.CodeText>GlobalTooltip</System.CodeText> component to
-          apply a style to all tooltip bubbles. To style a single tooltip
-          bubble, use the <System.CodeText>style</System.CodeText> prop on that
-          bubble's <System.CodeText>TooltipAnchor</System.CodeText>.
+          For a pre-styled tooltip that displays text, you can use the{" "}
+          <System.CodeText>TooltipAnchor</System.CodeText> component. Be sure to
+          give it a unique id.
         </System.P>
+        <br />
+        <System.TooltipAnchor
+          type="body"
+          id="another-unique-tooltip-id"
+          tooltip="Hello friends!"
+        />
+        <System.TooltipWrapper
+          id="another-unique-tooltip-id-2"
+          content={content}
+          type="body"
+        >
+          <span
+            onMouseEnter={() => {
+              dispatchCustomEvent({
+                name: "show-tooltip",
+                detail: { id: "another-unique-tooltip-id-2" },
+              });
+            }}
+            onMouseLeave={() => {
+              dispatchCustomEvent({
+                name: "hide-tooltip",
+                detail: { id: "another-unique-tooltip-id-2" },
+              });
+            }}
+          >
+            <System.SVG.Information height="24px" />
+          </span>
+        </System.TooltipWrapper>
+        <br />
+        <br />
+        <CodeBlock>
+          {`class ExampleTwo extends React.Component {
+  render() {
+    return <TooltipAnchor id="another-unique-tooltip-id" tooltip="Hello friends!" />;
+  }
+}`}
+        </CodeBlock>
+        <br />
+        <br />
+        <br />
+        <System.H2>Setting an Orientation</System.H2>
+        <hr />
+        <br />
+        <System.P>
+          You can set a tooltip to appear in a set orientation using the{" "}
+          <System.CodeText>horizontal</System.CodeText> and{" "}
+          <System.CodeText>vertical</System.CodeText> props. These can be
+          applied to the <System.CodeText>TooltipWrapper</System.CodeText> and
+          the <System.CodeText>TooltipAnchor</System.CodeText> components.
+        </System.P>
+        <br />
+        <div>
+          <System.P>Vertical</System.P>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            {["above", "up", "center", "down", "below"].map((dir) => (
+              <System.ButtonPrimary
+                style={{ width: "100px" }}
+                onClick={(e) => {
+                  this._handleClick(e, "vertical", dir);
+                }}
+              >
+                {dir}
+              </System.ButtonPrimary>
+            ))}
+          </div>
+          <br />
+          <System.P>Horizontal</System.P>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            {["far-left", "left", "center", "right", "far-right"].map((dir) => (
+              <System.ButtonPrimary
+                style={{ width: "100px" }}
+                onClick={(e) => {
+                  this._handleClick(e, "horizontal", dir);
+                }}
+              >
+                {dir}
+              </System.ButtonPrimary>
+            ))}
+          </div>
+          {this.state.show ? (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "200px",
+                width: "100%",
+              }}
+            >
+              <System.TooltipWrapper
+                id="orientation-tester-tooltip"
+                content={content}
+                horizontal={this.state.horizontal}
+                vertical={this.state.vertical}
+                type="body"
+              >
+                <span>
+                  <System.SVG.Information height="24px" />
+                </span>
+              </System.TooltipWrapper>
+            </div>
+          ) : null}
+        </div>
+        <CodeBlock>{`class ExampleThree extends React.Component {
+  render() {
+    return (
+      <TooltipAnchor
+        id="yet-another-unique-tooltip-id"
+        tooltip="Hello friends!"
+        style={{ opacity: "80%" }}
+        horizontal="${this.state.horizontal}"
+        vertical="${this.state.vertical}"
+      />
+    );
+  }
+}`}</CodeBlock>
+        <br />
         <br />
         <br />
         <System.H2>Accepted React Properties</System.H2>
         <hr />
         <br />
-        <Group title="TooltipAnchor">
+        <Group title="TooltipAnchor Properties">
           <System.Table
             data={{
               columns: [
@@ -102,41 +321,123 @@ import { TooltipAnchor, GlobalTooltip } from "slate-react-system";`}
               rows: [
                 {
                   id: 1,
+                  a: (
+                    <span style={{ fontFamily: Constants.font.semiBold }}>
+                      id
+                    </span>
+                  ),
+                  b: "string",
+                  c: "null",
+                  d: "Unique id to identify the tooltip.",
+                },
+                {
+                  id: 2,
                   a: "tooltip",
                   b: "string",
                   c: "null",
                   d: "Output text on the tooltip bubble.",
                 },
                 {
-                  id: 2,
+                  id: 3,
                   a: "height",
                   b: "number",
                   c: "24px",
                   d: "Height of the tooltip anchor icon.",
                 },
                 {
-                  id: 2,
+                  id: 4,
                   a: "style",
                   b: "Object",
                   c: "null",
-                  d:
-                    "Style applied to the tooltip. Apply this prop to GlobalTooltip to apply to all tooltips, and apply it to a given TooltipAnchor to apply only to that tooltip.",
+                  d: "Style applied to the tooltip bubble.",
                 },
                 {
-                  id: 2,
+                  id: 5,
                   a: "anchorStyle",
                   b: "Object",
                   c: "null",
+                  d: "Style applied to the tooltip anchor.",
+                },
+                {
+                  id: 6,
+                  a: "children",
+                  b: "Object",
+                  c: "null",
                   d:
-                    "Style applied to the tooltip anchor. Apply this to the TooltipAnchor component.",
+                    "Will be rendered instead of the default question mark SVG as the tooltip anchor.",
+                },
+                {
+                  id: 7,
+                  a: "horizontal",
+                  b: "string",
+                  c: "center",
+                  d:
+                    "Horizontal positioning of the tooltip relative to the anchor (far-left, left, center, right, far-right)",
+                },
+                {
+                  id: 8,
+                  a: "vertical",
+                  b: "string",
+                  c: "above",
+                  d:
+                    "Vertical positioning of the tooltip relative to the anchor (above, up, center, down, below)",
+                },
+              ],
+            }}
+          />
+        </Group>
+        <br />
+        <br />
+        <Group title="TooltipWrapper Properties">
+          <System.Table
+            data={{
+              columns: [
+                { key: "a", name: "Name", width: "128px" },
+                { key: "b", name: "Type", width: "88px", type: "OBJECT_TYPE" },
+                { key: "c", name: "Default", width: "88px" },
+                { key: "d", name: "Description", width: "100%" },
+              ],
+              rows: [
+                {
+                  id: 1,
+                  a: (
+                    <span style={{ fontFamily: Constants.font.semiBold }}>
+                      id
+                    </span>
+                  ),
+                  b: "string",
+                  c: "null",
+                  d: "Unique id to identify the tooltip.",
                 },
                 {
                   id: 2,
-                  a: "children",
-                  b: "SVG",
+                  a: "content",
+                  b: "Component",
                   c: "null",
+                  d: "Component rendered as the tooltip bubble.",
+                },
+                {
+                  id: 3,
+                  a: "horizontal",
+                  b: "string",
+                  c: "center",
                   d:
-                    "Will be rendered instead of the default question mark SVG as the tooltip anchor icon.",
+                    "Horizontal positioning of the tooltip relative to the anchor (far-left, left, center, right, far-right)",
+                },
+                {
+                  id: 4,
+                  a: "vertical",
+                  b: "string",
+                  c: "above",
+                  d:
+                    "Vertical positioning of the tooltip relative to the anchor (above, up, center, down, below)",
+                },
+                {
+                  id: 5,
+                  a: "children",
+                  b: "Component",
+                  c: "null",
+                  d: "The tooltip anchor",
                 },
               ],
             }}
