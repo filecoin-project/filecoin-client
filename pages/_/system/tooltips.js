@@ -102,6 +102,7 @@ import { GlobalTooltip, TooltipWrapper, TooltipAnchor } from "slate-react-system
         </CodeBlock>
         <br />
         <br />
+        <br />
         <System.H2>Tooltip</System.H2>
         <hr />
         <br />
@@ -188,11 +189,13 @@ import { GlobalTooltip, TooltipWrapper, TooltipAnchor } from "slate-react-system
         </CodeBlock>
         <br />
         <br />
+        <br />
         <System.H2>Tooltip Anchor</System.H2>
         <hr />
         <br />
         <System.P>
-          For a pre-styled tooltip that displays text, you can use the{" "}
+          For a pre-styled tooltip that accepts a string and handles
+          dispatchCustomEvent and styling for you, use the{" "}
           <System.CodeText>TooltipAnchor</System.CodeText> component. Be sure to
           give it a unique id.
         </System.P>
@@ -221,8 +224,8 @@ import { GlobalTooltip, TooltipWrapper, TooltipAnchor } from "slate-react-system
           You can set a tooltip to appear in a set orientation using the{" "}
           <System.CodeText>horizontal</System.CodeText> and{" "}
           <System.CodeText>vertical</System.CodeText> props. These can be
-          applied to the <System.CodeText>TooltipWrapper</System.CodeText> and
-          the <System.CodeText>TooltipAnchor</System.CodeText> components.
+          applied to both the <System.CodeText>TooltipWrapper</System.CodeText>{" "}
+          and the <System.CodeText>TooltipAnchor</System.CodeText> components.
         </System.P>
         <br />
         <div>
@@ -294,20 +297,6 @@ import { GlobalTooltip, TooltipWrapper, TooltipAnchor } from "slate-react-system
   }
 }`}</CodeBlock>
         <br />
-        <br />
-        <CodeBlock>{`class ExampleOne extends React.Component {
-  render() {
-    return <TooltipAnchor tooltip="Hello friends!!" />;
-  }
-}`}</CodeBlock>
-        <br />
-        <System.P>
-          Optionally, use the <System.CodeText>style</System.CodeText> prop on
-          the <System.CodeText>GlobalTooltip</System.CodeText> component to
-          apply a style to all tooltip bubbles. To style a single tooltip
-          bubble, use the <System.CodeText>style</System.CodeText> prop on that
-          bubble's <System.CodeText>TooltipAnchor</System.CodeText>.
-        </System.P>
         <br />
         <br />
         <System.H2>Accepted React Properties</System.H2>

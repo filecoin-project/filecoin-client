@@ -21,6 +21,7 @@ export class GlobalTooltip extends React.Component {
     window.addEventListener("remove-tooltip", this._handleRemove);
     window.addEventListener("show-tooltip", this._handleShow);
     window.addEventListener("hide-tooltip", this._handleHide);
+    window.addEventListener("resize", this._handleResize);
   };
 
   componentWillUnmount = () => {
@@ -28,6 +29,7 @@ export class GlobalTooltip extends React.Component {
     window.removeEventListener("remove-tooltip", this._handleRemove);
     window.removeEventListener("show-tooltip", this._handleShow);
     window.removeEventListener("hide-tooltip", this._handleHide);
+    window.removeEventListener("resize", this._handleResize);
   };
 
   getStyle = (rect, bubbleRect, vertical, horizontal) => {
@@ -105,24 +107,29 @@ export class GlobalTooltip extends React.Component {
     return this.getStyle(rect, bubbleRect, vertical, horizontal);
   };
 
+  _handleResize = (e) => {
+    let tooltips = this.state.tooltips;
+    for (let each of Object.keys(tooltips)) {
+      delete tooltips[each].style;
+    }
+    this.setState({ tooltips });
+  };
+
   _handleAdd = (e) => {
     if (
       this.props.allowedTypes &&
       !this.props.allowedTypes.includes(e.detail.type)
     )
       return;
-    let style = this.getOrientation(
-      e.detail.rect,
-      e.detail.bubbleRect,
-      e.detail.vertical,
-      e.detail.horizontal
-    );
     let tooltips = this.state.tooltips;
     tooltips[e.detail.id] = {
       id: e.detail.id,
       show: false,
       content: e.detail.content,
-      style,
+      root: e.detail.root,
+      bubbleRect: e.detail.bubbleRect,
+      vertical: e.detail.vertical,
+      horizontal: e.detail.horizontal,
     };
     this.setState({ tooltips });
   };
@@ -148,6 +155,16 @@ export class GlobalTooltip extends React.Component {
       return;
     if (this.state.tooltips[e.detail.id]) {
       let tooltips = this.state.tooltips;
+      if (!tooltips[e.detail.id].style) {
+        let rect = tooltips[e.detail.id].root.getBoundingClientRect();
+        let style = this.getOrientation(
+          rect,
+          tooltips[e.detail.id].bubbleRect,
+          tooltips[e.detail.id].vertical,
+          tooltips[e.detail.id].horizontal
+        );
+        tooltips[e.detail.id].style = style;
+      }
       tooltips[e.detail.id].show = true;
       this.setState({ tooltips });
     }
@@ -198,7 +215,6 @@ export class TooltipWrapper extends React.Component {
   };
 
   componentDidMount = () => {
-    let rect = this._root.getBoundingClientRect();
     let bubbleRect = this._bubble.getBoundingClientRect();
     dispatchCustomEvent({
       name: "add-tooltip",
@@ -208,7 +224,7 @@ export class TooltipWrapper extends React.Component {
         content: this.props.content,
         vertical: this.props.vertical,
         horizontal: this.props.horizontal,
-        rect,
+        root: this._root,
         bubbleRect,
       },
     });
