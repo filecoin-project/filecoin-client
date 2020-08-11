@@ -74,6 +74,7 @@ export default class SystemPageTooltips extends React.Component {
         description="..."
         url="https://slate.host/_/system/tooltips"
       >
+        <System.GlobalTooltip />
         <System.H1>
           Tooltips <ViewSourceLink file="system/tooltips.js" />
         </System.H1>
@@ -145,7 +146,8 @@ import { GlobalTooltip, TooltipWrapper, TooltipAnchor } from "slate-react-system
         />
         <br />
         <br />
-        <CodeBlock>{`class ExampleOne extends React.Component {
+        <CodeBlock>
+          {`class ExampleOne extends React.Component {
   _handleMouseEnter = (e) => {
     dispatchCustomEvent({
       name: "show-tooltip",
@@ -184,8 +186,8 @@ import { GlobalTooltip, TooltipWrapper, TooltipAnchor } from "slate-react-system
       </TooltipWrapper>
     )
   }
-}`}</CodeBlock>
-        <br />
+}`}
+        </CodeBlock>
         <br />
         <br />
         <System.H2>Tooltip Anchor</System.H2>
@@ -283,6 +285,20 @@ import { GlobalTooltip, TooltipWrapper, TooltipAnchor } from "slate-react-system
   }
 }`}</CodeBlock>
         <br />
+        <br />
+        <CodeBlock>{`class ExampleOne extends React.Component {
+  render() {
+    return <TooltipAnchor tooltip="Hello friends!!" />;
+  }
+}`}</CodeBlock>
+        <br />
+        <System.P>
+          Optionally, use the <System.CodeText>style</System.CodeText> prop on
+          the <System.CodeText>GlobalTooltip</System.CodeText> component to
+          apply a style to all tooltip bubbles. To style a single tooltip
+          bubble, use the <System.CodeText>style</System.CodeText> prop on that
+          bubble's <System.CodeText>TooltipAnchor</System.CodeText>.
+        </System.P>
         <br />
         <br />
         <System.H2>Accepted React Properties</System.H2>
