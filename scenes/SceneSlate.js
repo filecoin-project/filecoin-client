@@ -13,26 +13,36 @@ import CircleButtonLight from "~/components/core/CircleButtonLight";
 
 export default class SceneSlate extends React.Component {
   state = {
-    slatename: this.props.current.slatename,
-    public: this.props.current.data.public,
-    objects: this.props.current.data.objects,
+    slatename: this.props.data.slatename,
+    public: this.props.data.data.public,
+    objects: this.props.data.data.objects,
     loading: false,
+    isOwner: this.props.viewer.slates
+      .map((slate) => slate.id)
+      .includes(this.props.data.slateId),
   };
 
   componentDidMount() {
+    console.log(this.props);
     this._handleUpdateCarousel(this.state);
   }
 
   componentDidUpdate(prevProps) {
-    const isNewSlateScene = prevProps.current.slatename !== this.props.current.slatename;
-    const isUpdated = this.props.current.data.objects.length !== prevProps.current.data.objects.length;
+    const isNewSlateScene =
+      prevProps.data.slatename !== this.props.data.slatename;
+    const isUpdated =
+      this.props.data.data.objects.length !==
+      prevProps.data.data.objects.length;
 
     if (isNewSlateScene || isUpdated) {
       this.setState({
-        slatename: this.props.current.slatename,
-        public: this.props.current.data.public,
-        objects: this.props.current.data.objects,
+        slatename: this.props.data.slatename,
+        public: this.props.data.data.public,
+        objects: this.props.data.data.objects,
         loading: false,
+        isOwner: this.props.viewer.slates
+          .map((slate) => slate.id)
+          .includes(this.props.data.slateId),
       });
     }
   }
@@ -41,7 +51,7 @@ export default class SceneSlate extends React.Component {
     this.setState({ loading: true });
 
     const response = await Actions.updateSlate({
-      id: this.props.current.slateId,
+      id: this.props.data.slateId,
       slatename: this.state.slatename,
       data: {
         objects: this.state.objects,
@@ -72,7 +82,9 @@ export default class SceneSlate extends React.Component {
           return {
             onDelete: this._handleDelete,
             id: each.id,
-            component: <MediaObject key={each.id} useImageFallback data={each} />,
+            component: (
+              <MediaObject key={each.id} useImageFallback data={each} />
+            ),
           };
         }),
       },
@@ -86,7 +98,7 @@ export default class SceneSlate extends React.Component {
     });
 
     const response = await Actions.updateSlate({
-      id: this.props.current.slateId,
+      id: this.props.data.slateId,
       slatename: this.state.slatename,
       data: {
         objects: this.state.objects.filter((o) => o.id !== id),
@@ -130,7 +142,7 @@ export default class SceneSlate extends React.Component {
     return this.props.onAction({
       type: "SIDEBAR",
       value: "SIDEBAR_ADD_FILE_TO_BUCKET",
-      data: this.props.current,
+      data: this.props.data,
     });
   };
 
@@ -138,25 +150,32 @@ export default class SceneSlate extends React.Component {
     return this.props.onAction({
       type: "SIDEBAR",
       value: "SIDEBAR_SINGLE_SLATE_SETTINGS",
-      data: this.props.current,
+      data: this.props.data,
     });
   };
 
   render() {
     const { slatename, objects } = this.state;
+    console.log(this.props);
 
     return (
       <ScenePage style={{ padding: `88px 24px 128px 24px` }}>
         <System.H1 style={{ marginBottom: 24, paddingLeft: 24 }}>
           {slatename}{" "}
-          <CircleButtonLight onClick={this._handleAdd} style={{ marginLeft: 16, marginRight: 12 }}>
-            <SVG.Plus height="16px" />
-          </CircleButtonLight>
-          <CircleButtonLight onClick={this._handleShowSettings}>
-            <SVG.Settings height="16px" />
-          </CircleButtonLight>
+          {this.state.isOwner ? (
+            <React.Fragment>
+              <CircleButtonLight
+                onClick={this._handleAdd}
+                style={{ marginLeft: 16, marginRight: 12 }}
+              >
+                <SVG.Plus height="16px" />
+              </CircleButtonLight>
+              <CircleButtonLight onClick={this._handleShowSettings}>
+                <SVG.Settings height="16px" />
+              </CircleButtonLight>
+            </React.Fragment>
+          ) : null}
         </System.H1>
-
         <Slate editing items={objects} onSelect={this._handleSelect} />
       </ScenePage>
     );

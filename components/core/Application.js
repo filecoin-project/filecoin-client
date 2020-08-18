@@ -21,6 +21,8 @@ import SceneSettingsDeveloper from "~/scenes/SceneSettingsDeveloper";
 import SceneSignIn from "~/scenes/SceneSignIn";
 import SceneSlate from "~/scenes/SceneSlate";
 import SceneActivity from "~/scenes/SceneActivity";
+import SceneDirectory from "~/scenes/SceneDirectory";
+import SceneProfile from "~/scenes/SceneProfile";
 
 // NOTE(jim):
 // Sidebars each have a decorator and can be shown to with _handleAction
@@ -54,6 +56,9 @@ const SIDEBARS = {
 
 const SCENES = {
   HOME: <SceneHome />,
+  DIRECTORY: <SceneDirectory />,
+  PROFILE: <SceneProfile />,
+  VIEW_SLATE: <SceneSlate />,
   WALLET: <SceneWallet />,
   FOLDER: <SceneFilesFolder />,
   FILE: <SceneFile />,
@@ -68,6 +73,8 @@ const SCENES = {
 };
 
 export default class ApplicationPage extends React.Component {
+  _body;
+
   state = {
     selected: State.getSelectedState(this.props.viewer),
     viewer: State.getInitialState(this.props.viewer),
@@ -349,7 +356,8 @@ export default class ApplicationPage extends React.Component {
   _handleDeleteYourself = async () => {
     // TODO(jim):
     // Put this somewhere better for messages.
-    const message = "Do you really want to delete your account? It will be permanently removed";
+    const message =
+      "Do you really want to delete your account? It will be permanently removed";
     if (!window.confirm(message)) {
       return false;
     }
@@ -416,13 +424,16 @@ export default class ApplicationPage extends React.Component {
   };
 
   _handleDismissSidebar = () => {
-    this.setState({ sidebar: null, sidebarLoading: false, data: null });
+    this.setState({ sidebar: null, sidebarLoading: false });
   };
 
   _handleAction = (options) => {
     console.log(options);
     if (options.type === "NAVIGATE") {
-      return this._handleNavigateTo({ id: options.value }, options.data);
+      return this._handleNavigateTo(
+        { id: options.value, scene: options.scene },
+        options.data
+      );
     }
 
     if (options.type === "NEW_WINDOW") {
@@ -448,8 +459,9 @@ export default class ApplicationPage extends React.Component {
   };
 
   _handleNavigateTo = (next, data = null) => {
-    this.state.history[this.state.currentIndex].scrollTop = window.scrollY;
-    this.state.history[this.state.currentIndex].data = data;
+    let body = document.getElementById("slate-client-body");
+    this.state.history[this.state.currentIndex].scrollTop = body.scrollTop; //window.scrollY => body.scrollTop (where body is the body of the ApplicationLayout)
+    this.state.history[this.state.currentIndex].data = this.state.data; //BUG FIX: was originally = data. So it was setting it equal to the data for the next one rather than the current one
 
     if (this.state.currentIndex !== this.state.history.length - 1) {
       const adjustedArray = [...this.state.history];
@@ -462,7 +474,7 @@ export default class ApplicationPage extends React.Component {
           data,
           sidebar: null,
         },
-        () => window.scrollTo(0, 0)
+        () => body.scrollTo(0, 0)
       );
     }
 
@@ -473,12 +485,14 @@ export default class ApplicationPage extends React.Component {
         data,
         sidebar: null,
       },
-      () => window.scrollTo(0, 0)
+      () => body.scrollTo(0, 0)
     );
   };
 
   _handleBack = () => {
-    this.state.history[this.state.currentIndex].scrollTop = window.scrollY;
+    let body = document.getElementById("slate-client-body");
+    this.state.history[this.state.currentIndex].scrollTop = body.scrollTop;
+    this.state.history[this.state.currentIndex].data = this.state.data; //BUG FIX: if you go back, it doesn't save the data for that page. so if you go forward to it again, it breaks. changed data => this.state.data
 
     const next = this.state.history[this.state.currentIndex - 1];
 
@@ -490,13 +504,14 @@ export default class ApplicationPage extends React.Component {
       },
       () => {
         console.log({ next });
-        window.scrollTo(0, next.scrollTop);
+        body.scrollTo(0, next.scrollTop);
       }
     );
   };
 
   _handleForward = () => {
-    this.state.history[this.state.currentIndex].scrollTop = window.scrollY;
+    let body = document.getElementById("slate-client-body");
+    this.state.history[this.state.currentIndex].scrollTop = body.scrollTop;
 
     const next = this.state.history[this.state.currentIndex + 1];
 
@@ -508,7 +523,7 @@ export default class ApplicationPage extends React.Component {
       },
       () => {
         console.log({ next });
-        window.scrollTo(0, next.scrollTop);
+        body.scrollTo(0, next.scrollTop);
       }
     );
   };
@@ -523,8 +538,12 @@ export default class ApplicationPage extends React.Component {
         <WebsitePrototypeWrapper
           title="Slate: sign in"
           description="Sign in to your Slate account to manage your assets."
-          url="https://slate.host/_">
-          <SceneSignIn onAuthenticate={this._handleAuthenticate} onNavigateTo={this._handleNavigateTo} />
+          url="https://slate.host/_"
+        >
+          <SceneSignIn
+            onAuthenticate={this._handleAuthenticate}
+            onNavigateTo={this._handleNavigateTo}
+          />
         </WebsitePrototypeWrapper>
       );
     }
@@ -533,6 +552,7 @@ export default class ApplicationPage extends React.Component {
     const navigation = NavigationData.generate(this.state.viewer);
     const next = this.state.history[this.state.currentIndex];
     const current = NavigationData.getCurrentById(navigation, next.id);
+    console.log(this.state.history);
 
     const navigationElement = (
       <ApplicationNavigation
@@ -561,20 +581,24 @@ export default class ApplicationPage extends React.Component {
       headerElement = null;
     }
 
-    const scene = React.cloneElement(SCENES[current.target.decorator], {
-      current: current.target,
-      data: this.state.data,
-      viewer: this.state.viewer,
-      selected: this.state.selected,
-      onNavigateTo: this._handleNavigateTo,
-      onSelectedChange: this._handleSelectedChange,
-      onViewerChange: this._handleViewerChange,
-      onDeleteYourself: this._handleDeleteYourself,
-      onAction: this._handleAction,
-      onBack: this._handleBack,
-      onForward: this._handleForward,
-      onRehydrate: this.rehydrate,
-    });
+    const scene = React.cloneElement(
+      SCENES[next.scene || current.target.decorator],
+      {
+        current: current.target,
+        data: this.state.data,
+        viewer: this.state.viewer,
+        selected: this.state.selected,
+        onNavigateTo: this._handleNavigateTo,
+        onSelectedChange: this._handleSelectedChange,
+        onViewerChange: this._handleViewerChange,
+        onDeleteYourself: this._handleDeleteYourself,
+        onAction: this._handleAction,
+        onBack: this._handleBack,
+        onForward: this._handleForward,
+        onRehydrate: this.rehydrate,
+        sceneId: current.target.id,
+      }
+    );
 
     let sidebarElement;
     if (this.state.sidebar) {
@@ -601,12 +625,18 @@ export default class ApplicationPage extends React.Component {
 
     return (
       <React.Fragment>
-        <WebsitePrototypeWrapper title={title} description={description} url={url}>
+        <WebsitePrototypeWrapper
+          title={title}
+          description={description}
+          url={url}
+        >
           <ApplicationLayout
             navigation={navigationElement}
             header={headerElement}
             sidebar={sidebarElement}
-            onDismissSidebar={this._handleDismissSidebar}>
+            onDismissSidebar={this._handleDismissSidebar}
+            bodyRef={this._body}
+          >
             {scene}
           </ApplicationLayout>
           <System.GlobalCarousel />

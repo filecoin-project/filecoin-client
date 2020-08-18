@@ -28,6 +28,7 @@ const IconMap = {
   LOCAL_DATA: <SVG.HardDrive height="20px" />,
   PROFILE_PAGE: <SVG.ProfileUser height="20px" />,
   SETTINGS_DEVELOPER: <SVG.SettingsDeveloper height="20px" />,
+  DIRECTORY: <SVG.Directory height="20px" />,
 };
 
 const STYLES_NAVIGATION = css`
@@ -78,6 +79,7 @@ const STYLES_PROFILE = css`
   align-items: center;
   justify-content: flex-start;
   transition: 200ms ease all;
+  cursor: pointer;
 
   :hover {
     color: ${Constants.system.white};
@@ -152,17 +154,34 @@ const STYLES_ICON_ELEMENT = css`
   }
 `;
 
-const Item = ({ data, id, activeIds, level, children, showActive, decorator, onToggleShow, onNavigateTo }) => {
+const Item = ({
+  data,
+  id,
+  activeIds,
+  level,
+  children,
+  showActive,
+  decorator,
+  onToggleShow,
+  onNavigateTo,
+}) => {
   return (
-    <span css={STYLES_NAVIGATION_ITEM} style={{ padding: `0 0 0 ${level * 16}px` }}>
+    <span
+      css={STYLES_NAVIGATION_ITEM}
+      style={{ padding: `0 0 0 ${level * 16}px` }}
+    >
       <span css={STYLES_EXPANDER} onClick={onToggleShow ? onToggleShow : null}>
         <span
           css={STYLES_ICON_ELEMENT}
           style={{
             color: activeIds[id] ? Constants.system.brand : null,
-          }}>
+          }}
+        >
           {onToggleShow ? (
-            <SVG.ExpandArrow height="8px" style={showActive ? { transform: `rotate(90deg)` } : null} />
+            <SVG.ExpandArrow
+              height="8px"
+              style={showActive ? { transform: `rotate(90deg)` } : null}
+            />
           ) : null}
         </span>
       </span>
@@ -171,7 +190,8 @@ const Item = ({ data, id, activeIds, level, children, showActive, decorator, onT
           css={STYLES_ICON_ELEMENT}
           style={{
             color: activeIds[id] ? Constants.system.brand : null,
-          }}>
+          }}
+        >
           {IconMap[decorator]}
         </span>
       </span>
@@ -180,7 +200,8 @@ const Item = ({ data, id, activeIds, level, children, showActive, decorator, onT
         onClick={() => onNavigateTo({ id }, data)}
         style={{
           color: activeIds[id] ? Constants.system.brand : null,
-        }}>
+        }}
+      >
         {children}
       </span>
     </span>
@@ -197,7 +218,17 @@ class NodeReference extends React.Component {
   };
 
   render() {
-    const { id, activeId, activeIds, level, children, treeChildren, decorator, onNavigateTo, data } = this.props;
+    const {
+      id,
+      activeId,
+      activeIds,
+      level,
+      children,
+      treeChildren,
+      decorator,
+      onNavigateTo,
+      data,
+    } = this.props;
     const { showTreeChildren } = this.state;
 
     let showActive = showTreeChildren || activeIds[id];
@@ -215,7 +246,10 @@ class NodeReference extends React.Component {
           treeChildren={treeChildren}
           onNavigateTo={onNavigateTo}
           decorator={decorator}
-          onToggleShow={treeChildren && treeChildren.length ? this._handleToggleShow : null}>
+          onToggleShow={
+            treeChildren && treeChildren.length ? this._handleToggleShow : null
+          }
+        >
           {children}
         </Item>
 
@@ -239,7 +273,8 @@ class NodeReference extends React.Component {
                   onNavigateTo={onNavigateTo}
                   level={level + 1}
                   treeChildren={child.children}
-                  decorator={child.decorator}>
+                  decorator={child.decorator}
+                >
                   {child.name}
                 </NodeReference>
               );
@@ -261,7 +296,21 @@ export default class ApplicationNavigation extends React.Component {
             onSignOut={this.props.onSignOut}
           />
 
-          <a css={STYLES_PROFILE} style={{ marginLeft: 16 }} href={`/${this.props.viewer.username}`} target="_blank">
+          <div
+            css={STYLES_PROFILE}
+            style={{ marginLeft: 16 }}
+            onClick={() => {
+              this.props.onAction({
+                type: "NAVIGATE",
+                value: 20,
+                data: {
+                  data: this.props.viewer.data,
+                  slates: this.props.viewer.slates,
+                  username: this.props.viewer.username,
+                },
+              });
+            }}
+          >
             <span
               css={STYLES_PROFILE_IMAGE}
               style={{
@@ -269,7 +318,7 @@ export default class ApplicationNavigation extends React.Component {
               }}
             />
             {this.props.viewer.username}
-          </a>
+          </div>
         </div>
         {this.props.navigation.map((each) => {
           if (!each) {
@@ -290,7 +339,8 @@ export default class ApplicationNavigation extends React.Component {
               onNavigateTo={this.props.onNavigateTo}
               level={0}
               treeChildren={each.children}
-              decorator={each.decorator}>
+              decorator={each.decorator}
+            >
               {each.name}
             </NodeReference>
           );

@@ -23,6 +23,7 @@ export default class Slate extends React.Component {
         {this.props.items.map((each, index) => {
           return (
             <SlateMediaObjectPreview
+              style={this.props.itemStyle}
               key={each.id}
               type={each.type}
               onClick={() => this.props.onSelect(index)}

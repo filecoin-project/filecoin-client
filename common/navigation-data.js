@@ -59,6 +59,13 @@ export const generate = ({ library = [], slates = [] }) => [
     children: null,
   },
   {
+    id: 19,
+    name: "Directory",
+    pageTitle: "Your peers",
+    decorator: "DIRECTORY",
+    children: null,
+  },
+  {
     id: 18,
     name: "Activity",
     pageTitle: "Your activity",
@@ -131,6 +138,14 @@ export const generate = ({ library = [], slates = [] }) => [
     name: "Filecoin Settings",
     pageTitle: "Filecoin Settings.",
     decorator: "SETTINGS",
+    children: null,
+    ignore: true,
+  },
+  {
+    id: 20,
+    name: "Profile",
+    pageTitle: "Profile",
+    decorator: "PROFILE",
     children: null,
     ignore: true,
   },

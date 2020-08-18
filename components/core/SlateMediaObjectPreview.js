@@ -36,7 +36,7 @@ export default class SlateMediaObjectPreview extends React.Component {
   render() {
     if (this.props.type && this.props.type.startsWith("video/")) {
       return (
-        <span css={STYLES_ITEM}>
+        <span css={STYLES_ITEM} style={this.props.style}>
           <div css={STYLES_PDF} onClick={this.props.onClick}>
             Video
           </div>
@@ -46,7 +46,7 @@ export default class SlateMediaObjectPreview extends React.Component {
 
     if (this.props.type && this.props.type.startsWith("audio/")) {
       return (
-        <span css={STYLES_ITEM}>
+        <span css={STYLES_ITEM} style={this.props.style}>
           <div css={STYLES_PDF} onClick={this.props.onClick}>
             Audio
           </div>
@@ -56,7 +56,7 @@ export default class SlateMediaObjectPreview extends React.Component {
 
     if (this.props.type && this.props.type.startsWith("application/epub")) {
       return (
-        <span css={STYLES_ITEM}>
+        <span css={STYLES_ITEM} style={this.props.style}>
           <div css={STYLES_PDF} onClick={this.props.onClick}>
             EPub
           </div>
@@ -66,7 +66,7 @@ export default class SlateMediaObjectPreview extends React.Component {
 
     if (this.props.type && this.props.type.startsWith("application/pdf")) {
       return (
-        <span css={STYLES_ITEM}>
+        <span css={STYLES_ITEM} style={this.props.style}>
           <div css={STYLES_PDF} onClick={this.props.onClick}>
             PDF
           </div>
@@ -75,8 +75,12 @@ export default class SlateMediaObjectPreview extends React.Component {
     }
 
     return (
-      <span css={STYLES_ITEM}>
-        <img css={STYLES_IMAGE} src={this.props.url} onClick={this.props.onClick} />
+      <span css={STYLES_ITEM} style={this.props.style}>
+        <img
+          css={STYLES_IMAGE}
+          src={this.props.url}
+          onClick={this.props.onClick}
+        />
       </span>
     );
   }
