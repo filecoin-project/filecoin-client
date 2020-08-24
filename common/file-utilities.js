@@ -1,4 +1,5 @@
-export const upload = async ({ file, slate, context }) => {
+
+export const upload = async ({ file, slate, context, type = "lazy"/** type can be lazy(default) or parallel */ }) => {
   let formData = new FormData();
   const HEIC2ANY = require("heic2any");
 
@@ -66,7 +67,11 @@ export const upload = async ({ file, slate, context }) => {
       XHR.send(formData);
     });
 
-  const json = await _privateUploadMethod(`/api/data/${file.name}`);
+  const json = await _privateUploadMethod(
+    type === "lazy"
+      ? `/api/data/${file.name}`
+      : `/api/data/parallel/${file.name}`
+  );
   if (!json || json.error || !json.data) {
     if (context) {
       context.setState({

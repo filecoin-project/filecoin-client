@@ -107,6 +107,20 @@ export default class ApplicationPage extends React.Component {
     return await FileUtilities.upload({ file, slate, context: this });
   };
 
+  _handleParallelUpload = async ({ files, slate }) => {
+    await Promise.all(
+      files.map(
+        async (file) =>
+          await FileUtilities.upload({
+            file,
+            slate,
+            context: this,
+            type: "parallel",
+          })
+      )
+    );
+  };
+
   _handleRegisterFileLoading = ({ fileLoading }) => {
     return this.setState({
       fileLoading,
@@ -196,10 +210,8 @@ export default class ApplicationPage extends React.Component {
     // NOTE(jim): Stages each file.
     this._handleRegisterFileLoading({ fileLoading });
 
-    // NOTE(jim): Uploads each file.
-    for (let i = 0; i < files.length; i++) {
-      await this._handleUploadFile({ file: files[i], slate });
-    }
+    // NOTE(aminejvm): Uploads all files at once.
+    await this._handleParallelUpload({files, slate})
 
     // NOTE(jim): Rehydrates user.
     await this.rehydrate({ resetFiles: true });

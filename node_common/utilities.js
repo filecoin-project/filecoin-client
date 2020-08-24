@@ -9,6 +9,7 @@ import BCrypt from "bcrypt";
 import { Buckets, PrivateKey } from "@textile/hub";
 import { ffsOptions } from "@textile/powergate-client";
 
+
 const BUCKET_NAME = "data";
 
 const TEXTILE_KEY_INFO = {
@@ -162,5 +163,26 @@ export const updateStateData = async (state, newState) => {
   return {
     ...state,
     ...newState,
+  };
+};
+
+export const createQueue = () => {
+  let queue = [];
+  return {
+    get isEmpty() {
+      return queue.length === 0;
+    },
+    get head() {
+      return queue.length === 0 ? false : queue[0];
+    },
+    queue(val) {
+      return queue.push(val);
+    },
+    dequeue() {
+      return queue.shift();
+    },
+    toList() {
+      return queue;
+    },
   };
 };
