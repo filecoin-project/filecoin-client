@@ -1,47 +1,43 @@
 import * as React from "react";
-import * as NavigationData from "~/common/navigation-data";
+import Cookies from "universal-cookie";
 import * as Actions from "~/common/actions";
-import * as State from "~/common/state";
 import * as Credentials from "~/common/credentials";
+import * as FileUtilities from "~/common/file-utilites-experiment";
+import * as NavigationData from "~/common/navigation-data";
 import * as Validations from "~/common/validations";
-import * as FileUtilities from "~/common/file-utilities";
-import * as System from "~/components/system";
-
+import ApplicationHeader from "~/components/core/ApplicationHeader";
+import ApplicationLayout from "~/components/core/ApplicationLayout";
 // NOTE(jim):
-// Scenes each have an ID and can be navigated to with _handleAction
-import SceneDeals from "~/scenes/SceneDeals";
-import SceneEditAccount from "~/scenes/SceneEditAccount";
-import SceneFile from "~/scenes/SceneFile";
-import SceneFilesFolder from "~/scenes/SceneFilesFolder";
-import SceneHome from "~/scenes/SceneHome";
-import SceneSettings from "~/scenes/SceneSettings";
-import SceneWallet from "~/scenes/SceneWallet";
-import SceneSlates from "~/scenes/SceneSlates";
-import SceneLocalData from "~/scenes/SceneLocalData";
-import SceneSettingsDeveloper from "~/scenes/SceneSettingsDeveloper";
-import SceneSignIn from "~/scenes/SceneSignIn";
-import SceneSlate from "~/scenes/SceneSlate";
-import SceneActivity from "~/scenes/SceneActivity";
-import SceneDirectory from "~/scenes/SceneDirectory";
-
+// Core components to the application structure.
+import ApplicationNavigation from "~/components/core/ApplicationNavigation";
+import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
+import SidebarAddFileToBucket from "~/components/sidebars/SidebarAddFileToBucket";
 // NOTE(jim):
 // Sidebars each have a decorator and can be shown to with _handleAction
 import SidebarCreateSlate from "~/components/sidebars/SidebarCreateSlate";
 import SidebarCreateWalletAddress from "~/components/sidebars/SidebarCreateWalletAddress";
-import SidebarWalletSendFunds from "~/components/sidebars/SidebarWalletSendFunds";
-import SidebarFileStorageDeal from "~/components/sidebars/SidebarFileStorageDeal";
-import SidebarAddFileToBucket from "~/components/sidebars/SidebarAddFileToBucket";
 import SidebarDragDropNotice from "~/components/sidebars/SidebarDragDropNotice";
-import SidebarSingleSlateSettings from "~/components/sidebars/SidebarSingleSlateSettings";
 import SidebarFilecoinArchive from "~/components/sidebars/SidebarFilecoinArchive";
-
+import SidebarFileStorageDeal from "~/components/sidebars/SidebarFileStorageDeal";
+import SidebarSingleSlateSettings from "~/components/sidebars/SidebarSingleSlateSettings";
+import SidebarWalletSendFunds from "~/components/sidebars/SidebarWalletSendFunds";
+import * as System from "~/components/system";
+import SceneActivity from "~/scenes/SceneActivity";
 // NOTE(jim):
-// Core components to the application structure.
-import ApplicationNavigation from "~/components/core/ApplicationNavigation";
-import ApplicationHeader from "~/components/core/ApplicationHeader";
-import ApplicationLayout from "~/components/core/ApplicationLayout";
-import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
-import Cookies from "universal-cookie";
+// Scenes each have an ID and can be navigated to with _handleAction
+import SceneDeals from "~/scenes/SceneDeals";
+import SceneDirectory from "~/scenes/SceneDirectory";
+import SceneEditAccount from "~/scenes/SceneEditAccount";
+import SceneFile from "~/scenes/SceneFile";
+import SceneFilesFolder from "~/scenes/SceneFilesFolder";
+import SceneHome from "~/scenes/SceneHome";
+import SceneLocalData from "~/scenes/SceneLocalData";
+import SceneSettings from "~/scenes/SceneSettings";
+import SceneSettingsDeveloper from "~/scenes/SceneSettingsDeveloper";
+import SceneSignIn from "~/scenes/SceneSignIn";
+import SceneSlate from "~/scenes/SceneSlate";
+import SceneSlates from "~/scenes/SceneSlates";
+import SceneWallet from "~/scenes/SceneWallet";
 
 const cookies = new Cookies();
 
@@ -105,8 +101,48 @@ export default class ApplicationPage extends React.Component {
     this.setState({ online: navigator.onLine });
   };
 
+  // Will be updated on _handleUploadFile
+  _handleUploadPause = () => {};
+
   _handleUploadFile = async ({ file, slate }) => {
-    return await FileUtilities.upload({ file, slate, context: this });
+    const UploadController = new FileUtilities.Uploader({
+      file,
+      slate,
+      onTogglePause: (nextPause) =>
+        this.setState({
+          fileLoading: {
+            ...this.state.fileLoading,
+            [`${file.lastModified}-${file.name}`]: {
+              ...this.state.fileLoading[`${file.lastModified}-${file.name}`],
+              paused: nextPause,
+            },
+          },
+        }),
+      onProgress: (progress) =>
+        this.setState({
+          fileLoading: {
+            ...this.state.fileLoading,
+            [`${file.lastModified}-${file.name}`]: {
+              ...this.state.fileLoading[`${file.lastModified}-${file.name}`],
+              name: file.name,
+              loaded: (progress * file.size) / 100,
+              total: file.size,
+            },
+          },
+        }),
+      onFailure: () =>
+        this.setState({
+          fileLoading: {
+            ...this.state.fileLoading,
+            [`${file.lastModified}-${file.name}`]: {
+              name: file.name,
+              failed: true,
+            },
+          },
+        }),
+    });
+    this._handleUploadPause = UploadController.togglePause;
+    return await UploadController.upload();
   };
 
   _handleRegisterFileLoading = ({ fileLoading }) => {
@@ -122,11 +158,7 @@ export default class ApplicationPage extends React.Component {
     }
 
     // NOTE(jim): Only allow the sidebar to show with file drag and drop.
-    if (
-      e.dataTransfer.items &&
-      e.dataTransfer.items.length &&
-      e.dataTransfer.items[0].kind !== "file"
-    ) {
+    if (e.dataTransfer.items && e.dataTransfer.items.length && e.dataTransfer.items[0].kind !== "file") {
       return;
     }
 
@@ -279,8 +311,7 @@ export default class ApplicationPage extends React.Component {
   _handleDeleteYourself = async () => {
     // TODO(jim):
     // Put this somewhere better for messages.
-    const message =
-      "Do you really want to delete your account? It will be permanently removed";
+    const message = "Do you really want to delete your account? It will be permanently removed";
     if (!window.confirm(message)) {
       return false;
     }
@@ -455,10 +486,7 @@ export default class ApplicationPage extends React.Component {
           description="Sign in to your Slate account to manage your assets."
           url="https://slate.host/_"
         >
-          <SceneSignIn
-            onAuthenticate={this._handleAuthenticate}
-            onNavigateTo={this._handleNavigateTo}
-          />
+          <SceneSignIn onAuthenticate={this._handleAuthenticate} onNavigateTo={this._handleNavigateTo} />
         </WebsitePrototypeWrapper>
       );
     }
@@ -520,6 +548,7 @@ export default class ApplicationPage extends React.Component {
         onCancel: this._handleCancel,
         onRegisterFileLoading: this._handleRegisterFileLoading,
         onUploadFile: this._handleUploadFile,
+        onUploadPause: this._handleUploadPause,
         onSidebarLoading: this._handleSidebarLoading,
         onAction: this._handleAction,
         onRehydrate: this.rehydrate,
@@ -532,11 +561,7 @@ export default class ApplicationPage extends React.Component {
 
     return (
       <React.Fragment>
-        <WebsitePrototypeWrapper
-          description={description}
-          title={title}
-          url={url}
-        >
+        <WebsitePrototypeWrapper description={description} title={title} url={url}>
           <ApplicationLayout
             header={headerElement}
             navigation={navigationElement}
