@@ -39,6 +39,9 @@ import SceneSlate from "~/scenes/SceneSlate";
 import SceneSlates from "~/scenes/SceneSlates";
 import SceneWallet from "~/scenes/SceneWallet";
 
+
+
+
 const cookies = new Cookies();
 
 const SIDEBARS = {
