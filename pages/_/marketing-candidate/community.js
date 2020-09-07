@@ -194,7 +194,6 @@ const STYLES_CARD_GITHUB = css`
 
 const STYLES_CARD_TEXT = css`
   padding: 20px 5px;
-  color: ${Constants.system.pitchBlack};
 `;
 
 const STYLES_CARD_WRAPPER = css`
@@ -205,7 +204,24 @@ const STYLES_CARD_WRAPPER = css`
     width: 50%;
   }
 `;
-
+const STYLES_SLATE_CARD_EFFECTS = css`
+  border-radius: 4px;
+  height: 100%;
+  cursor: default;
+  background-image: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/13471/sparkles.gif");
+  background-position: center;
+  z-index: 2;
+  :hover {
+    background-image: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/13471/sparkles.gif");
+    background-position: center;
+    background-size: 180%;
+    mix-blend-mode: color-dodge;
+    opacity: 1;
+    z-index: 2;
+  }
+  :after {
+  }
+`;
 export const getServerSideProps = async context => {
   return {
     props: { ...context.query }
@@ -251,22 +267,24 @@ export default class CommunityPage extends React.Component {
             <div css={STYLES_CARD_GROUP}>
               <div css={STYLES_CARD_WRAPPER}>
                 <a href="https://github.com/jasonleyser">
-                  <System.HoverTile
+                  <System.HoverTileColorful
                     height={300}
                     width={200}
                     style={{ padding: 8 }}
                   >
-                    <img
-                      css={STYLES_IMG}
-                      alt="Github Profile Photo for Jason Leyser"
-                      src="https://bafkreie3dvujhpil4tgv2qx2lng5bfeif7reyybmgaftub6n4wxx4vnbly.ipfs.slate.textile.io"
-                    />
+                    <div css={STYLES_SLATE_CARD_EFFECTS}>
+                      <img
+                        css={STYLES_IMG}
+                        alt="Github Profile Photo for Jason Leyser"
+                        src="https://bafkreie3dvujhpil4tgv2qx2lng5bfeif7reyybmgaftub6n4wxx4vnbly.ipfs.slate.textile.io"
+                      />
 
-                    <div css={STYLES_CARD_TEXT}>
-                      <p css={STYLES_CARD_NAME}>Jason Leyser</p>
-                      <p css={STYLES_CARD_GITHUB}>@jasonleyser</p>
+                      <div css={STYLES_CARD_TEXT}>
+                        <p css={STYLES_CARD_NAME}>Jason Leyser</p>
+                        <p css={STYLES_CARD_GITHUB}>@jasonleyser</p>
+                      </div>
                     </div>
-                  </System.HoverTile>
+                  </System.HoverTileColorful>
                 </a>
               </div>
               <div css={STYLES_CARD_WRAPPER}>

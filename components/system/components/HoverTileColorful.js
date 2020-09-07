@@ -23,9 +23,10 @@ const STYLES_TILE_CONTAINER = css`
   display: inline-block;
 `;
 
-export class HoverTile extends React.Component {
+export class HoverTileColorful extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
       tileStyle: {}
     };
