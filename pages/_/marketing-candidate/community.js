@@ -160,12 +160,19 @@ const STYLES_SECTION_CHILD_SPLIT = css`
   padding: 50px;
   width: 50%;
   @media (max-width: ${Constants.sizes.tablet}px) {
-    width: 100%;
+    width: 50%;
     padding: 20px;
   }
   @media (max-width: ${Constants.sizes.mobile}px) {
     width: 100%;
     padding: 20px;
+<<<<<<< HEAD
+  }
+  @media (max-width: ${Constants.sizes.mobile}px) {
+    width: 100%;
+    padding: 20px;
+=======
+>>>>>>> basic pokemon card working
   }
 `;
 const STYLES_CARD_NAME = css`
@@ -187,8 +194,14 @@ const STYLES_CARD_GITHUB = css`
 const STYLES_CARD_TEXT = css`
   padding: 20px 5px;
   color: ${Constants.system.pitchBlack};
+<<<<<<< HEAD
   :hover {
   }
+=======
+  bckground-color: ${Constants.system.white};
+  color: ${Constants.system.white};
+
+>>>>>>> basic pokemon card working
   @media (max-width: ${Constants.sizes.mobile}px) {
   }
 `;
@@ -199,15 +212,49 @@ const STYLES_CARD_WRAPPER = css`
   border-radius: 4px;
   margin: 20px 40px;
   @media (max-width: ${Constants.sizes.tablet}px) {
+<<<<<<< HEAD
     width: 100%;
     padding: 20px;
   }
   @media (max-width: ${Constants.sizes.mobile}px) {
     width: 100%;
+=======
+    padding: 20px;
+    width: 150px;
+  }
+  @media (max-width: ${Constants.sizes.mobile}px) {
+    width: 150px;
+>>>>>>> basic pokemon card working
     padding: 20px;
   }
 `;
 
+<<<<<<< HEAD
+=======
+const STYLES_SLATE_CARD_EFFECTS = css`
+  border-radius: 4px;
+  height: 100%;
+  cursor: default;
+  background-image: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/13471/sparkles.gif");
+  background-position: center;
+  z-index: 2;
+  :hover {
+    cursor: none;
+    border-radius: 4px;
+    height: 100%;
+    width: auto;
+    background-image: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/13471/sparkles.gif");
+    background-position: center;
+    background-size: 180%;
+    mix-blend-mode: color-dodge;
+    opacity: 1;
+    z-index: 2;
+  }
+  :after {
+  }
+`;
+
+>>>>>>> basic pokemon card working
 export const getServerSideProps = async context => {
   return {
     props: { ...context.query }
@@ -256,6 +303,7 @@ export default class CommunityPage extends React.Component {
                     width={200}
                     style={{ padding: 10 }}
                   >
+<<<<<<< HEAD
                     <div>
                       <img
                         css={STYLES_IMG}
@@ -266,6 +314,20 @@ export default class CommunityPage extends React.Component {
                     <div css={STYLES_CARD_TEXT}>
                       <p css={STYLES_CARD_NAME}>Jason Leyser</p>
                       <p css={STYLES_CARD_GITHUB}>@jasonleyser</p>
+=======
+                    <div css={STYLES_SLATE_CARD_EFFECTS}>
+                      <div>
+                        <img
+                          css={STYLES_IMG}
+                          alt="Github Profile Photo for Jason Leyser"
+                          src="https://bafkreie3dvujhpil4tgv2qx2lng5bfeif7reyybmgaftub6n4wxx4vnbly.ipfs.slate.textile.io"
+                        />
+                      </div>
+                      <div css={STYLES_CARD_TEXT}>
+                        <p css={STYLES_CARD_NAME}>Jason Leyser</p>
+                        <p css={STYLES_CARD_GITHUB}>@jasonleyser</p>
+                      </div>
+>>>>>>> basic pokemon card working
                     </div>
                   </System.HoverTile>
                 </a>
