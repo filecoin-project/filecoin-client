@@ -26,7 +26,6 @@ const STYLES_TILE_CONTAINER = css`
 export class HoverTile extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
       tileStyle: {}
     };
