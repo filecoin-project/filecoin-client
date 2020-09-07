@@ -12,7 +12,8 @@ const STYLES_TILE = css`
   transform-style: preserve-3d;
   z-index: -1;
   border-radius: 10px;
-  background-image: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
+  overflow: hidden;
+  background-color: white;
 `;
 
 const STYLES_TILE_CONTAINER = css`
@@ -63,8 +64,6 @@ export class HoverTile extends React.Component {
     this.setState({
       tileStyle: {
         transform: `scale(.97) rotateY(${x}deg) rotateX(${y * -1}deg)`,
-        background: `linear-gradient(${x}deg, rgba(${x *
-          -5},238,238,1) 0%, rgba(148,${x * -20},233,1) 100%)`,
         boxShadow: `${x * -1 * 0.75}px ${y *
           -1 *
           1.2}px 25px rgba(0, 0, 0, .15)`
