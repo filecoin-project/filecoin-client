@@ -39,7 +39,16 @@ export default async (req, res) => {
   await Data.deleteSlatesForUserId({ userId: user.id });
 
   const i = await PrivateKey.fromString(user.data.tokens.api);
-  const b = await Buckets.withKeyInfo(TEXTILE_KEY_INFO);
+
+  let b;
+  if (!Strings.isEmpty(Environment.TEXTILE_HUB_STAGING_HOST)) {
+    b = await Buckets.withKeyInfo(TEXTILE_KEY_INFO, {
+      host: Environment.TEXTILE_HUB_STAGING_HOST,
+    });
+  } else {
+    b = await Buckets.withKeyInfo(TEXTILE_KEY_INFO);
+  }
+
   const tokenResponse = await b.getToken(i);
   const openResponse = await b.getOrInit("data");
 

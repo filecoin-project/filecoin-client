@@ -82,7 +82,18 @@ export const parseAuthHeader = (value) => {
 // NOTE(jim): Requires @textile/hub
 export const getBucketAPIFromUserToken = async (token) => {
   const identity = await PrivateKey.fromString(token);
-  const buckets = await Buckets.withKeyInfo(TEXTILE_KEY_INFO);
+
+  // NOTE(jim): If the staging variable is present, use a different host.
+  // You will be on a separate network.
+  let buckets;
+  if (!Strings.isEmpty(Environment.TEXTILE_HUB_STAGING_HOST)) {
+    buckets = await Buckets.withKeyInfo(TEXTILE_KEY_INFO, {
+      host: Environment.TEXTILE_HUB_STAGING_HOST,
+    });
+  } else {
+    buckets = await Buckets.withKeyInfo(TEXTILE_KEY_INFO);
+  }
+
   await buckets.getToken(identity);
   const target = await buckets.getOrInit(BUCKET_NAME);
 
