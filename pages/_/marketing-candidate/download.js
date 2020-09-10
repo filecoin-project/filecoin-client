@@ -22,8 +22,6 @@ const STYLES_H1 = css`
   letter-spacing: -0.021rem;
   width: 100%;
   color: ${Constants.system.slate};
-  font-weight: 800;
-
   @media (max-width: ${Constants.sizes.tablet}px) {
     font-size: ${Constants.typescale.lvl5};
     padding: 0px 0px 16px 0px;
@@ -54,7 +52,8 @@ const STYLES_TEXT_BLOCK = css`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  width: 56vw;
+  max-width: 56vw;
+  width: 100%;
   align-self: center;
 
   @media (max-width: ${Constants.sizes.mobile}px) {
