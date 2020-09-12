@@ -15,22 +15,22 @@ const randomDate = (start, end) => {
   return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
 }
 
-let data = [
-  { id: 1, date: randomDate(new Date(2018, 0, 1), new Date()), category: "1", value: getRandomInt(1000) },
-  { id: 2, date: randomDate(new Date(2018, 0, 1), new Date()), category: "1", value: getRandomInt(1000) },
-  { id: 4, date: randomDate(new Date(2018, 0, 1), new Date()), category: "1", value: getRandomInt(1000) },
-  { id: 3, date: randomDate(new Date(2018, 0, 1), new Date()), category: "1", value: getRandomInt(1000) },
-  { id: 5, date: randomDate(new Date(2018, 0, 1), new Date()), category: "1", value: getRandomInt(1000) },
-  { id: 6, date: randomDate(new Date(2018, 0, 1), new Date()), category: "1", value: getRandomInt(1000) },
-  { id: 7, date: randomDate(new Date(2018, 0, 1), new Date()), category: "2", value: getRandomInt(1000) },
-  { id: 8, date: randomDate(new Date(2018, 0, 1), new Date()), category: "2", value: getRandomInt(1000) },
-  { id: 9, date: randomDate(new Date(2018, 0, 1), new Date()), category: "2", value: getRandomInt(1000) },
-  { id: 10, date: randomDate(new Date(2018, 0, 1), new Date()), category: "2", value: getRandomInt(1000) },
-  { id: 11, date: randomDate(new Date(2018, 0, 1), new Date()), category: "3", value: getRandomInt(1000) },
-  { id: 12, date: randomDate(new Date(2018, 0, 1), new Date()), category: "3", value: getRandomInt(1000) },
-  { id: 13, date: randomDate(new Date(2018, 0, 1), new Date()), category: "3", value: getRandomInt(1000) },
-  { id: 14, date: randomDate(new Date(2018, 0, 1), new Date()), category: "3", value: getRandomInt(1000) },
-];
+  let data = [
+    { id: 1, date: randomDate(new Date(2018, 0, 1), new Date()), category: "1", value: getRandomInt(1000) },
+    { id: 2, date: randomDate(new Date(2018, 0, 1), new Date()), category: "1", value: getRandomInt(1000) },
+    { id: 4, date: randomDate(new Date(2018, 0, 1), new Date()), category: "1", value: getRandomInt(1000) },
+    { id: 3, date: randomDate(new Date(2018, 0, 1), new Date()), category: "1", value: getRandomInt(1000) },
+    { id: 5, date: randomDate(new Date(2018, 0, 1), new Date()), category: "1", value: getRandomInt(1000) },
+    { id: 6, date: randomDate(new Date(2018, 0, 1), new Date()), category: "1", value: getRandomInt(1000) },
+    { id: 7, date: randomDate(new Date(2018, 0, 1), new Date()), category: "2", value: getRandomInt(1000) },
+    { id: 8, date: randomDate(new Date(2018, 0, 1), new Date()), category: "2", value: getRandomInt(1000) },
+    { id: 9, date: randomDate(new Date(2018, 0, 1), new Date()), category: "2", value: getRandomInt(1000) },
+    { id: 10, date: randomDate(new Date(2018, 0, 1), new Date()), category: "2", value: getRandomInt(1000) },
+    { id: 11, date: randomDate(new Date(2018, 0, 1), new Date()), category: "3", value: getRandomInt(1000) },
+    { id: 12, date: randomDate(new Date(2018, 0, 1), new Date()), category: "3", value: getRandomInt(1000) },
+    { id: 13, date: randomDate(new Date(2018, 0, 1), new Date()), category: "3", value: getRandomInt(1000) },
+    { id: 14, date: randomDate(new Date(2018, 0, 1), new Date()), category: "3", value: getRandomInt(1000) },
+  ];  
 
 // Use this to determine how many tick marks to be written on X axis
 const tickNumber = 4;
@@ -40,6 +40,9 @@ const yCeiling = 400;
 
 //Use this to choose how much of the chart is filled horizontally displayMax = 550
 const xWall = 500;
+
+//Use this to choose how much of the chart is filled horizontally displayMax = 550
+const gridLines = 10;
 
 import { css } from "@emotion/react";
 
@@ -437,6 +440,7 @@ export default class StatsPage extends React.Component {
         <Section title="Node">
           <Chart
             data={data}
+            gridLines={gridLines}
             maxTicks={tickNumber}
             yCeiling={yCeiling}
             xWall={xWall}
