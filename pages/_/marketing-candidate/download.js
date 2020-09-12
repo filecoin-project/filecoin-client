@@ -220,14 +220,8 @@ export default class IndexPage extends React.Component {
             <div css={STYLES_BLOCK}>
               <h1 css={STYLES_H1}>Slate Chrome Extensions</h1>
               <h3 css={STYLES_H3}>Take any image on the web and save it to Slate right from your browser tab.</h3>
-
-              <a
-                css={STYLES_LINK}
-                src="/"
-                href="/public/static/slate-for-chrome-V0.4.zip"
-                download="Slate Chrome extension V0.4"
-              >
-                <button css={STYLES_BUTTON_PRIMARY}>Get Slate extension</button>
+              <a src="/">
+                <button css={STYLES_BUTTON_PRIMARY}>Get Chrome extension</button>
               </a>
               <p css={STYLES_ANNOTATION}>
                 Currently avaible for{" "}
