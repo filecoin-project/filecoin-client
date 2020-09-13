@@ -164,8 +164,8 @@ export default class SidebarAddFileToBucket extends React.Component {
     if (this.props.fileLoading) {
       for (let file of Object.values(this.props.fileLoading)) {
         if (typeof file.loaded === "number" && typeof file.total === "number") {
-          total += file.total;
-          loaded += file.loaded;
+          total += curr.total;
+          loaded += curr.loaded;
         }
       }
     }

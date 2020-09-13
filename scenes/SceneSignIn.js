@@ -255,6 +255,17 @@ export default class SceneSignIn extends React.Component {
       return;
     }
 
+    if (response.error) {
+      dispatchCustomEvent({
+        name: "create-alert",
+        detail: {
+          alert: {
+            decorator: response.decorator,
+          },
+        },
+      });
+    }
+
     if (response.data) {
       //NOTE(martina): username taken
       this.setState({ usernameTaken: true });
