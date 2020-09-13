@@ -1,11 +1,7 @@
 import * as React from "react";
 import * as Constants from "~/common/constants";
-import ReactDOM from "react-dom";
 
 import { css } from "@emotion/react";
-
-import CreateChart from "~/components/stats/CreateChart";
-
 
 const STYLES_GRAPH_CONTAINER = css`
   display: flex;
@@ -54,6 +50,7 @@ export default class Chart extends React.Component {
     xLabel: {},
     yLabel: {},
     organizedData: [],
+    circles: [],
   };
 
   componentDidMount() {
@@ -66,13 +63,6 @@ export default class Chart extends React.Component {
     this.sepCategories();
     this.getTicks();
 
-  }
-
-  componentDidUpdate() {
-   // this.createGrid();
-    this.createLines();
-    this.createCircles();
-    this.createTicks();
   }
 
   //Reference used by createTicks to display shorter month names
@@ -291,51 +281,6 @@ export default class Chart extends React.Component {
     return null;
   } */
 
-  createCircles = () => {
-    const organizedData = this.state.organizedData;
-    let oData = organizedData.flat(2);
-    let allCircles = oData.map((g, index) => {
-      return (
-        <circle key={index} cx={g.x} cy={g.y} r="2" css={STYLES_CHART_CIRCLE} />
-      );
-    });
-    ReactDOM.render(allCircles, document.getElementById("circles"));
-  };
-
-  createLines = () => {
-    const organizedData = this.state.organizedData;
-
-    if (organizedData.length) {
-      let allLines = [];
-      for (let groups of organizedData) {
-        for (let group of groups) {
-          let polyLines = this.loopData(group);
-          allLines.push(polyLines);
-        }
-
-        ReactDOM.render(allLines, document.getElementById("lines"));
-      }
-    }
-  };
-
-  loopData = (g) => {
-    let coordinates = [];
-    let i = {};
-    g.map((o, index) => {
-      coordinates.push(o.x);
-      coordinates.push(o.y);
-      i[`id`] = o.id;
-    });
-    let polyLine = (
-      <polyline
-        css={STYLES_CHART_LINE}
-        key={i.id}
-        points={this.drawPoints(coordinates)}
-      />
-    );
-    return polyLine;
-  };
-
   drawPoints = (a) => {
     const c = a.toString();
     const regex = /([0-9]+),\s([0-9]+),\s/g;
@@ -343,28 +288,6 @@ export default class Chart extends React.Component {
     return cOrganized;
   };
 
-  createTicks = () => {
-    const ticks = this.state.ticks;
-    const fTicks = ticks.flat(1);
-    const tickLines = [];
-
-    for (let tick of fTicks) {
-      const tDate = new Date(tick.date);
-      const month = this.monthNames[tDate.getMonth()];
-      const year = tDate.getUTCFullYear();
-
-      let tickLine = (
-        <g>
-          <line css={STYLES_X_LINE} x1={tick.x} y1="550" x2={tick.x} y2="560" />
-          <text css={STYLES_CHART_TEXT} textAnchor="middle" x={tick.x} y="575">
-            {`${month} ${year}`}
-          </text>
-        </g>
-      );
-      tickLines.push(tickLine);
-    }
-    ReactDOM.render(tickLines, document.getElementById("tickContainer"));
-  };
 
 render() {
 
@@ -378,11 +301,47 @@ render() {
             </linearGradient>
           </defs>
           <g id="circles"></g>
+          {this.state.organizedData.flat(2).map((g, index) => {
+            return (
+              <circle key={index} cx={g.x} cy={g.y} r="2" css={STYLES_CHART_CIRCLE} />
+            );
+          })}
           <g id="lines"></g>
+            {this.state.organizedData.flat().map( lines => {
+              let coordinates = []; 
+              let i = {};
+              for (let line of lines) {
+                  coordinates.push(line.x);
+                  coordinates.push(line.y);
+                  i[`id`] = line.id;
+                };
+              return (
+                <polyline
+                css={STYLES_CHART_LINE}
+                key={i.id}
+                points={this.drawPoints(coordinates)}
+              />
+              )
+              })}
           <g>
             <line css={STYLES_X_LINE} x1="25" y1="550" x2="575" y2="550" />
           </g>
-          <g id="tickContainer"></g>
+          <g id="tickContainer">
+          {this.state.ticks.flat().map((tick, index) => {
+            const tDate = new Date(tick.date);
+            const month = this.monthNames[tDate.getMonth()];
+            const year = tDate.getUTCFullYear();
+
+            return (
+              <g>
+              <line css={STYLES_X_LINE} x1={tick.x} y1="550" x2={tick.x} y2="560" />
+              <text css={STYLES_CHART_TEXT} textAnchor="middle" x={tick.x} y="575">
+                {`${month} ${year}`}
+              </text>
+            </g>
+            )
+          })}
+          </g>
         </svg>
       </div>
     );
