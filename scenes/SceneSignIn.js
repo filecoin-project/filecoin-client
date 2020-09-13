@@ -148,7 +148,7 @@ export default class SceneSignIn extends React.Component {
           alert: {
             message:
               this.state.scene === "CREATE_ACCOUNT"
-                ? "Usernames must between 1-48 characters and consist of only characters and numbers"
+                ? "Only characters and numbers are allowed in usernames"
                 : "Invalid username",
           },
         },
@@ -231,7 +231,7 @@ export default class SceneSignIn extends React.Component {
         detail: {
           alert: {
             message:
-              "Usernames must between 1-48 characters and consist of only characters and numbers",
+              "Your username was invalid. Usernames must between 1-48 characters and consist of only characters and numbers",
           },
         },
       });
@@ -249,18 +249,6 @@ export default class SceneSignIn extends React.Component {
           alert: {
             message:
               "We're having trouble connecting right now. Please try again later.",
-          },
-        },
-      });
-      return;
-    }
-
-    if (response.error) {
-      dispatchCustomEvent({
-        name: "create-alert",
-        detail: {
-          alert: {
-            decorator: response.decorator,
           },
         },
       });
@@ -447,7 +435,7 @@ export default class SceneSignIn extends React.Component {
             onClick={!this.state.loading ? this._handleSubmit : () => {}}
             loading={this.state.loading}
           >
-            Log in
+            Sign in
           </System.ButtonPrimary>
         </div>
         <div css={STYLES_LINKS}>
