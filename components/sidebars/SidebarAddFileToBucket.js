@@ -88,7 +88,9 @@ export default class SidebarAddFileToBucket extends React.Component {
           name: "create-alert",
           detail: {
             alert: {
-              message: `We currently do not accept ${file.type} yet but may in the future!`,
+              message: `We currently do not accept ${
+                file.type
+              } yet but may in the future!`,
             },
           },
         });
