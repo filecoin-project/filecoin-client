@@ -361,19 +361,6 @@ export default class ApplicationPage extends React.Component {
     return response;
   };
 
-  _handleCreateUser = async (state) => {
-    // NOTE(jim): Acts as our existing username exists check.
-    // If the user exists, move on the sign in anyways.
-    let response = await Actions.createUser(state);
-    console.log("CREATE_USER", response);
-
-    if (!response || response.error) {
-      return response;
-    }
-
-    return this._handleAuthenticate(state);
-  };
-
   _handleAuthenticate = async (state) => {
     // NOTE(jim): Kills existing session cookie if there is one.
     const jwt = cookies.get(Credentials.session.key);
