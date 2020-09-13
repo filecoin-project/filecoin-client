@@ -308,6 +308,7 @@ export default class SlateMediaObjectSidebar extends React.Component {
     }
 
     if (this.props.onDelete && this.props.editing) {
+<<<<<<< HEAD
       elements.push(
         <a
           key="sidebar-media-object-preview"
@@ -321,6 +322,8 @@ export default class SlateMediaObjectSidebar extends React.Component {
         </a>
       );
 
+=======
+>>>>>>> separates design for data preview from slate item preview
       elements.push(
         <span
           key="sidebar-media-object-delete"
