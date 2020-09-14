@@ -3,6 +3,7 @@ import * as System from "~/components/system";
 import * as Actions from "~/common/actions";
 import * as Constants from "~/common/constants";
 import * as SVG from "~/common/svg";
+import * as Strings from "~/common/strings";
 import * as Window from "~/common/window";
 
 import { css } from "@emotion/react";
@@ -13,10 +14,7 @@ import ScenePageHeader from "~/components/core/ScenePageHeader";
 import Slate, { generateLayout } from "~/components/core/Slate";
 import SlateMediaObject from "~/components/core/SlateMediaObject";
 import CircleButtonGray from "~/components/core/CircleButtonGray";
-import {
-  ButtonPrimary,
-  ButtonSecondary,
-} from "~/components/system/components/Buttons";
+import EmptyState from "~/components/core/EmptyState";
 
 const STYLES_BUTTON = css`
   color: ${Constants.system.brand};
@@ -25,6 +23,12 @@ const STYLES_BUTTON = css`
   height: 36px;
   display: flex;
   align-items: center;
+  justify-content: center;
+`;
+
+const STYLES_ICONS = css`
+  display: flex;
+  flex-direction: row;
   justify-content: center;
 `;
 
@@ -271,16 +275,7 @@ export default class SceneSlate extends React.Component {
           // NOTE(jim):
           // This is a hack to catch this undefined case I don't want to track down yet.
           const url = each.url.replace("https://undefined", "https://");
-
-          // NOTE(andrew)
-          const cid = url.includes("/ipfs/")
-            ? // pull cid from a path format gateway
-              url.split("/ipfs/")[1]
-            : // pull cid from a subdomain format gateway
-              url.match(
-                // regex here performs https://{cid}.ipfs.slate.textile.io => [https://{cid}, {cid}]
-                /(?:http[s]*\:\/\/)*(.*?)\.(?=[^\/]*\..{2,5})/i
-              )[1];
+          const cid = Strings.getCIDFromIPFS(url);
           const data = { ...each, cid, url };
 
           return {
@@ -297,6 +292,8 @@ export default class SceneSlate extends React.Component {
             id: data.id,
             cid,
             data,
+            username: this.props.viewer.username,
+            slatename: this.props.current.slatename,
             editing: this.state.editing,
             component: <SlateMediaObject key={each.id} data={data} />,
           };
@@ -530,17 +527,34 @@ export default class SceneSlate extends React.Component {
         >
           <ProcessedText text={body} />
         </ScenePageHeader>
-        {layouts ? (
-          <Slate
-            editing={this.state.editing}
-            saving={this.state.saving}
-            items={objects}
-            layouts={layouts}
-            onLayoutChange={this._handleChangeLayout}
-            onLayoutSave={this._handleSaveLayout}
-            onMoveIndex={this._handleMoveIndex}
-            onSelect={this._handleSelect}
-          />
+        {objects && objects.length ? (
+          layouts ? (
+            <Slate
+              editing={this.state.editing}
+              saving={this.state.saving}
+              items={objects}
+              layouts={layouts}
+              onLayoutChange={this._handleChangeLayout}
+              onLayoutSave={this._handleSaveLayout}
+              onMoveIndex={this._handleMoveIndex}
+              onSelect={this._handleSelect}
+            />
+          ) : null
+        ) : this.state.editing ? (
+          <div style={{ padding: "24px" }}>
+            <EmptyState>
+              <div css={STYLES_ICONS}>
+                <SVG.Sound height="24px" style={{ margin: "0 16px" }} />
+                <SVG.Document height="24px" style={{ margin: "0 16px" }} />
+                <SVG.Image height="24px" style={{ margin: "0 16px" }} />
+                <SVG.Book height="24px" style={{ margin: "0 16px" }} />
+                <SVG.Video height="24px" style={{ margin: "0 16px" }} />
+              </div>
+              <div style={{ marginTop: 24 }}>
+                Drag and drop files to add them to this slate
+              </div>
+            </EmptyState>
+          </div>
         ) : null}
       </ScenePage>
     );

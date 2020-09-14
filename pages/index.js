@@ -555,8 +555,7 @@ const SlateCardElement = (props) => {
             background-color: ${Constants.system.pitchBlack};
             background-image: url("${props.preview}");
           }
-        `}
-      >
+        `}>
         <a css={STYLES_SLATE_CARD_PARAGRAPH} href={props.url} target="_blank">
           <div css={STYLES_SLATE_CARD_TEXT}>
             <div css={STYLES_SLATE_CARD_TITLE}>{props.name}</div>
@@ -589,7 +588,10 @@ export default class IndexPage extends React.Component {
     const url = "https://slate.host";
 
     return (
-      <WebsitePrototypeWrapper title={title} description={description} url={url}>
+      <WebsitePrototypeWrapper
+        title={title}
+        description={description}
+        url={url}>
         <WebsitePrototypeHeader />
         <div css={STYLES_ROOT}>
           <div css={STYLES_SECTION_HERO}>
@@ -600,7 +602,9 @@ export default class IndexPage extends React.Component {
               </h1>
 
               <div css={STYLES_ACTIONS_RIGHT}>
-                <div css={STYLES_BUTTON_PRIMARY} onClick={() => window.open("/_")}>
+                <div
+                  css={STYLES_BUTTON_PRIMARY}
+                  onClick={() => window.open("/_")}>
                   Use slate
                 </div>
               </div>
@@ -625,7 +629,10 @@ export default class IndexPage extends React.Component {
                 Slate{" "}
                 <span css={STYLES_HIGHLIGHT}>
                   is a{" "}
-                  <a css={STYLES_LINK} href={"https://github.com/filecoin-project/slate"} target="_blank">
+                  <a
+                    css={STYLES_LINK}
+                    href={"https://github.com/filecoin-project/slate"}
+                    target="_blank">
                     fully open-source
                   </a>{" "}
                   file sharing network designed for research and collaboration.
@@ -642,11 +649,17 @@ export default class IndexPage extends React.Component {
               <h3 css={STYLES_H3}>Powered by</h3>
               <h2 css={STYLES_H2}>
                 <span css={STYLES_HIGHLIGHT}>
-                  <a href="https://textile.io" css={STYLES_LINK} target="_blank">
+                  <a
+                    href="https://textile.io"
+                    css={STYLES_LINK}
+                    target="_blank">
                     Textile
                   </a>{" "}
                   <br />
-                  <a href="https://filecoin.io" css={STYLES_LINK} target="_blank">
+                  <a
+                    href="https://filecoin.io"
+                    css={STYLES_LINK}
+                    target="_blank">
                     Filecoin
                   </a>
                   <br />
@@ -826,7 +839,10 @@ export default class IndexPage extends React.Component {
                 <span css={STYLES_HIGHLIGHT}>Slate is built on Filecoin and IPFS</span> — technologies built around
                 ownership and transparency for the future of the web.
               </h3>
-              <a css={STYLES_LINK_WHITE} href="https://filecoin.io" target="_blank">
+              <a
+                css={STYLES_LINK_WHITE}
+                href="https://filecoin.io"
+                target="_blank">
                 Learn more about Filecoin -&gt;
               </a>
             </div>
@@ -838,7 +854,10 @@ export default class IndexPage extends React.Component {
 
           <div css={STYLES_SECTION_SLATE_WALL}>
             <div css={STYLES_SLATE_CARD_CTA}>
-              <a css={STYLES_SLATE_CARD_PARAGRAPH} href="https://slate.host/_" target="_blank">
+              <a
+                css={STYLES_SLATE_CARD_PARAGRAPH}
+                href="https://slate.host/_"
+                target="_blank">
                 <div css={STYLES_SLATE_CARD_TEXT}>
                   <h1 css={STYLES_SLATE_CARD_CTA_TITLE}>
                     Join us <br />
