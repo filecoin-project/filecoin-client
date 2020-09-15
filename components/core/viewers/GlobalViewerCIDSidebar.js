@@ -4,6 +4,8 @@ import * as Strings from "~/common/strings";
 import * as Actions from "~/common/actions";
 import * as SVG from "~/common/svg";
 
+import * as Window from "~/common/window";
+
 import { css } from "@emotion/react";
 import { LoaderSpinner } from "~/components/system/components/Loaders";
 import { ProcessedText } from "~/components/system/components/Typography";
@@ -80,30 +82,13 @@ const STYLES_BODY = css`
   white-space: pre-wrap;
 `;
 
-const STYLES_SIDEBAR_INPUT = css`
-  position: relative;
-`;
 
-const STYLES_SIDEBAR_TEXTAREA = css`
-  resize: none;
-  box-sizing: border-box;
-  line-height: 1.255;
-  font-size: 16px;
-  outline: 0;
-  border: 0;
-  background: transparent;
-  width: 100%;
-  white-space: pre-wrap;
-  padding: 48px 24px 24px 24px;
-  color: ${Constants.system.white};
-  font-family: ${Constants.font.text};
-  scrollbar-width: none;
-  -ms-overflow-style: -ms-autohiding-scrollbar;
-
-  ::-webkit-scrollbar {
-    display: none;
-  }
-`;
+export default class GlobalViewerCIDSidebar extends React.Component {
+  _handleDownload = () => {
+    // NOTE(jim): 2mb limit on this.
+    const extension = Strings.getFileExtension(this.props.data.file);
+    const download = `${this.props.cid}.${extension}`;
+    const uri = Strings.getCIDGatewayURL(this.props.cid);
 
 const STYLES_SIDEBAR_INPUT_LABEL = css`
   font-family: ${Constants.font.code};
