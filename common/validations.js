@@ -142,5 +142,12 @@ export const isFileTypeAllowed = (type = "") => {
     return true;
   }
 
+  if (
+    type.startsWith("application/zip") ||
+    type.startsWith("application/x-zip-compressed")
+  ) {
+    return true;
+  }
+
   return false;
 };
