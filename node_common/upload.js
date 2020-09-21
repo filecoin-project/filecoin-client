@@ -1,22 +1,69 @@
+import B from "busboy";
+import unzip from "unzip-stream";
 import * as LibraryManager from "~/node_common/managers/library";
 import * as Utilities from "~/node_common/utilities";
 import * as Social from "~/node_common/social";
 
-import B from "busboy";
-
 const HIGH_WATER_MARK = 1024 * 1024 * 3;
+
+const uploadZipToDirectory = ({ stream, token, path }) =>
+  new Promise((resolve, reject) => {
+    stream
+      .pipe(unzip.Parse())
+      .on("entry", async (entry) => {
+        const fileName = entry.path;
+        const filePath = `${path}/${fileName}`;
+        if (entry.type === "File") {
+          console.log(
+            "UPLOADING FILE FROM ZIP",
+            filePath,
+            entry.type === "File"
+          );
+          const {
+            buckets,
+            bucketKey,
+          } = await Utilities.getBucketAPIFromUserToken(token);
+          await buckets.pushPath(
+            bucketKey,
+            filePath,
+            {
+              path: filePath,
+              content: entry,
+            },
+            {
+              progress: (num) => console.log("PROGRESS", num),
+            }
+          );
+          console.log("UPLOADED FILE", fileName);
+        }
+        entry.autodrain();
+      })
+      .on("finish", async () => {
+        const {
+          buckets,
+          bucketKey,
+        } = await Utilities.getBucketAPIFromUserToken(token);
+        const { item } = await buckets.listPath(bucketKey, path);
+        console.log("FINISHED UPLAODING ZIPPED FILES", item.path);
+        resolve({ path: { path: item.path } });
+      })
+      .on("error", (e) => reject(e));
+  });
 
 export const formMultipart = async (req, res, { user }) => {
   let data = null;
+  // Note(Amine): there are multiple mime types for zips, we need to cover them.
+  const isZipType = (mime) =>
+    ["application/x-zip-compressed"].some((item) => item === mime);
 
   const upload = () =>
     new Promise(async (resolve, reject) => {
-      let form = new B({
+      const form = new B({
         headers: req.headers,
         highWaterMark: HIGH_WATER_MARK,
       });
 
-      form.on("file", async function(
+      form.on("file", async function (
         fieldname,
         stream,
         filename,
@@ -27,15 +74,19 @@ export const formMultipart = async (req, res, { user }) => {
           name: filename,
           type: mime,
         });
-
         let push;
         try {
           const token = user.data.tokens.api;
-          const {
-            buckets,
-            bucketKey,
-          } = await Utilities.getBucketAPIFromUserToken(token, user);
-          push = await buckets.pushPath(bucketKey, data.id, stream);
+          if (isZipType(mime)) {
+            data.type = "Unity";
+            push = await uploadZipToDirectory({ stream, path: data.id, token });
+          } else {
+            const {
+              buckets,
+              bucketKey,
+            } = await Utilities.getBucketAPIFromUserToken(token);
+            push = await buckets.pushPath(bucketKey, data.id, stream);
+          }
         } catch (e) {
           Social.sendTextileSlackMessage({
             file: "/node_common/upload.js",
@@ -58,13 +109,13 @@ export const formMultipart = async (req, res, { user }) => {
         });
       });
 
-      form.on("error", (e) => {
-        return reject({
+      form.on("error", (e) =>
+        reject({
           decorator: "SERVER_BUCKET_STREAM_FAILURE",
           error: true,
           message: e,
-        });
-      });
+        })
+      );
 
       req.pipe(form);
     });
