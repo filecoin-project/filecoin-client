@@ -54,7 +54,9 @@ export const formMultipart = async (req, res, { user }) => {
   let data = null;
   // Note(Amine): there are multiple mime types for zips, we need to cover them.
   const isZipType = (mime) =>
-    ["application/x-zip-compressed"].some((item) => item === mime);
+    ["application/x-zip-compressed", "application/zip"].some(
+      (item) => item === mime
+    );
 
   const upload = () =>
     new Promise(async (resolve, reject) => {
