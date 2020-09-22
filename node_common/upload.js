@@ -12,32 +12,37 @@ const uploadZipToDirectory = ({ stream, token, path }) =>
     stream
       .pipe(unzip.Parse())
       .on("entry", async (entry) => {
-        const fileName = entry.path;
-        const filePath = `${path}/${fileName}`;
-        if (entry.type === "File") {
-          console.log(
-            "UPLOADING FILE FROM ZIP",
-            filePath,
-            entry.type === "File"
-          );
-          const {
-            buckets,
-            bucketKey,
-          } = await Utilities.getBucketAPIFromUserToken(token);
-          await buckets.pushPath(
-            bucketKey,
-            filePath,
-            {
-              path: filePath,
-              content: entry,
-            },
-            {
-              progress: (num) => console.log("PROGRESS", num),
-            }
-          );
-          console.log("UPLOADED FILE", fileName);
+        try {
+          const fileName = entry.path;
+          const filePath = `${path}/${fileName}`;
+
+          if (entry.type === "File") {
+            console.log(
+              "UPLOADING FILE FROM ZIP",
+              filePath,
+              entry.type === "File"
+            );
+            const {
+              buckets,
+              bucketKey,
+            } = await Utilities.getBucketAPIFromUserToken(token);
+            await buckets.pushPath(
+              bucketKey,
+              filePath,
+              {
+                path: filePath,
+                content: entry,
+              },
+              {
+                progress: (num) => console.log("PROGRESS", num),
+              }
+            );
+            console.log("UPLOADED FILE", fileName);
+          }
+          entry.autodrain();
+        } catch (error) {
+          console.error(error);
         }
-        entry.autodrain();
       })
       .on("finish", async () => {
         const {
