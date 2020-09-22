@@ -130,8 +130,8 @@ export const formMultipart = async (req, res, { user }) => {
           decorator: "SERVER_BUCKET_STREAM_FAILURE",
           error: true,
           message: e,
-        })
-      );
+        });
+      });
 
       req.pipe(form);
     });
