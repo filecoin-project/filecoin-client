@@ -38,6 +38,34 @@ const STYLES_TITLE = css`
   text-overflow: break-word;
 `;
 
+const STYLES_VIDEO = css`
+  margin-top: 8px;
+  overflow: hidden;
+  pointer-events: none;
+  width: 300px !important;
+  height: auto !important;
+`;
+
+const STYLES_PDF = css`
+  width: 100%;
+  height: 76.5%;
+  margin-top: 8px;
+  overflow: hidden;
+  pointer-events: none;
+  scrollbar-width: none;
+  -ms-overflow-style: -ms-autohiding-scrollbar;
+  ::-webkit-scrollbar {
+    width: 0px;
+    display: none;
+  }
+  ::-webkit-scrollbar-track {
+    background: ${Constants.system.foreground};
+  }
+  ::-webkit-scrollbar-thumb {
+    background: ${Constants.system.darkGray};
+  }
+`;
+
 export default class SlateMediaObjectPreview extends React.Component {
   static defaultProps = {
     charCap: 30,
@@ -56,6 +84,20 @@ export default class SlateMediaObjectPreview extends React.Component {
       return <img css={STYLES_IMAGE} style={this.props.imageStyle} src={url} />;
     }
 
+    if (this.props.type && this.props.type.startsWith("application/pdf")) {
+      // PDF Toolbar showing up on firefox. Seems like a browser setting issue.
+      return <iframe css={STYLES_PDF} type="application/pdf" scrolling='no' src={`${url}#toolbar=0&navpanes=0&scrollbar=0`}></iframe>
+    }
+
+    if (this.props.type && this.props.type.startsWith("video/")) {
+      return (
+        // Not sure if video should autoplay on load.
+        <video css={STYLES_VIDEO} loop >
+          <source src={url} type="video/mp4"></source>
+        </video>
+      );
+    }
+    
     let element = <FileTypeIcon type={this.props.type} height="24px" />;
 
     return (
