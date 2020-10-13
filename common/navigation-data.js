@@ -176,6 +176,16 @@ export const generate = ({ library = [], slates = [] }) => [
     filecoin: true,
     pageTitle: "Make an one-off Filecoin storage deal",
   },
+  /*
+  {
+    id: "V1_NAVIGATION_PROFILE_EDIT",
+    decorator: "EDIT_ACCOUNT",
+    name: "Profile & Account Settings",
+    pageTitle: "Your Profile & Account Settings",
+    children: null,
+    ignore: true,
+  },
+  */
   {
     id: "V1_NAVIGATION_PROFILE_EDIT",
     decorator: "EDIT_ACCOUNT",
