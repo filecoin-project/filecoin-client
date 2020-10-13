@@ -240,14 +240,46 @@ export default class SceneEditAccount extends React.Component {
     return (
       <ScenePage>
         <System.H1>New Account settings</System.H1>
+        <br />
         <System.H2>Profile</System.H2>
-        <System.H2>Profile</System.H2>
-
-        <System.H2>Profile</System.H2>
-
-        <System.H2>Profile</System.H2>
-
-
+        <System.Input
+                  containerStyle={{ marginTop: 48 }}
+                  label="Name"
+                  description={`This is how your name will be publicly shown.`}
+                  name="name"
+                  value={this.state.name}
+                  placeholder="Your name"
+                  onChange={this._handleChange}
+                />
+        
+                <System.DescriptionGroup label="Bio" style={{ marginTop: 24 }} />
+                <System.Textarea
+                  style={{ marginTop: 24 }}
+                  label="Bio"
+                  name="body"
+                  value={this.state.body}
+                  placeholder="A user on Slate."
+                  onChange={this._handleChange}
+                />
+        
+        <System.Input
+          containerStyle={{ marginTop: 64 }}
+          label="Username"
+          description={
+            <React.Fragment>
+              This is your username on Slate. Your username is unique and used
+              for your profile URL{" "}
+              <a href={profileURL} target="_blank">
+                {profileURL}
+              </a>
+            </React.Fragment>
+          }
+          name="username"
+          value={this.state.username}
+          placeholder="Username"
+          onChange={this._handleUsernameChange}
+        />
+        
         <System.DescriptionGroup
           style={{ marginTop: 48 }}
           label="Avatar image"
@@ -267,7 +299,7 @@ export default class SceneEditAccount extends React.Component {
             id="file"
             onChange={this._handleUpload}
           />
-          <System.ButtonPrimary
+         <System.ButtonPrimary
             style={{ margin: "0 16px 16px 0" }}
             type="label"
             htmlFor="file"
@@ -276,7 +308,11 @@ export default class SceneEditAccount extends React.Component {
             Pick avatar
           </System.ButtonPrimary>
         </div>
-
+        
+        
+        
+        
+        <System.H2>Data </System.H2>
         <System.DescriptionGroup
           style={{ marginTop: 48 }}
           label="Allow Slate to make Filecoin archive storage deals on your behalf"
@@ -312,72 +348,9 @@ export default class SceneEditAccount extends React.Component {
           Force encryption on archive storage deals (only you can see retrieved
           data from the Filecoin network).
         </System.CheckBox>
-
-        <div style={{ marginTop: 24 }}>
-          <System.ButtonPrimary
-            onClick={this._handleSaveFilecoin}
-            loading={this.state.changingFilecoin}
-          >
-            Save archiving settings
-          </System.ButtonPrimary>
-        </div>
-
-        <System.Input
-          containerStyle={{ marginTop: 64 }}
-          label="Username"
-          description={
-            <React.Fragment>
-              This is your username on Slate. Your username is unique and used
-              for your profile URL{" "}
-              <a href={profileURL} target="_blank">
-                {profileURL}
-              </a>
-            </React.Fragment>
-          }
-          name="username"
-          value={this.state.username}
-          placeholder="Username"
-          onChange={this._handleUsernameChange}
-        />
-
-        <div style={{ marginTop: 24 }}>
-          <System.ButtonPrimary
-            onClick={this._handleSave}
-            loading={this.state.changingUsername}
-          >
-            Change username
-          </System.ButtonPrimary>
-        </div>
-
-        <System.Input
-          containerStyle={{ marginTop: 48 }}
-          label="Name"
-          description={`This is how your name will be publicly shown.`}
-          name="name"
-          value={this.state.name}
-          placeholder="Your name"
-          onChange={this._handleChange}
-        />
-
-        <System.DescriptionGroup label="Bio" style={{ marginTop: 24 }} />
-        <System.Textarea
-          style={{ marginTop: 24 }}
-          label="Bio"
-          name="body"
-          value={this.state.body}
-          placeholder="A user on Slate."
-          onChange={this._handleChange}
-        />
-
-        <div style={{ marginTop: 24 }}>
-          <System.ButtonPrimary
-            onClick={this._handleSaveBio}
-            loading={this.state.changingBio}
-          >
-            Update information
-          </System.ButtonPrimary>
-        </div>
-
+        <br />
+        <System.H2>Secutiry</System.H2>
+        <br />
         <System.DescriptionGroup
           style={{ marginTop: 48 }}
           label="Reset password"
@@ -403,6 +376,43 @@ export default class SceneEditAccount extends React.Component {
           placeholder="Confirm it!"
           onChange={this._handleChange}
         />
+        <System.H2>Security</System.H2>
+
+
+       
+        
+
+        <div style={{ marginTop: 24 }}>
+          <System.ButtonPrimary
+            onClick={this._handleSaveFilecoin}
+            loading={this.state.changingFilecoin}
+          >
+            Save archiving settings
+          </System.ButtonPrimary>
+        </div>
+
+       
+
+        <div style={{ marginTop: 24 }}>
+          <System.ButtonPrimary
+            onClick={this._handleSave}
+            loading={this.state.changingUsername}
+          >
+            Change username
+          </System.ButtonPrimary>
+        </div>
+
+       
+        <div style={{ marginTop: 24 }}>
+          <System.ButtonPrimary
+            onClick={this._handleSaveBio}
+            loading={this.state.changingBio}
+          >
+            Update information
+          </System.ButtonPrimary>
+        </div>
+
+        
 
         <div style={{ marginTop: 24 }}>
           <System.ButtonPrimary
