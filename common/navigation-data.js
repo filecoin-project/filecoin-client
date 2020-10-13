@@ -81,6 +81,13 @@ export const generate = ({ library = [], slates = [] }) => [
     children: null,
   },
   {
+    id: "V1_NAVIGATION_WILL_SCENE",
+    decorator: "SCENE_WILL",
+    name: "Will's Scene",
+    pageTitle: "Slate",
+    children: null,
+  },
+  {
     id: "V1_NAVIGATION_SLATE",
     decorator: "PUBLIC_SLATE",
     name: "Slate",
