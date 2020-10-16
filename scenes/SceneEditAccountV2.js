@@ -28,13 +28,6 @@ const STYLES_COPY_INPUT = css`
   opacity: 0;
 `;
 
-const delay = (time) =>
-  new Promise((resolve) =>
-    setTimeout(() => {
-      resolve();
-    }, time)
-  );
-
 export default class SceneEditAccount extends React.Component {
   _ref;
 
@@ -148,33 +141,34 @@ export default class SceneEditAccount extends React.Component {
     this.setState({ changingFilecoin: true });
     this.setState({ changingBio: true });
     this.setState({ changingUsername: true });
-    this.setState({ changingPassword: true });
     
-    /*
-   if (this.state.password !== this.state.confirm) {
-     dispatchCustomEvent({
-       name: "create-alert",
-       detail: { alert: { message: "Passwords did not match" } },
-     });
-     this.setState({ changingPassword: false });
-     return;
+    if(this.state.password !== ""){
+      this.setState({ changingPassword: true });
+      
+     if (this.state.password !== this.state.confirm) {
+       dispatchCustomEvent({
+         name: "create-alert",
+         detail: { alert: { message: "Passwords did not match" } },
+       });
+       this.setState({ changingPassword: false });
+       return;
+     }
+  
+     if (!Validations.password(this.state.password)) {
+       dispatchCustomEvent({
+         name: "create-alert",
+         detail: {
+           alert: { message: "Password length must be more than 8 characters" },
+         },
+       });
+       this.setState({ changingPassword: false });
+       return;
+     }
    }
-
-   if (!Validations.password(this.state.password)) {
-     dispatchCustomEvent({
-       name: "create-alert",
-       detail: {
-         alert: { message: "Password length must be more than 8 characters" },
-       },
-     });
-     this.setState({ changingPassword: false });
-     return;
-   }*/
-
     await Actions.updateViewer({
-      /*username: this.state.username,
+      username: this.state.username,
       type: "CHANGE_PASSWORD",
-            password: this.state.password,*/
+            password: this.state.password,
       data: {
         photo: this.state.photo,
         body: this.state.body,
@@ -233,43 +227,6 @@ export default class SceneEditAccount extends React.Component {
     this.setState({ [e.target.name]: e.target.value });
   };
 
-  _handleDocumentKeydown = (e) => {
-    if (e.keyCode === 27) {
-      this._handleDelete();
-      e.preventDefault();
-    } else if (e.keyCode === 9) {
-      this._handleDelete();
-    } else if (e.keyCode === 40) {
-      if (this.state.selectedIndex < this.props.results.length - 1) {
-        let listElem = this._optionRoot.children[this.state.selectedIndex + 1];
-        let elemRect = listElem.getBoundingClientRect();
-        let rootRect = this._optionRoot.getBoundingClientRect();
-        if (elemRect.bottom > rootRect.bottom) {
-          this._optionRoot.scrollTop =
-            listElem.offsetTop + listElem.offsetHeight - this._optionRoot.offsetHeight;
-        }
-        this.setState({ selectedIndex: this.state.selectedIndex + 1 });
-      }
-      e.preventDefault();
-    } else if (e.keyCode === 38) {
-      if (this.state.selectedIndex > 0) {
-        let listElem = this._optionRoot.children[this.state.selectedIndex - 1];
-        let elemRect = listElem.getBoundingClientRect();
-        let rootRect = this._optionRoot.getBoundingClientRect();
-        if (elemRect.top < rootRect.top) {
-          this._optionRoot.scrollTop = listElem.offsetTop;
-        }
-        this.setState({ selectedIndex: this.state.selectedIndex - 1 });
-      }
-      e.preventDefault();
-    } else if (e.keyCode === 13) {
-      if (this.props.results.length > this.state.selectedIndex && this.state.selectedIndex !== -1) {
-        this._handleSelect(this.state.selectedIndex);
-      }
-      e.preventDefault();
-    }
-  };
-
   render() {
     const profileURL = `https://slate.host/${this.state.username}`;
     console.log(this.props.viewer);
@@ -278,7 +235,7 @@ export default class SceneEditAccount extends React.Component {
       <ScenePage>
         <ScenePageHeader title="Account Settings" />
         <TabGroup
-          tabs={["Profile", "Data Storage", "Danger"]}
+          tabs={["Profile", "Data Storage", "Security", "Account"]}
           value={this.state.tab}
           onChange={(value) => this.setState({ tab: value })}
         />
@@ -306,7 +263,7 @@ export default class SceneEditAccount extends React.Component {
             </div>
 
             <System.Input
-              containerStyle={{ marginTop: 64 }}
+              containerStyle={{ marginTop: 48 }}
               label="Username"
               description={
                 <React.Fragment>
@@ -326,20 +283,20 @@ export default class SceneEditAccount extends React.Component {
             <System.Input
               containerStyle={{ marginTop: 48 }}
               label="Name"
-              description={`This is how your name will be publicly shown.`}
+              description={`This name will be publicly shown on you profile.`}
               name="name"
               value={this.state.name}
               placeholder="Your name"
               onChange={this._handleChange}
             />
 
-            <System.DescriptionGroup label="Bio" style={{ marginTop: 24 }} />
+            <System.DescriptionGroup label="Bio" style={{ marginTop: 48 }} />
             <System.Textarea
               style={{ marginTop: 24 }}
               label="Bio"
               name="body"
               value={this.state.body}
-              placeholder="A user on Slate."
+              placeholder="A summary you."
               onChange={this._handleChange}
             />
             <div style={{ marginTop: 24 }}>
@@ -387,16 +344,48 @@ export default class SceneEditAccount extends React.Component {
                 onClick={this._handleSaveAll}
                 loading={this.state.changingFilecoin}
               >
-                Save 
+                Save
               </System.ButtonPrimary>
             </div>
           </div>
         ) : null}
         {this.state.tab === 2 ? (
           <div>
+            <System.Input
+              containerStyle={{ marginTop: 48 }}
+              label="New password"
+              name="password"
+              type="password"
+              value={this.state.password}
+              placeholder="Your new password"
+              onChange={this._handleChange}
+            />
+
+            <System.Input
+              containerStyle={{ marginTop: 24 }}
+              label="Confirm password"
+              name="confirm"
+              type="password"
+              value={this.state.confirm}
+              placeholder="Confirm it!"
+              onChange={this._handleChange}
+            />
+
+            <div style={{ marginTop: 24 }}>
+              <System.ButtonPrimary
+                onClick={this._handleSaveAll}
+                loading={this.state.changingPassword}
+              >
+                Change password
+              </System.ButtonPrimary>
+            </div>
+          </div>
+        ) : null}
+        {this.state.tab === 3 ? (
+          <div>
             <System.DescriptionGroup
               style={{ marginTop: 48 }}
-              label={'Danger ' + this.state.name}
+              label={"Danger " + this.state.name}
               description="If you choose to delete your account you will lose your Textile Hub and Powergate key. Make sure you back those up before deleting your account."
             />
 

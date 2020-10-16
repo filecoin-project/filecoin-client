@@ -13,7 +13,7 @@ import * as Store from "~/common/store";
 // NOTE(jim):
 // Scenes each have an ID and can be navigated to with _handleAction
 import SceneDeals from "~/scenes/SceneDeals";
-import SceneEditAccount from "~/scenes/SceneEditAccount";
+import SceneEditAccount from "~/scenes/SceneEditAccountV2";
 import SceneFile from "~/scenes/SceneFile";
 import SceneFilesFolder from "~/scenes/SceneFilesFolder";
 import SceneHome from "~/scenes/SceneHome";
