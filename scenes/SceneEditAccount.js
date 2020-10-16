@@ -143,25 +143,38 @@ export default class SceneEditAccount extends React.Component {
     this.setState({ changingAvatar: false, photo: url });
   };
 
-  _handleSaveBio = async (e) => {
-    this.setState({ changingBio: true });
-
-    await Actions.updateViewer({
-      data: {
-        photo: this.state.photo,
-        body: this.state.body,
-        name: this.state.name,
-      },
-    });
-
-    await this.props.onRehydrate();
-    this.setState({ changingBio: false });
-  };
-
-  _handleSaveFilecoin = async (e) => {
+  _handleSaveAll = async (e) => {
+    this.setState({ changingUsername: true });
     this.setState({ changingFilecoin: true });
+    this.setState({ changingBio: true });
+    this.setState({ changingUsername: true });
+    this.setState({ changingPassword: true });
+    
+    /*
+   if (this.state.password !== this.state.confirm) {
+     dispatchCustomEvent({
+       name: "create-alert",
+       detail: { alert: { message: "Passwords did not match" } },
+     });
+     this.setState({ changingPassword: false });
+     return;
+   }
+
+   if (!Validations.password(this.state.password)) {
+     dispatchCustomEvent({
+       name: "create-alert",
+       detail: {
+         alert: { message: "Password length must be more than 8 characters" },
+       },
+     });
+     this.setState({ changingPassword: false });
+     return;
+   }*/
 
     await Actions.updateViewer({
+      /*username: this.state.username,
+      type: "CHANGE_PASSWORD",
+            password: this.state.password,*/
       data: {
         photo: this.state.photo,
         body: this.state.body,
@@ -174,70 +187,14 @@ export default class SceneEditAccount extends React.Component {
 
     await this.props.onRehydrate();
     this.setState({ changingFilecoin: false });
-  };
-
-  _handleSave = async (e) => {
-    this.setState({ changingUsername: true });
-
-    if (!Validations.username(this.state.username)) {
-      dispatchCustomEvent({
-        name: "create-alert",
-        detail: {
-          alert: {
-            message: "Please include only letters and numbers in your username",
-          },
-        },
-      });
-      this.setState({ changingUsername: false });
-      return;
-    }
-
-    await Actions.updateViewer({
-      username: this.state.username,
-      data: {
-        photo: this.state.photo,
-        body: this.state.body,
-        name: this.state.name,
-      },
-    });
-
-    await this.props.onRehydrate();
+    this.setState({ changingBio: false });
     this.setState({ changingUsername: false });
+    this.setState({ changingPassword: false, password: "", confirm: "" });
   };
 
   _handleUsernameChange = (e) => {
     e.persist();
     this.setState({ [e.target.name]: e.target.value.toLowerCase() });
-  };
-
-  _handleChangePassword = async (e) => {
-    this.setState({ changingPassword: true });
-    if (this.state.password !== this.state.confirm) {
-      dispatchCustomEvent({
-        name: "create-alert",
-        detail: { alert: { message: "Passwords did not match" } },
-      });
-      this.setState({ changingPassword: false });
-      return;
-    }
-
-    if (!Validations.password(this.state.password)) {
-      dispatchCustomEvent({
-        name: "create-alert",
-        detail: {
-          alert: { message: "Password length must be more than 8 characters" },
-        },
-      });
-      this.setState({ changingPassword: false });
-      return;
-    }
-
-    await Actions.updateViewer({
-      type: "CHANGE_PASSWORD",
-      password: this.state.password,
-    });
-
-    this.setState({ changingPassword: false, password: "", confirm: "" });
   };
 
   _handleChange = (e) => {
@@ -386,8 +343,8 @@ export default class SceneEditAccount extends React.Component {
               onChange={this._handleChange}
             />
             <div style={{ marginTop: 24 }}>
-              <System.ButtonPrimary onClick={this._handleSaveBio} loading={this.state.changingBio}>
-                Update information
+              <System.ButtonPrimary onClick={this._handleSaveAll} loading={this.state.changingBio}>
+                Save
               </System.ButtonPrimary>
             </div>
           </div>
@@ -427,10 +384,10 @@ export default class SceneEditAccount extends React.Component {
             </System.CheckBox>
             <div style={{ marginTop: 24 }}>
               <System.ButtonPrimary
-                onClick={this._handleSaveFilecoin}
+                onClick={this._handleSaveAll}
                 loading={this.state.changingFilecoin}
               >
-                Save archiving settings
+                Save 
               </System.ButtonPrimary>
             </div>
           </div>
@@ -439,7 +396,7 @@ export default class SceneEditAccount extends React.Component {
           <div>
             <System.DescriptionGroup
               style={{ marginTop: 48 }}
-              label="Delete your account"
+              label={'Danger ' + this.state.name}
               description="If you choose to delete your account you will lose your Textile Hub and Powergate key. Make sure you back those up before deleting your account."
             />
 
