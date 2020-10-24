@@ -4,6 +4,7 @@ import * as Actions from "~/common/actions";
 import * as Strings from "~/common/strings";
 import * as Validations from "~/common/validations";
 import * as FileUtilities from "~/common/file-utilities";
+
 import { css } from "@emotion/react";
 import { dispatchCustomEvent } from "~/common/custom-events";
 import { TabGroup } from "~/components/core/TabGroup";
@@ -28,7 +29,7 @@ const STYLES_COPY_INPUT = css`
   opacity: 0;
 `;
 
-export default class SceneEditAccount extends React.Component {
+export default class SceneEditAccountV2 extends React.Component {
   _ref;
 
   state = {
@@ -61,6 +62,10 @@ export default class SceneEditAccount extends React.Component {
       }
       this.props.onSearch();
     }, 500);
+  };
+
+  componentWillUnmount = () => {
+    window.removeEventListener("keydown", this._handleDocumentKeydown);
   };
 
   debounce = (fn, time) => {
@@ -141,34 +146,34 @@ export default class SceneEditAccount extends React.Component {
     this.setState({ changingFilecoin: true });
     this.setState({ changingBio: true });
     this.setState({ changingUsername: true });
-    
-    if(this.state.password !== ""){
+
+    if (this.state.password !== "") {
       this.setState({ changingPassword: true });
-      
-     if (this.state.password !== this.state.confirm) {
-       dispatchCustomEvent({
-         name: "create-alert",
-         detail: { alert: { message: "Passwords did not match" } },
-       });
-       this.setState({ changingPassword: false });
-       return;
-     }
-  
-     if (!Validations.password(this.state.password)) {
-       dispatchCustomEvent({
-         name: "create-alert",
-         detail: {
-           alert: { message: "Password length must be more than 8 characters" },
-         },
-       });
-       this.setState({ changingPassword: false });
-       return;
-     }
-   }
+
+      if (this.state.password !== this.state.confirm) {
+        dispatchCustomEvent({
+          name: "create-alert",
+          detail: { alert: { message: "Passwords did not match" } },
+        });
+        this.setState({ changingPassword: false });
+        return;
+      }
+
+      if (!Validations.password(this.state.password)) {
+        dispatchCustomEvent({
+          name: "create-alert",
+          detail: {
+            alert: { message: "Password length must be more than 8 characters" },
+          },
+        });
+        this.setState({ changingPassword: false });
+        return;
+      }
+    }
     await Actions.updateViewer({
       username: this.state.username,
       type: "CHANGE_PASSWORD",
-            password: this.state.password,
+      password: this.state.password,
       data: {
         photo: this.state.photo,
         body: this.state.body,

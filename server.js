@@ -31,21 +31,15 @@ app.prepare().then(async () => {
   const server = express();
 
   server.use(cors());
-  server.use(
-    morgan(":method :url :status :res[content-length] - :response-time ms")
-  );
+  server.use(morgan(":method :url :status :res[content-length] - :response-time ms"));
 
   server.use("/public", express.static("public"));
   server.get("/system", async (r, s) => s.redirect("/_/system"));
   server.get("/experiences", async (r, s) => s.redirect("/_/system"));
   server.get("/_/experiences", async (r, s) => s.redirect("/_/system"));
-  server.get("/system/:c", async (r, s) =>
-    s.redirect(`/_/system/${r.params.c}`)
-  );
+  server.get("/system/:c", async (r, s) => s.redirect(`/_/system/${r.params.c}`));
 
-  server.get("/experiences/:m", async (r, s) =>
-    s.redirect(`/_/experiences/${r.params.m}`)
-  );
+  server.get("/experiences/:m", async (r, s) => s.redirect(`/_/experiences/${r.params.m}`));
 
   server.all("/api/:a", async (r, s, next) => {
     return handler(r, s, r.url);
@@ -78,9 +72,9 @@ app.prepare().then(async () => {
   server.get("/_", async (req, res) => {
     const isBucketsAvailable = await Utilities.checkTextile();
 
-    // if (!isBucketsAvailable) {
-    //   return res.redirect("/maintenance");
-    // }
+    if (!isBucketsAvailable) {
+      return res.redirect("/maintenance");
+    }
 
     const id = Utilities.getIdFromCookie(req);
 
