@@ -56,97 +56,92 @@ export default class SceneEditAccountV2 extends React.Component {
 
   componentDidMount = () => {
     window.addEventListener("keydown", this._handleDocumentKeydown);
-    this.debounceInstance = this.debounce(() => {
-      if (this.state.selectedIndex !== -1) {
-        this.setState({ selectedIndex: -1 });
-      }
-      this.props.onSearch();
-    }, 500);
   };
 
   componentWillUnmount = () => {
     window.removeEventListener("keydown", this._handleDocumentKeydown);
   };
 
-  debounce = (fn, time) => {
-    let timer;
-    return () => {
-      window.clearTimeout(timer);
-      timer = window.setTimeout(() => fn(), time);
-    };
-  };
-
-  _handleUpload = async (e) => {
-    this.setState({ changingAvatar: true });
-    e.persist();
-    let file = e.target.files[0];
-
-    if (!file) {
-      dispatchCustomEvent({
-        name: "create-alert",
-        detail: {
-          alert: {
-            message: "Something went wrong with the upload. Please try again",
-          },
-        },
-      });
-      return;
-    }
-
-    // NOTE(jim): Only allow images for account avatar.
-    if (!file.type.startsWith("image/")) {
-      dispatchCustomEvent({
-        name: "create-alert",
-        detail: {
-          alert: { message: "Upload failed. Only images and gifs are allowed" },
-        },
-      });
-      return;
-    }
-
-    const response = await FileUtilities.upload({ file });
-
-    if (!response) {
-      dispatchCustomEvent({
-        name: "create-alert",
-        detail: {
-          alert: { message: "We're having trouble connecting right now" },
-        },
-      });
-      this.setState({ changingAvatar: false });
-      return;
-    }
-
-    if (response.error) {
-      dispatchCustomEvent({
-        name: "create-alert",
-        detail: { alert: { decorator: json.decorator } },
-      });
-      this.setState({ changingAvatar: false });
-      return;
-    }
-
-    const { json } = response;
-    const cid = json.data.ipfs.replace("/ipfs/", "");
-    const url = Strings.getCIDGatewayURL(cid);
-    await Actions.updateViewer({
-      data: {
-        photo: Strings.getCIDGatewayURL(cid),
-        body: this.state.body,
-        name: this.state.name,
-      },
-    });
-
-    await this.props.onRehydrate();
-    this.setState({ changingAvatar: false, photo: url });
-  };
-
   _handleSaveAll = async (e) => {
-    this.setState({ changingUsername: true });
-    this.setState({ changingFilecoin: true });
-    this.setState({ changingBio: true });
-    this.setState({ changingUsername: true });
+    //CHANGE BIO
+    if (this.state.changingUsername == true) {
+      e.persist();
+      this.setState({ [e.target.name]: e.target.value.toLowerCase() });
+    }
+    //CHANGE NAME
+    if (this.state.changingUsername == true) {
+      e.persist();
+      this.setState({ [e.target.name]: e.target.value.toLowerCase() });
+    }
+    //CHANGE USERNAME
+    if (this.state.changingUsername == true) {
+      e.persist();
+      this.setState({ [e.target.name]: e.target.value.toLowerCase() });
+    }
 
+    //CHANGE AVATAR IMAGE
+    if (this.state.changingAvatar == true) {
+      e.persist();
+      let file = e.target.files[0];
+
+      if (!file) {
+        dispatchCustomEvent({
+          name: "create-alert",
+          detail: {
+            alert: {
+              message: "Something went wrong with the upload. Please try again",
+            },
+          },
+        });
+        return;
+      }
+
+      // NOTE(jim): Only allow images for account avatar.
+      if (!file.type.startsWith("image/")) {
+        dispatchCustomEvent({
+          name: "create-alert",
+          detail: {
+            alert: { message: "Upload failed. Only images and gifs are allowed" },
+          },
+        });
+        return;
+      }
+
+      const response = await FileUtilities.upload({ file });
+
+      if (!response) {
+        dispatchCustomEvent({
+          name: "create-alert",
+          detail: {
+            alert: { message: "We're having trouble connecting right now" },
+          },
+        });
+        this.setState({ changingAvatar: false });
+        return;
+      }
+
+      if (response.error) {
+        dispatchCustomEvent({
+          name: "create-alert",
+          detail: { alert: { decorator: json.decorator } },
+        });
+        this.setState({ changingAvatar: false });
+        return;
+      }
+
+      const { json } = response;
+      const cid = json.data.ipfs.replace("/ipfs/", "");
+      const url = Strings.getCIDGatewayURL(cid);
+      await Actions.updateViewer({
+        data: {
+          photo: Strings.getCIDGatewayURL(cid),
+          body: this.state.body,
+          name: this.state.name,
+        },
+      });
+      this.setState({ changingAvatar: false, photo: url });
+    }
+    // CHNAGE PASSWORD
     if (this.state.password !== "") {
       this.setState({ changingPassword: true });
 
@@ -191,14 +186,18 @@ export default class SceneEditAccountV2 extends React.Component {
     this.setState({ changingPassword: false, password: "", confirm: "" });
   };
 
-  _handleUsernameChange = (e) => {
-    e.persist();
-    this.setState({ [e.target.name]: e.target.value.toLowerCase() });
-  };
-
   _handleChange = (e) => {
     e.persist();
     this.setState({ [e.target.name]: e.target.value });
+    if (e.target.name == "username") this.setState({ changingUsername: true });
+    if (e.target.name == "name") this.setState({ changingUsername: true });
+    if (e.target.name == "body") this.setState({ changingBio: true });
+
+    if (e.target.name == "") this.setState({ changingFilecoin: true });
+    if (e.target.name == "") this.setState({ changingAvatar: true });
+    // add password
+
+    this._handleSaveAll();
   };
 
   _handleCopy = (e, value) => {
@@ -219,17 +218,13 @@ export default class SceneEditAccountV2 extends React.Component {
     }
   };
 
-  _handleDelete = async (e, id) => {
-    this._handleHide();
-    e.stopPropagation();
-    const response = await Actions.deleteTrustRelationship({
-      id: id,
-    });
-    await this.props.onRehydrate();
-  };
+  _handleDelete = async (e) => {
+    this.setState({ deleting: true });
 
-  _handleCheckboxChange = (e) => {
-    this.setState({ [e.target.name]: e.target.value });
+    await delay(100);
+
+    const response = await this.props.onDeleteYourself();
+    this.setState({ deleting: false });
   };
 
   render() {
@@ -255,7 +250,7 @@ export default class SceneEditAccountV2 extends React.Component {
             <Avatar style={{ marginTop: 24 }} size={256} url={this.props.viewer.data.photo} />
 
             <div style={{ marginTop: 24 }}>
-              <input css={STYLES_FILE_HIDDEN} type="file" id="file" onChange={this._handleUpload} />
+              <input css={STYLES_FILE_HIDDEN} type="file" id="file" onChange={this._handleChange} />
 
               <System.ButtonPrimary
                 style={{ margin: "0 16px 16px 0" }}
@@ -282,7 +277,7 @@ export default class SceneEditAccountV2 extends React.Component {
               name="username"
               value={this.state.username}
               placeholder="Username"
-              onChange={this._handleUsernameChange}
+              onChange={this._handleChange}
             />
 
             <System.Input
@@ -322,7 +317,7 @@ export default class SceneEditAccountV2 extends React.Component {
               style={{ marginTop: 48 }}
               name="allow_filecoin_directory_listing"
               value={this.state.allow_filecoin_directory_listing}
-              onChange={this._handleCheckboxChange}
+              onChange={this._handleChange}
             >
               Show your successful deals on a directory page where others can retrieve them.
             </System.CheckBox>
@@ -330,7 +325,7 @@ export default class SceneEditAccountV2 extends React.Component {
               style={{ marginTop: 24 }}
               name="allow_automatic_data_storage"
               value={this.state.allow_automatic_data_storage}
-              onChange={this._handleCheckboxChange}
+              onChange={this._handleChange}
             >
               Allow Slate to make archive storage deals on your behalf to the Filecoin Network. You
               will get a receipt in the Filecoin section.
@@ -339,7 +334,7 @@ export default class SceneEditAccountV2 extends React.Component {
               style={{ marginTop: 24 }}
               name="allow_encrypted_data_storage"
               value={this.state.allow_encrypted_data_storage}
-              onChange={this._handleCheckboxChange}
+              onChange={this._handleChange}
             >
               Force encryption on archive storage deals (only you can see retrieved data from the
               Filecoin network).
