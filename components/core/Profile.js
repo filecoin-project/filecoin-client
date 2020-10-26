@@ -51,11 +51,13 @@ const STYLES_NAME = css`
   font-size: ${Constants.typescale.lvl3};
   font-family: ${Constants.font.medium};
   font-weight: 400;
-  width: 70%;
+  width: auto;
+  max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   align-item: left;
   margin-top: 8px;
+  margin-right: 24px;
 
   @media (max-width: ${Constants.sizes.mobile}px) {
     font-size: ${Constants.typescale.lvl2};
@@ -92,7 +94,7 @@ padding-left: 12px; */};
 `;
 
 const STYLES_BUTTON = css`
-  padding: 10px 24px;
+  padding: 8px 24px;
   cursor: pointer;
   font-family: ${Constants.font.medium};
   font-weight: 400;
@@ -100,7 +102,8 @@ const STYLES_BUTTON = css`
   text-align: center;
   text-decoration: none;
   border: 1px solid ${Constants.system.gray};
-  height: 40px;
+  height: 36px;
+  border-radius: 4px;
 
   :hover {
     background-color: ${Constants.system.gray};
@@ -114,9 +117,8 @@ const STYLES_BUTTON = css`
 
 const STYLES_FLEX = css`
   display: flex;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
   align-items: baseline;
-  justify-content: space-between;
 
   @media (max-width: ${Constants.sizes.mobile}px) {
     display: block;
