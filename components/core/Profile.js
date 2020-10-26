@@ -116,6 +116,7 @@ const STYLES_FLEX = css`
   display: flex;
   margin-bottom: 8px;
   align-items: baseline;
+  justify-content: space-between;
 
   @media (max-width: ${Constants.sizes.mobile}px) {
     display: block;
@@ -130,7 +131,15 @@ const STYLES_LINK = css`
 export default class Profile extends React.Component {
   render() {
     let data = this.props.creator ? this.props.creator : this.props.data;
-    console.log(data.slates.length);
+
+    console.log(data.slates);
+    // const p = data.public;
+    // const counts = data.slates.reduce((counts, { p }) => {
+    //   counts[data.public] = (counts[data.public] || 0) + 1;
+    //   return counts;
+    // }, {});
+
+    // console.log(counts);
 
     return (
       <div css={STYLES_PROFILE}>
@@ -165,10 +174,10 @@ export default class Profile extends React.Component {
                 <div style={{ color: `${Constants.system.grayBlack}` }}>Public slates</div>
                 <div style={{ fontFamily: `${Constants.font.semiBold}` }}>0</div>
               </div>
-              <div css={STYLES_STAT}>
+              {/* <div css={STYLES_STAT}>
                 <div style={{ color: `${Constants.system.grayBlack}` }}>Following slates</div>
                 <div style={{ fontFamily: `${Constants.font.semiBold}` }}>0</div>
-              </div>
+              </div> */}
             </div>
           </div>
           {this.props.buttons}
