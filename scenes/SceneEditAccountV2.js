@@ -4,6 +4,7 @@ import * as Actions from "~/common/actions";
 import * as Strings from "~/common/strings";
 import * as Validations from "~/common/validations";
 import * as FileUtilities from "~/common/file-utilities";
+import * as Window from "~/common/window";
 
 import { css } from "@emotion/react";
 import { dispatchCustomEvent } from "~/common/custom-events";
@@ -64,19 +65,40 @@ export default class SceneEditAccountV2 extends React.Component {
 
   _handleSaveAll = async (e) => {
     //CHANGE BIO
-    if (this.state.changingUsername == true) {
+    if (this.state.changingBio == true) {
       e.persist();
-      this.setState({ [e.target.name]: e.target.value.toLowerCase() });
+      this.setState({ [e.target.name]: e.target.value });
+
+      await Actions.updateViewer({
+        data: {
+          body: this.state.body,
+        },
+      });
+      console.log("UPDATE Bio");
     }
+
     //CHANGE NAME
-    if (this.state.changingUsername == true) {
+    if (this.state.changingName == true) {
       e.persist();
-      this.setState({ [e.target.name]: e.target.value.toLowerCase() });
+      this.setState({ [e.target.name]: e.target.value });
+
+      await Actions.updateViewer({
+        data: {
+          name: this.state.name,
+        },
+      });
+      console.log("UPDATE Name");
     }
+
     //CHANGE USERNAME
     if (this.state.changingUsername == true) {
       e.persist();
-      this.setState({ [e.target.name]: e.target.value.toLowerCase() });
+      this.setState({ [e.target.name]: e.target.value });
+
+      await Actions.updateViewer({
+        username: this.state.username,
+      });
+      console.log("UPDATE Username");
     }
 
     //CHANGE AVATAR IMAGE
@@ -182,6 +204,7 @@ export default class SceneEditAccountV2 extends React.Component {
     await this.props.onRehydrate();
     this.setState({ changingFilecoin: false });
     this.setState({ changingBio: false });
+    this.setState({ changingName: false });
     this.setState({ changingUsername: false });
     this.setState({ changingPassword: false, password: "", confirm: "" });
   };
@@ -189,14 +212,12 @@ export default class SceneEditAccountV2 extends React.Component {
   _handleChange = (e) => {
     e.persist();
     this.setState({ [e.target.name]: e.target.value });
-    if (e.target.name == "username") this.setState({ changingUsername: true });
-    if (e.target.name == "name") this.setState({ changingUsername: true });
-    if (e.target.name == "body") this.setState({ changingBio: true });
-
     if (e.target.name == "") this.setState({ changingFilecoin: true });
+    if (e.target.name == "body") this.setState({ changingBio: true });
+    if (e.target.name == "name") this.setState({ changingName: true });
+    if (e.target.name == "username") this.setState({ changingUsername: true });
     if (e.target.name == "") this.setState({ changingAvatar: true });
-    // add password
-
+    if (e.target.name == "") this.setState({ changingPassword: true });
     this._handleSaveAll();
   };
 
@@ -250,7 +271,12 @@ export default class SceneEditAccountV2 extends React.Component {
             <Avatar style={{ marginTop: 24 }} size={256} url={this.props.viewer.data.photo} />
 
             <div style={{ marginTop: 24 }}>
-              <input css={STYLES_FILE_HIDDEN} type="file" id="file" onChange={this._handleChange} />
+              <input
+                css={STYLES_FILE_HIDDEN}
+                type="file"
+                id="file"
+                onChange={Window._checkDebounce(this._handleChange, 200)}
+              />
 
               <System.ButtonPrimary
                 style={{ margin: "0 16px 16px 0" }}
@@ -277,7 +303,7 @@ export default class SceneEditAccountV2 extends React.Component {
               name="username"
               value={this.state.username}
               placeholder="Username"
-              onChange={this._handleChange}
+              onChange={Window._checkDebounce(this._handleChange, 200)}
             />
 
             <System.Input
@@ -287,7 +313,7 @@ export default class SceneEditAccountV2 extends React.Component {
               name="name"
               value={this.state.name}
               placeholder="Your name"
-              onChange={this._handleChange}
+              onChange={Window._checkDebounce(this._handleChange, 200)}
             />
 
             <System.DescriptionGroup label="Bio" style={{ marginTop: 48 }} />
@@ -297,7 +323,7 @@ export default class SceneEditAccountV2 extends React.Component {
               name="body"
               value={this.state.body}
               placeholder="A summary you."
-              onChange={this._handleChange}
+              onChange={Window._checkDebounce(this._handleChange, 200)}
             />
             <div style={{ marginTop: 24 }}>
               <System.ButtonPrimary onClick={this._handleSaveAll} loading={this.state.changingBio}>
@@ -317,7 +343,7 @@ export default class SceneEditAccountV2 extends React.Component {
               style={{ marginTop: 48 }}
               name="allow_filecoin_directory_listing"
               value={this.state.allow_filecoin_directory_listing}
-              onChange={this._handleChange}
+              onChange={Window._checkDebounce(this._handleChange, 200)}
             >
               Show your successful deals on a directory page where others can retrieve them.
             </System.CheckBox>
@@ -325,7 +351,7 @@ export default class SceneEditAccountV2 extends React.Component {
               style={{ marginTop: 24 }}
               name="allow_automatic_data_storage"
               value={this.state.allow_automatic_data_storage}
-              onChange={this._handleChange}
+              onChange={Window._checkDebounce(this._handleChange, 200)}
             >
               Allow Slate to make archive storage deals on your behalf to the Filecoin Network. You
               will get a receipt in the Filecoin section.
@@ -334,7 +360,7 @@ export default class SceneEditAccountV2 extends React.Component {
               style={{ marginTop: 24 }}
               name="allow_encrypted_data_storage"
               value={this.state.allow_encrypted_data_storage}
-              onChange={this._handleChange}
+              onChange={Window._checkDebounce(this._handleChange, 200)}
             >
               Force encryption on archive storage deals (only you can see retrieved data from the
               Filecoin network).
@@ -358,7 +384,7 @@ export default class SceneEditAccountV2 extends React.Component {
               type="password"
               value={this.state.password}
               placeholder="Your new password"
-              onChange={this._handleChange}
+              onChange={Window._checkDebounce(this._handleChange, 200)}
             />
 
             <System.Input
@@ -368,7 +394,7 @@ export default class SceneEditAccountV2 extends React.Component {
               type="password"
               value={this.state.confirm}
               placeholder="Confirm it!"
-              onChange={this._handleChange}
+              onChange={Window._checkDebounce(this._handleChange, 200)}
             />
 
             <div style={{ marginTop: 24 }}>
