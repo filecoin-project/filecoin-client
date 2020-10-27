@@ -72,7 +72,7 @@ const STYLES_NAME = css`
 `;
 
 const STYLES_DESCRIPTION = css`
-  font-size: 14px;
+  font-size: ${Constants.typescale.lvl0};
   width: 100%;
   word-wrap: break-word;
 

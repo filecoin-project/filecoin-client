@@ -55,18 +55,14 @@ const STYLES_CREATOR = css`
 `;
 
 const STYLES_DESCTIPTION = css`
-  font-size: ${Constants.typescale.lvl1};
+  font-size: ${Constants.typescale.lvl0};
   font-family: ${Constants.font.text};
   width: 50%;
   color: ${Constants.system.black};
   word-wrap: break-word;
 
-  @media (max-width: ${Constants.sizes.tablet}px) {
-    width: 100%;
-  }
-
   @media (max-width: ${Constants.sizes.mobile}px) {
-    font-size: 14px;
+    width: 100%;
     margin-top: 4px;
   }
 `;
@@ -96,7 +92,7 @@ const STYLES_FLEX = css`
 `;
 
 const STYLES_STATS = css`
-  font-size: ${Constants.typescale.lvl0};
+  font-size: ${Constants.typescale.lvlN1};
   margin-top: 24px;
   display: flex;
   line-height: 1.5;
