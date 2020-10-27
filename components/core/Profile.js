@@ -9,6 +9,7 @@ import SlatePreviewBlocks from "~/components/core/SlatePreviewBlock";
 
 const STYLES_PROFILE = css`
   width: 100%;
+  padding: 24px 24px 0px 24px;
 `;
 
 const STYLES_PROFILE_INFO = css`
@@ -16,6 +17,10 @@ const STYLES_PROFILE_INFO = css`
   margin: 0 auto;
   width: 50%;
   line-height: 1.3;
+
+  @media (max-width: ${Constants.sizes.tablet}px) {
+    width: 66.66%;
+  }
 
   @media (max-width: ${Constants.sizes.mobile}px) {
     width: 100%;
@@ -62,7 +67,7 @@ const STYLES_NAME = css`
 
   @media (max-width: ${Constants.sizes.mobile}px) {
     font-size: ${Constants.typescale.lvl2};
-    margin-bottom: 24px;
+    margin-bottom: 16px;
   }
 `;
 
@@ -180,7 +185,7 @@ export default class Profile extends React.Component {
               </div> */}
             </div>
           </div>
-          {this.props.buttons}
+          {/* {this.props.buttons} */}
         </div>
         {data.slates && data.slates.length ? (
           <SlatePreviewBlocks

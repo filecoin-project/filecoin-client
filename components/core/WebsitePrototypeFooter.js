@@ -7,12 +7,12 @@ const STYLES_CONTAINER = css`
   position: -webkit-sticky;
   position: sticky;
   bottom: 0;
-  padding: 8px 64px;
+  padding: 4px 64px;
   z-index: ${Constants.zindex.header};
   background-color: ${Constants.system.foreground};
   font-family: ${Constants.font.text};
   font-weight: 400;
-  font-size: ${Constants.typescale.lvl0};
+  font-size: ${Constants.typescale.lvlN1};
   line-height: 150%;
   display: flex;
   justify-content: space-between;

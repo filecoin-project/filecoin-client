@@ -14,7 +14,7 @@ const STYLES_CONTAINER = css`
   z-index: ${Constants.zindex.header};
   font-family: ${Constants.font.text};
   font-weight: 400;
-  font-size: 1rem;
+  font-size: ${Constants.typescale.lvl0};
   width: 100%;
   display: flex;
   justify-content: space-between;

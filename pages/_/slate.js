@@ -104,7 +104,7 @@ const STYLES_STATS = css`
 
 const STYLES_STAT = css`
   margin-right: 48px;
-  width: 80px;
+  width: 88px;
   ${"" /* border-left: 1px solid ${Constants.system.darkGray};
 padding-left: 12px; */};
 `;
