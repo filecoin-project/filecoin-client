@@ -105,6 +105,7 @@ const STYLES_BUTTON = css`
   border: 1px solid ${Constants.system.gray};
   height: 36px;
   border-radius: 4px;
+  color: ${Constants.system.black};
 
   :hover {
     background-color: ${Constants.system.gray};
