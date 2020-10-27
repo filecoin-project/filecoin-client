@@ -58,6 +58,7 @@ const STYLES_NAME = css`
   align-item: left;
   margin-top: 8px;
   margin-right: 24px;
+  word-wrap: break-word;
 
   @media (max-width: ${Constants.sizes.mobile}px) {
     font-size: ${Constants.typescale.lvl2};
@@ -78,7 +79,7 @@ const STYLES_DESCRIPTION = css`
 const STYLES_STATS = css`
   font-size: ${Constants.typescale.lvlN1};
   line-height: 1.5;
-  margin-top: 32px;
+  margin-top: 24px;
   display: flex;
   width: 100%;
   flex-wrap: wrap;
@@ -134,14 +135,10 @@ export default class Profile extends React.Component {
   render() {
     let data = this.props.creator ? this.props.creator : this.props.data;
 
-    console.log(data.slates);
-    // const p = data.public;
-    // const counts = data.slates.reduce((counts, { p }) => {
-    //   counts[data.public] = (counts[data.public] || 0) + 1;
-    //   return counts;
-    // }, {});
-
-    // console.log(counts);
+    let total = 0;
+    for (let slate of data.slates) {
+      total += slate.data.objects.length;
+    }
 
     return (
       <div css={STYLES_PROFILE}>
@@ -170,11 +167,11 @@ export default class Profile extends React.Component {
             <div css={STYLES_STATS}>
               <div css={STYLES_STAT}>
                 <div style={{ color: `${Constants.system.grayBlack}` }}>Public data</div>
-                <div style={{ fontFamily: `${Constants.font.semiBold}` }}>0</div>
+                <div style={{ fontFamily: `${Constants.font.medium}` }}>{total}</div>
               </div>
               <div css={STYLES_STAT}>
                 <div style={{ color: `${Constants.system.grayBlack}` }}>Public slates</div>
-                <div style={{ fontFamily: `${Constants.font.semiBold}` }}>0</div>
+                <div style={{ fontFamily: `${Constants.font.medium}` }}>{data.slates.length}</div>
               </div>
               {/* <div css={STYLES_STAT}>
                 <div style={{ color: `${Constants.system.grayBlack}` }}>Following slates</div>
