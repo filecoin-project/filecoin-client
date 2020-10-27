@@ -63,8 +63,8 @@ export const font = {
 };
 
 export const typescale = {
-  lvlN1: `12px`,
-  lvl0: `14px`,
+  lvlN1: `0.75rem`,
+  lvl0: `0.875rem`,
   lvl1: `1rem`,
   lvl2: `1.25rem`,
   lvl3: `1.563rem`,
