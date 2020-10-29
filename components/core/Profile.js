@@ -16,12 +16,19 @@ const STYLES_PROFILE_INFO = css`
   display: flex;
   line-height: 1.3;
   margin: 0 auto;
+  width: 50%;
   @media (max-width: ${Constants.sizes.tablet}px) {
     width: 66.66%;
   }
   @media (max-width: ${Constants.sizes.mobile}px) {
     width: 100%;
   }
+`;
+
+const STYLES_PROFILE_INFO_INTERNAL = css`
+  display: flex;
+  line-height: 1.3;
+  margin: 0 auto;
 `;
 
 const STYLES_INFO = css`
@@ -61,7 +68,6 @@ const STYLES_NAME = css`
   margin-right: 24px;
   word-wrap: break-word;
   @media (max-width: ${Constants.sizes.mobile}px) {
-    font-size: ${Constants.typescale.lvl2};
     margin-bottom: 16px;
   }
 `;
@@ -140,49 +146,95 @@ export default class Profile extends React.Component {
 
     return (
       <div css={STYLES_PROFILE}>
-        <div css={STYLES_PROFILE_INFO} style={this.props.onAction ? null : { width: `50%` }}>
-          <div
-            css={STYLES_PROFILE_IMAGE}
-            style={{ backgroundImage: `url('${data.data.photo}')` }}
-          />
-          <div css={STYLES_INFO}>
-            <div css={STYLES_FLEX}>
-              <div css={STYLES_NAME}>{Strings.getPresentationName(data)}</div>
-              {this.props.onAction ? null : (
-                <a css={STYLES_BUTTON} href={"http://slate.host/_"}>
-                  Follow
-                </a>
-              )}
-            </div>
+        {this.props.onAction ? (
+          <div css={STYLES_PROFILE_INFO_INTERNAL}>
+            <div
+              css={STYLES_PROFILE_IMAGE}
+              style={{ backgroundImage: `url('${data.data.photo}')` }}
+            />
+            <div css={STYLES_INFO}>
+              <div css={STYLES_FLEX}>
+                <div css={STYLES_NAME}>{Strings.getPresentationName(data)}</div>
+                {this.props.onAction ? null : (
+                  <a css={STYLES_BUTTON} href={"http://slate.host/_"}>
+                    Follow
+                  </a>
+                )}
+              </div>
 
-            {
-              data.data.body ? (
-                <div css={STYLES_DESCRIPTION}>
-                  <ProcessedText text={data.data.body} />
+              {
+                data.data.body ? (
+                  <div css={STYLES_DESCRIPTION}>
+                    <ProcessedText text={data.data.body} />
+                  </div>
+                ) : null
+                // <div css={STYLES_DESCRIPTION}>
+                //   <ProcessedText text={"Joined Slate Month, Year"} />
+                // </div>
+              }
+
+              <div>{this.props.buttons}</div>
+              <div css={STYLES_STATS}>
+                <div css={STYLES_STAT}>
+                  <div style={{ color: `${Constants.system.grayBlack}` }}>Public data</div>
+                  <div style={{ fontFamily: `${Constants.font.medium}` }}>{total}</div>
                 </div>
-              ) : null
-              // <div css={STYLES_DESCRIPTION}>
-              //   <ProcessedText text={"Joined Slate Month, Year"} />
-              // </div>
-            }
-
-            <div>{this.props.buttons}</div>
-            <div css={STYLES_STATS}>
-              <div css={STYLES_STAT}>
-                <div style={{ color: `${Constants.system.grayBlack}` }}>Public data</div>
-                <div style={{ fontFamily: `${Constants.font.medium}` }}>{total}</div>
-              </div>
-              <div css={STYLES_STAT}>
-                <div style={{ color: `${Constants.system.grayBlack}` }}>Public slates</div>
-                <div style={{ fontFamily: `${Constants.font.medium}` }}>{data.slates.length}</div>
-              </div>
-              {/* <div css={STYLES_STAT}>
+                <div css={STYLES_STAT}>
+                  <div style={{ color: `${Constants.system.grayBlack}` }}>Public slates</div>
+                  <div style={{ fontFamily: `${Constants.font.medium}` }}>{data.slates.length}</div>
+                </div>
+                {/* <div css={STYLES_STAT}>
                 <div style={{ color: `${Constants.system.grayBlack}` }}>Following slates</div>
                 <div style={{ fontFamily: `${Constants.font.semiBold}` }}>0</div>
               </div> */}
+              </div>
             </div>
           </div>
-        </div>
+        ) : (
+          <div css={STYLES_PROFILE_INFO}>
+            <div
+              css={STYLES_PROFILE_IMAGE}
+              style={{ backgroundImage: `url('${data.data.photo}')` }}
+            />
+            <div css={STYLES_INFO}>
+              <div css={STYLES_FLEX}>
+                <div css={STYLES_NAME}>{Strings.getPresentationName(data)}</div>
+                {this.props.onAction ? null : (
+                  <a css={STYLES_BUTTON} href={"http://slate.host/_"}>
+                    Follow
+                  </a>
+                )}
+              </div>
+
+              {
+                data.data.body ? (
+                  <div css={STYLES_DESCRIPTION}>
+                    <ProcessedText text={data.data.body} />
+                  </div>
+                ) : null
+                // <div css={STYLES_DESCRIPTION}>
+                //   <ProcessedText text={"Joined Slate Month, Year"} />
+                // </div>
+              }
+
+              <div>{this.props.buttons}</div>
+              <div css={STYLES_STATS}>
+                <div css={STYLES_STAT}>
+                  <div style={{ color: `${Constants.system.grayBlack}` }}>Public data</div>
+                  <div style={{ fontFamily: `${Constants.font.medium}` }}>{total}</div>
+                </div>
+                <div css={STYLES_STAT}>
+                  <div style={{ color: `${Constants.system.grayBlack}` }}>Public slates</div>
+                  <div style={{ fontFamily: `${Constants.font.medium}` }}>{data.slates.length}</div>
+                </div>
+                {/* <div css={STYLES_STAT}>
+                <div style={{ color: `${Constants.system.grayBlack}` }}>Following slates</div>
+                <div style={{ fontFamily: `${Constants.font.semiBold}` }}>0</div>
+              </div> */}
+              </div>
+            </div>
+          </div>
+        )}
         {data.slates && data.slates.length ? (
           <SlatePreviewBlocks
             isOwner={this.props.isOwner}
