@@ -52,7 +52,7 @@ const STYLES_CREATOR = css`
 `;
 
 const STYLES_DESCTIPTION = css`
-  font-size: ${Constants.typescale.lvl0};
+  font-size: ${Constants.typescale.lvl1};
   font-family: ${Constants.font.text};
   width: 50%;
   color: ${Constants.system.black};
@@ -86,7 +86,7 @@ const STYLES_FLEX = css`
 `;
 
 const STYLES_STATS = css`
-  font-size: ${Constants.typescale.lvlN1};
+  font-size: ${Constants.typescale.lvl0};
   margin-top: 24px;
   display: flex;
   line-height: 1.5;

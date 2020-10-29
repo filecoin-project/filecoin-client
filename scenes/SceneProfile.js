@@ -5,10 +5,7 @@ import * as Constants from "~/common/constants";
 import * as SVG from "~/common/svg";
 
 import { css } from "@emotion/react";
-import {
-  ButtonPrimary,
-  ButtonSecondary,
-} from "~/components/system/components/Buttons";
+import { ButtonPrimary, ButtonSecondary } from "~/components/system/components/Buttons";
 import { dispatchCustomEvent } from "~/common/custom-events";
 
 import ScenePage from "~/components/core/ScenePage";
@@ -94,8 +91,7 @@ export default class SceneProfile extends React.Component {
         name: "create-alert",
         detail: {
           alert: {
-            message:
-              "We're having trouble connecting right now. Please try again later",
+            message: "We're having trouble connecting right now. Please try again later",
           },
         },
       });
@@ -118,10 +114,7 @@ export default class SceneProfile extends React.Component {
   _handleTrust = () => {
     this.setState({ trustLoading: true }, async () => {
       let response;
-      if (
-        this.state.trustStatus === "untrusted" ||
-        this.state.trustStatus === "sent"
-      ) {
+      if (this.state.trustStatus === "untrusted" || this.state.trustStatus === "sent") {
         response = await Actions.createTrustRelationship({
           userId: this.props.data.id,
         });
@@ -157,7 +150,7 @@ export default class SceneProfile extends React.Component {
         {this.state.followStatus ? (
           <ButtonSecondary
             loading={this.state.followLoading}
-            style={{ margin: "0px 8px", minWidth: 152 }}
+            style={{ marginRight: 8, marginTop: 16, minWidth: 152 }}
             onClick={this._handleFollow}
           >
             Unfollow
@@ -165,17 +158,16 @@ export default class SceneProfile extends React.Component {
         ) : (
           <ButtonPrimary
             loading={this.state.followLoading}
-            style={{ margin: "0px 8px", minWidth: 152 }}
+            style={{ marginRight: 8, marginTop: 16, minWidth: 152 }}
             onClick={this._handleFollow}
           >
             Follow
           </ButtonPrimary>
         )}
-        {this.state.trustStatus === "untrusted" ||
-        this.state.trustStatus === "received" ? (
+        {this.state.trustStatus === "untrusted" || this.state.trustStatus === "received" ? (
           <ButtonPrimary
             loading={this.state.trustLoading}
-            style={{ margin: "0px 8px", minWidth: 152 }}
+            style={{ marginRight: 8, marginTop: 16, minWidth: 152 }}
             onClick={this._handleTrust}
           >
             {STATUS_BUTTON_MAP[this.state.trustStatus]}
@@ -183,7 +175,7 @@ export default class SceneProfile extends React.Component {
         ) : (
           <ButtonSecondary
             loading={this.state.trustLoading}
-            style={{ margin: "0px 8px", minWidth: 152 }}
+            style={{ marginRight: 8, marginTop: 16, minWidth: 152 }}
             onClick={this._handleTrust}
           >
             {STATUS_BUTTON_MAP[this.state.trustStatus]}
@@ -198,11 +190,7 @@ export default class SceneProfile extends React.Component {
           onAction={this.props.onAction}
           creator={this.props.data}
           sceneId={this.props.sceneId}
-          buttons={
-            this.props.viewer.username === this.props.data.username
-              ? null
-              : buttons
-          }
+          buttons={this.props.viewer.username === this.props.data.username ? null : buttons}
           isOwner={this.props.viewer.username === this.props.data.username}
         />
       </ScenePage>

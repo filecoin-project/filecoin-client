@@ -14,9 +14,8 @@ const STYLES_PROFILE = css`
 
 const STYLES_PROFILE_INFO = css`
   display: flex;
-  margin: 0 auto;
-  width: 50%;
   line-height: 1.3;
+  margin: 0 auto;
   @media (max-width: ${Constants.sizes.tablet}px) {
     width: 66.66%;
   }
@@ -68,7 +67,7 @@ const STYLES_NAME = css`
 `;
 
 const STYLES_DESCRIPTION = css`
-  font-size: ${Constants.typescale.lvl0};
+  font-size: ${Constants.typescale.lvl1};
   width: 100%;
   word-wrap: break-word;
   @media (max-width: ${Constants.sizes.mobile}px) {
@@ -77,7 +76,7 @@ const STYLES_DESCRIPTION = css`
 `;
 
 const STYLES_STATS = css`
-  font-size: ${Constants.typescale.lvlN1};
+  font-size: ${Constants.typescale.lvl0};
   line-height: 1.5;
   margin-top: 24px;
   display: flex;
@@ -137,10 +136,11 @@ export default class Profile extends React.Component {
     for (let slate of data.slates) {
       total += slate.data.objects.length;
     }
+    console.log(this.props.buttons);
 
     return (
       <div css={STYLES_PROFILE}>
-        <div css={STYLES_PROFILE_INFO}>
+        <div css={STYLES_PROFILE_INFO} style={this.props.onAction ? null : { width: `50%` }}>
           <div
             css={STYLES_PROFILE_IMAGE}
             style={{ backgroundImage: `url('${data.data.photo}')` }}
@@ -148,10 +148,13 @@ export default class Profile extends React.Component {
           <div css={STYLES_INFO}>
             <div css={STYLES_FLEX}>
               <div css={STYLES_NAME}>{Strings.getPresentationName(data)}</div>
-              <a css={STYLES_BUTTON} href={"http://slate.host/_"}>
-                Follow
-              </a>
+              {this.props.onAction ? null : (
+                <a css={STYLES_BUTTON} href={"http://slate.host/_"}>
+                  Follow
+                </a>
+              )}
             </div>
+
             {
               data.data.body ? (
                 <div css={STYLES_DESCRIPTION}>
@@ -162,6 +165,8 @@ export default class Profile extends React.Component {
               //   <ProcessedText text={"Joined Slate Month, Year"} />
               // </div>
             }
+
+            <div>{this.props.buttons}</div>
             <div css={STYLES_STATS}>
               <div css={STYLES_STAT}>
                 <div style={{ color: `${Constants.system.grayBlack}` }}>Public data</div>
@@ -177,7 +182,6 @@ export default class Profile extends React.Component {
               </div> */}
             </div>
           </div>
-          {/* {this.props.buttons} */}
         </div>
         {data.slates && data.slates.length ? (
           <SlatePreviewBlocks
