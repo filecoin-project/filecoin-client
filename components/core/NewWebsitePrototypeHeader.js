@@ -12,7 +12,6 @@ const STYLES_ROOT = css`
   width: 100%;
   height: 100%;
   margin: 0 auto;
-  mix-blend-mode: difference;
   z-index: ${Constants.zindex.header};
 
   @media (max-width: ${Constants.sizes.mobile}px) {
@@ -28,6 +27,7 @@ const STYLES_CONTAINER = css`
   width: 100%;
   display: flex;
   justify-content: space-between;
+
   @media (max-width: ${Constants.sizes.mobile}px) {
     display: flex;
     justify-content: space-between;
@@ -75,7 +75,7 @@ const STYLES_BURGER = css`
   @media (max-width: ${Constants.sizes.mobile}px) {
     z-index: ${Constants.zindex.modal};
     position: absolute;
-    top: 24px;
+    top: 12px;
     right: 24px;
     display: flex;
     flex-direction: column;

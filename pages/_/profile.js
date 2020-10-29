@@ -21,6 +21,7 @@ const STYLES_ROOT = css`
   text-align: center;
   font-size: 1rem;
   min-height: 100vh;
+  background-color: ${Constants.system.white};
 `;
 
 export default class ProfilePage extends React.Component {

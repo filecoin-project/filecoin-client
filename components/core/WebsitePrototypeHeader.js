@@ -8,7 +8,7 @@ const STYLES_CONTAINER = css`
   position: -webkit-sticky;
   position: sticky;
   top: 0;
-  padding: 24px 64px 24px 42px;
+  padding: 16px 64px 16px 42px;
   width: 100%;
   margin: 0 auto;
   z-index: ${Constants.zindex.header};
@@ -19,8 +19,14 @@ const STYLES_CONTAINER = css`
   display: flex;
   justify-content: space-between;
 
+  @supports ((-webkit-backdrop-filter: blur(25px)) or (backdrop-filter: blur(25px))) {
+    -webkit-backdrop-filter: blur(25px);
+    backdrop-filter: blur(25px);
+    background-color: rgba(255, 255, 255, 0.75);
+  }
+
   @media (max-width: ${Constants.sizes.mobile}px) {
-    padding: 16px 24px;
+    padding: 12px 24px;
   }
 `;
 
