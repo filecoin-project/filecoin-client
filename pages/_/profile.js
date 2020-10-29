@@ -39,9 +39,7 @@ export default class ProfilePage extends React.Component {
       >
         <div css={STYLES_ROOT}>
           <WebsitePrototypeHeader />
-          <div style={{ margin: "80px 24px 0px 24px" }}>
-            <Profile {...this.props} />
-          </div>
+          <Profile {...this.props} />
           <WebsitePrototypeFooter />
         </div>
       </WebsitePrototypeWrapper>
