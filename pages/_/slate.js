@@ -27,12 +27,12 @@ const STYLES_ROOT = css`
 
 const STYLES_SLATE_INTRO = css`
   display: flex;
-  margin: 0 64px;
+  padding: 32px 64px;
   align-items: baseline;
   line-height: 1.3;
   word-wrap: break-word;
   @media (max-width: ${Constants.sizes.mobile}px) {
-    margin: 0 24px;
+    padding: 32px 24px;
     display: block;
     font-size: 14px;
   }
@@ -55,7 +55,7 @@ const STYLES_DESCTIPTION = css`
   font-size: ${Constants.typescale.lvl1};
   font-family: ${Constants.font.text};
   width: 50%;
-  color: ${Constants.system.black};
+  color: ${Constants.system.grayBlack};
   word-wrap: break-word;
   @media (max-width: ${Constants.sizes.mobile}px) {
     width: 100%;
@@ -73,7 +73,7 @@ const STYLES_TITLE = css`
   margin-right: 24px;
   word-wrap: break-word;
   @media (max-width: ${Constants.sizes.mobile}px) {
-    font-size: ${Constants.typescale.lvl2};
+    font-size: ${Constants.typescale.lvl3};
   }
 `;
 

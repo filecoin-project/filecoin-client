@@ -6,36 +6,68 @@ import { css } from "@emotion/react";
 import { ProcessedText } from "~/components/system/components/Typography";
 
 import SlatePreviewBlocks from "~/components/core/SlatePreviewBlock";
+import { SceneUtils } from "three";
+
+const STYLES_PROFILE_INTERNAL = css`
+  width: 100%;
+  padding: 80px 0px 0px 0px;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+`;
 
 const STYLES_PROFILE = css`
   width: 100%;
-  padding: 24px 24px 0px 24px;
+  padding: 80px 64px 0px 64px;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+
+  @media (max-width: ${Constants.sizes.mobile}px) {
+    padding: 80px 24px 0px 24px;
+  }
 `;
 
 const STYLES_PROFILE_INFO = css`
   display: flex;
   line-height: 1.3;
   margin: 0 auto;
-  width: 50%;
-  @media (max-width: ${Constants.sizes.tablet}px) {
-    width: 66.66%;
-  }
-  @media (max-width: ${Constants.sizes.mobile}px) {
-    width: 100%;
-  }
+  width: 100%;
+  max-width: ${Constants.sizes.desktop}px;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
 `;
 
 const STYLES_PROFILE_INFO_INTERNAL = css`
   display: flex;
   line-height: 1.3;
   margin: 0 auto;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+`;
+
+const STYLES_INFO_INTERNAL = css`
+  display: block;
+  width: 100%;
+  max-width: calc(100% - 104px);
+  text-align: left;
+  margin-bottom: 48px;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+  @media (max-width: ${Constants.sizes.mobile}px) {
+    max-width: calc(100% - 64px);
+  }
 `;
 
 const STYLES_INFO = css`
   display: block;
   width: 100%;
+  max-width: calc(100% - 224px);
   text-align: left;
   margin-bottom: 48px;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+  @media (max-width: ${Constants.sizes.mobile}px) {
+    max-width: calc(100% - 80px);
+  }
 `;
 
 const STYLES_PROFILE_IMAGE = css`
@@ -44,7 +76,6 @@ const STYLES_PROFILE_IMAGE = css`
   background-position: 50% 50%;
   width: 80px;
   height: 80px;
-  align-item: right;
   flex-shrink: 0;
   border-radius: 4px;
   margin-right: 24px;
@@ -58,15 +89,27 @@ const STYLES_PROFILE_IMAGE = css`
 const STYLES_NAME = css`
   font-size: ${Constants.typescale.lvl3};
   font-family: ${Constants.font.medium};
-  font-weight: 400;
-  width: auto;
   max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-weight: 400;
   align-item: left;
   margin-top: 8px;
   margin-right: 24px;
-  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+  @media (max-width: ${Constants.sizes.mobile}px) {
+    margin-bottom: 16px;
+  }
+`;
+
+const STYLES_NAME_INTERNAL = css`
+  font-size: ${Constants.typescale.lvl3};
+  font-family: ${Constants.font.medium};
+  font-weight: 400;
+  max-width: 100%;
+  align-item: left;
+  margin-top: 8px;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
   @media (max-width: ${Constants.sizes.mobile}px) {
     margin-bottom: 16px;
   }
@@ -75,7 +118,8 @@ const STYLES_NAME = css`
 const STYLES_DESCRIPTION = css`
   font-size: ${Constants.typescale.lvl1};
   width: 100%;
-  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
   @media (max-width: ${Constants.sizes.mobile}px) {
     margin-top: 24px;
   }
@@ -145,16 +189,16 @@ export default class Profile extends React.Component {
     console.log(this.props.buttons);
 
     return (
-      <div css={STYLES_PROFILE}>
+      <div>
         {this.props.onAction ? (
           <div css={STYLES_PROFILE_INFO_INTERNAL}>
             <div
               css={STYLES_PROFILE_IMAGE}
               style={{ backgroundImage: `url('${data.data.photo}')` }}
             />
-            <div css={STYLES_INFO}>
+            <div css={STYLES_INFO_INTERNAL}>
               <div css={STYLES_FLEX}>
-                <div css={STYLES_NAME}>{Strings.getPresentationName(data)}</div>
+                <div css={STYLES_NAME_INTERNAL}>{Strings.getPresentationName(data)}</div>
                 {this.props.onAction ? null : (
                   <a css={STYLES_BUTTON} href={"http://slate.host/_"}>
                     Follow
@@ -191,59 +235,79 @@ export default class Profile extends React.Component {
             </div>
           </div>
         ) : (
-          <div css={STYLES_PROFILE_INFO}>
-            <div
-              css={STYLES_PROFILE_IMAGE}
-              style={{ backgroundImage: `url('${data.data.photo}')` }}
-            />
-            <div css={STYLES_INFO}>
-              <div css={STYLES_FLEX}>
-                <div css={STYLES_NAME}>{Strings.getPresentationName(data)}</div>
-                {this.props.onAction ? null : (
-                  <a css={STYLES_BUTTON} href={"http://slate.host/_"}>
-                    Follow
-                  </a>
-                )}
-              </div>
+          <div css={STYLES_PROFILE}>
+            <div css={STYLES_PROFILE_INFO}>
+              <div
+                css={STYLES_PROFILE_IMAGE}
+                style={{ backgroundImage: `url('${data.data.photo}')` }}
+              />
+              <div css={STYLES_INFO}>
+                <div css={STYLES_FLEX}>
+                  <div css={STYLES_NAME}>{Strings.getPresentationName(data)}</div>
+                  {this.props.onAction ? null : (
+                    <a css={STYLES_BUTTON} href={"http://slate.host/_"}>
+                      Follow
+                    </a>
+                  )}
+                </div>
 
-              {
-                data.data.body ? (
-                  <div css={STYLES_DESCRIPTION}>
-                    <ProcessedText text={data.data.body} />
+                {
+                  data.data.body ? (
+                    <div css={STYLES_DESCRIPTION}>
+                      <ProcessedText text={data.data.body} />
+                    </div>
+                  ) : null
+                  // <div css={STYLES_DESCRIPTION}>
+                  //   <ProcessedText text={"Joined Slate Month, Year"} />
+                  // </div>
+                }
+
+                <div>{this.props.buttons}</div>
+                <div css={STYLES_STATS}>
+                  <div css={STYLES_STAT}>
+                    <div style={{ color: `${Constants.system.grayBlack}` }}>Public data</div>
+                    <div style={{ fontFamily: `${Constants.font.medium}` }}>{total}</div>
                   </div>
-                ) : null
-                // <div css={STYLES_DESCRIPTION}>
-                //   <ProcessedText text={"Joined Slate Month, Year"} />
-                // </div>
-              }
-
-              <div>{this.props.buttons}</div>
-              <div css={STYLES_STATS}>
-                <div css={STYLES_STAT}>
-                  <div style={{ color: `${Constants.system.grayBlack}` }}>Public data</div>
-                  <div style={{ fontFamily: `${Constants.font.medium}` }}>{total}</div>
-                </div>
-                <div css={STYLES_STAT}>
-                  <div style={{ color: `${Constants.system.grayBlack}` }}>Public slates</div>
-                  <div style={{ fontFamily: `${Constants.font.medium}` }}>{data.slates.length}</div>
-                </div>
-                {/* <div css={STYLES_STAT}>
+                  <div css={STYLES_STAT}>
+                    <div style={{ color: `${Constants.system.grayBlack}` }}>Public slates</div>
+                    <div style={{ fontFamily: `${Constants.font.medium}` }}>
+                      {data.slates.length}
+                    </div>
+                  </div>
+                  {/* <div css={STYLES_STAT}>
                 <div style={{ color: `${Constants.system.grayBlack}` }}>Following slates</div>
                 <div style={{ fontFamily: `${Constants.font.semiBold}` }}>0</div>
               </div> */}
+                </div>
               </div>
             </div>
           </div>
         )}
-        {data.slates && data.slates.length ? (
-          <SlatePreviewBlocks
-            isOwner={this.props.isOwner}
-            external={this.props.onAction ? false : true}
-            slates={data.slates}
-            username={data.username}
-            onAction={this.props.onAction}
-          />
-        ) : null}
+        {this.props.onAction ? (
+          <div css={STYLES_PROFILE_INTERNAL}>
+            {data.slates && data.slates.length ? (
+              <SlatePreviewBlocks
+                isOwner={this.props.isOwner}
+                external={this.props.onAction ? false : true}
+                slates={data.slates}
+                username={data.username}
+                onAction={this.props.onAction}
+              />
+            ) : null}
+          </div>
+        ) : (
+          <div css={STYLES_PROFILE}>
+            {data.slates && data.slates.length ? (
+              <SlatePreviewBlocks
+                isOwner={this.props.isOwner}
+                external={this.props.onAction ? false : true}
+                slates={data.slates}
+                username={data.username}
+                onAction={this.props.onAction}
+              />
+            ) : null}
+          </div>
+        )}
         {/* <div>
             {data.slates.map((slate) => {
               if (this.props.onAction) {
