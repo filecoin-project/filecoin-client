@@ -16,7 +16,7 @@ export const getServerSideProps = async (context) => {
 };
 
 const STYLES_ROOT = css`
-  display: grid;
+  display: block;
   grid-template-rows: auto 1fr auto;
   text-align: center;
   font-size: 1rem;

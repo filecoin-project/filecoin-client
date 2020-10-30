@@ -10,7 +10,7 @@ import { SceneUtils } from "three";
 
 const STYLES_PROFILE_INTERNAL = css`
   width: 100%;
-  padding: 80px 0px 0px 0px;
+  padding: 64px 0px 0px 0px;
   overflow-wrap: break-word;
   white-space: pre-wrap;
 `;
@@ -20,6 +20,8 @@ const STYLES_PROFILE = css`
   padding: 80px 64px 0px 64px;
   overflow-wrap: break-word;
   white-space: pre-wrap;
+  flex-shrink: 0;
+  display: block;
 
   @media (max-width: ${Constants.sizes.mobile}px) {
     padding: 80px 24px 0px 24px;
@@ -98,6 +100,7 @@ const STYLES_NAME = css`
   white-space: pre-wrap;
   @media (max-width: ${Constants.sizes.mobile}px) {
     margin-bottom: 16px;
+    margin-right: 0;
   }
 `;
 
@@ -284,7 +287,7 @@ export default class Profile extends React.Component {
           </div>
         )}
         {this.props.onAction ? (
-          <div css={STYLES_PROFILE_INTERNAL}>
+          <div css={STYLES_PROFILE_INTERNAL} style={{ paddingTop: 0 }}>
             {data.slates && data.slates.length ? (
               <SlatePreviewBlocks
                 isOwner={this.props.isOwner}
@@ -296,7 +299,7 @@ export default class Profile extends React.Component {
             ) : null}
           </div>
         ) : (
-          <div css={STYLES_PROFILE}>
+          <div css={STYLES_PROFILE} style={{ paddingTop: 0 }}>
             {data.slates && data.slates.length ? (
               <SlatePreviewBlocks
                 isOwner={this.props.isOwner}
