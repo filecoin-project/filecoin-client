@@ -89,7 +89,7 @@ const STYLES_PROFILE_IMAGE = css`
 `;
 
 const STYLES_NAME = css`
-  font-size: ${Constants.typescale.lvl3};
+  font-size: ${Constants.typescale.lvl4};
   font-family: ${Constants.font.medium};
   max-width: 100%;
   font-weight: 400;
@@ -147,23 +147,21 @@ padding-left: 12px; */};
 `;
 
 const STYLES_BUTTON = css`
-  padding: 8px 24px;
+  padding: 10px 24px;
   cursor: pointer;
-  font-family: ${Constants.font.medium};
+  font-family: ${Constants.font.semiBold};
   font-weight: 400;
   font-size: 14px;
   text-align: center;
   text-decoration: none;
-  border: 1px solid ${Constants.system.gray};
-  height: 36px;
+  height: 40px;
+  width: 160px;
   border-radius: 4px;
-  color: ${Constants.system.black};
-  :hover {
-    background-color: ${Constants.system.gray};
-    transition: 200ms background-color linear;
-  }
+  color: ${Constants.system.white};
+  background-color: ${Constants.system.brand};
+
   :visited {
-    color: ${Constants.system.black};
+    color: ${Constants.system.white};
   }
 `;
 
@@ -174,11 +172,6 @@ const STYLES_FLEX = css`
   @media (max-width: ${Constants.sizes.mobile}px) {
     display: block;
   }
-`;
-
-const STYLES_LINK = css`
-  color: ${Constants.system.black};
-  text-decoration: none;
 `;
 
 export default class Profile extends React.Component {
@@ -202,11 +195,6 @@ export default class Profile extends React.Component {
             <div css={STYLES_INFO_INTERNAL}>
               <div css={STYLES_FLEX}>
                 <div css={STYLES_NAME_INTERNAL}>{Strings.getPresentationName(data)}</div>
-                {this.props.onAction ? null : (
-                  <a css={STYLES_BUTTON} href={"http://slate.host/_"}>
-                    Follow
-                  </a>
-                )}
               </div>
 
               {
@@ -223,11 +211,11 @@ export default class Profile extends React.Component {
               <div>{this.props.buttons}</div>
               <div css={STYLES_STATS}>
                 <div css={STYLES_STAT}>
-                  <div style={{ color: `${Constants.system.grayBlack}` }}>Public data</div>
+                  <div style={{ color: `${Constants.system.darkGray}` }}>Public data</div>
                   <div style={{ fontFamily: `${Constants.font.medium}` }}>{total}</div>
                 </div>
                 <div css={STYLES_STAT}>
-                  <div style={{ color: `${Constants.system.grayBlack}` }}>Public slates</div>
+                  <div style={{ color: `${Constants.system.darkGray}` }}>Public slates</div>
                   <div style={{ fontFamily: `${Constants.font.medium}` }}>{data.slates.length}</div>
                 </div>
                 {/* <div css={STYLES_STAT}>
@@ -247,16 +235,10 @@ export default class Profile extends React.Component {
               <div css={STYLES_INFO}>
                 <div css={STYLES_FLEX}>
                   <div css={STYLES_NAME}>{Strings.getPresentationName(data)}</div>
-                  {this.props.onAction ? null : (
-                    <a css={STYLES_BUTTON} href={"http://slate.host/_"}>
-                      Follow
-                    </a>
-                  )}
                 </div>
-
                 {
                   data.data.body ? (
-                    <div css={STYLES_DESCRIPTION}>
+                    <div css={STYLES_DESCRIPTION} style={{ marginBottom: 24 }}>
                       <ProcessedText text={data.data.body} />
                     </div>
                   ) : null
@@ -264,15 +246,18 @@ export default class Profile extends React.Component {
                   //   <ProcessedText text={"Joined Slate Month, Year"} />
                   // </div>
                 }
-
-                <div>{this.props.buttons}</div>
+                <div css={STYLES_BUTTON}>
+                  <a css={STYLES_BUTTON} href={"http://slate.host/_"}>
+                    Follow
+                  </a>
+                </div>
                 <div css={STYLES_STATS}>
                   <div css={STYLES_STAT}>
-                    <div style={{ color: `${Constants.system.grayBlack}` }}>Public data</div>
+                    <div style={{ color: `${Constants.system.darkGray}` }}>Public data</div>
                     <div style={{ fontFamily: `${Constants.font.medium}` }}>{total}</div>
                   </div>
                   <div css={STYLES_STAT}>
-                    <div style={{ color: `${Constants.system.grayBlack}` }}>Public slates</div>
+                    <div style={{ color: `${Constants.system.darkGray}` }}>Public slates</div>
                     <div style={{ fontFamily: `${Constants.font.medium}` }}>
                       {data.slates.length}
                     </div>
