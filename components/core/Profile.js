@@ -238,7 +238,7 @@ export default class Profile extends React.Component {
                 </div>
                 {
                   data.data.body ? (
-                    <div css={STYLES_DESCRIPTION} style={{ marginBottom: 24 }}>
+                    <div css={STYLES_DESCRIPTION} style={{ marginBottom: 16 }}>
                       <ProcessedText text={data.data.body} />
                     </div>
                   ) : null
