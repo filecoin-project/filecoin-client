@@ -335,7 +335,8 @@ const STYLES_LINK = css`
   color: ${Constants.system.black};
   text-decoration: none;
   width: calc(33.33% - 16px);
-  margin-bottom: 24px;
+  margin-bottom: 16px;
+  margin-right: 16px;
 
   @media (max-width: ${Constants.sizes.tablet}px) {
     width: 50%;
@@ -352,7 +353,6 @@ const STYLES_SLATES = css`
   flex-wrap: wrap;
   overflow: hidden;
   padding-bottom: 48px;
-  justify-content: space-between;
 
   @media (max-width: ${Constants.sizes.mobile}px) {
     display: block;
