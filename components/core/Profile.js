@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as Constants from "~/common/constants";
 import * as Strings from "~/common/strings";
+import * as Actions from "~/common/actions";
 
 import { css } from "@emotion/core";
 import { ProcessedText } from "~/components/system/components/Typography";
@@ -98,8 +99,7 @@ const STYLES_NAME = css`
   font-family: ${Constants.font.medium};
   max-width: 100%;
   font-weight: 400;
-  margin-top: 8px;
-  margin-right: 24px;
+  margin: 8px 24px 8px 0;
   overflow-wrap: break-word;
   white-space: pre-wrap;
 
@@ -175,15 +175,54 @@ const STYLES_FLEX = css`
   }
 `;
 
+const STYLES_EXPLORE = css`
+  padding-top: 8px;
+  margin: 200px auto 24px auto;
+  font-size: ${Constants.typescale.lvl2};
+  font-family: ${Constants.font.medium};
+  font-weight: 400;
+  color: ${Constants.system.black};
+`;
+
 export default class Profile extends React.Component {
+  state = {
+    exploreSlates: [],
+  };
+
+  componentDidMount = async () => {
+    let exploreSlates = [];
+    let response1 = await Actions.getSlateById({ id: "857ad84d-7eff-4861-a988-65c84b62fc23" });
+    let response2 = await Actions.getSlateById({ id: "81fa0b39-0e96-4c7f-8587-38468bb67cb3" });
+    let response3 = await Actions.getSlateById({ id: "c4e8dad7-4ba0-4f25-a92a-c73ef5522d29" });
+    let response4 = await Actions.getSlateById({ id: "857ad84d-7eff-4861-a988-65c84b62fc23" });
+    let response5 = await Actions.getSlateById({ id: "81fa0b39-0e96-4c7f-8587-38468bb67cb3" });
+    let response6 = await Actions.getSlateById({ id: "c4e8dad7-4ba0-4f25-a92a-c73ef5522d29" });
+
+    // let response1 = await Actions.getSlateById({ id: "d2861ac4-fc41-4c07-8f21-d0bf06be364c" });
+    // let response2 = await Actions.getSlateById({ id: "9c2c458c-d92a-4e81-a4b6-bf6ab4607470" });
+    // let response3 = await Actions.getSlateById({ id: "7f461144-0647-43d7-8294-788b37ae5979" });
+    // let response4 = await Actions.getSlateById({ id: "f72c2594-b8ac-41f6-91e0-b2da6788ae23" });
+    // let response5 = await Actions.getSlateById({ id: "a0d6e2f2-564d-47ed-bf56-13c42634703d" });
+    // let response6 = await Actions.getSlateById({ id: "0ba92c73-92e7-4b00-900e-afae4856c9ea" });
+    exploreSlates.push(
+      response1.slate,
+      response2.slate,
+      response3.slate,
+      response4.slate,
+      response5.slate,
+      response6.slate
+    );
+    this.setState({ exploreSlates });
+  };
+
   render() {
     let data = this.props.creator ? this.props.creator : this.props.data;
+    console.log(this.state.exploreSlates);
 
     let total = 0;
     for (let slate of data.slates) {
       total += slate.data.objects.length;
     }
-
     return (
       <div>
         {this.props.onAction ? (
@@ -252,7 +291,6 @@ export default class Profile extends React.Component {
             </div>
           </div>
         )}
-
         {this.props.onAction ? (
           <div css={STYLES_PROFILE_INTERNAL} style={{ paddingTop: 0 }}>
             {data.slates && data.slates.length ? (
@@ -274,7 +312,16 @@ export default class Profile extends React.Component {
                 username={data.username}
                 onAction={this.props.onAction}
               />
-            ) : null}
+            ) : (
+              <div>
+                {" "}
+                <p style={{ color: `${Constants.system.darkGray}` }}>
+                  No publicly shared slates from @{data.username}.
+                </p>
+                <div css={STYLES_EXPLORE}>Explore slates</div>
+                <SlatePreviewBlocksExternal slates={this.state.exploreSlates} />
+              </div>
+            )}
           </div>
         )}
       </div>
