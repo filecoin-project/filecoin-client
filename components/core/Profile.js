@@ -198,6 +198,7 @@ export default class Profile extends React.Component {
     let response5 = await Actions.getSlateById({ id: "81fa0b39-0e96-4c7f-8587-38468bb67cb3" });
     let response6 = await Actions.getSlateById({ id: "c4e8dad7-4ba0-4f25-a92a-c73ef5522d29" });
 
+    // @TARA: actual slate content to swap out when pushing to prod.
     // let response1 = await Actions.getSlateById({ id: "d2861ac4-fc41-4c07-8f21-d0bf06be364c" });
     // let response2 = await Actions.getSlateById({ id: "9c2c458c-d92a-4e81-a4b6-bf6ab4607470" });
     // let response3 = await Actions.getSlateById({ id: "7f461144-0647-43d7-8294-788b37ae5979" });
