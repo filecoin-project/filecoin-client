@@ -107,7 +107,7 @@ const STYLES_BLOCK = css`
   font-size: 12px;
   text-align: left;
   cursor: pointer;
-  height: 480px;
+  height: 440px;
   width: 100%;
 
   @media (max-width: ${Constants.sizes.mobile}px) {
@@ -116,22 +116,14 @@ const STYLES_BLOCK = css`
   }
 `;
 
-const STYLES_TITLE_LINE = css`
-  width: 100%;
-  display: flex;
-  align-items: center;
-  font-size: ${Constants.typescale.lvl1};
-  margin-bottom: 8px;
-  overflow-wrap: break-word;
-`;
-
 const STYLES_BODY = css`
   font-family: ${Constants.font.text};
   font-size: ${Constants.typescale.lvl0};
-  margin-bottom: 24px;
-  white-space: pre-wrap;
-  word-wrap: break-word;
   color: ${Constants.system.darkGray};
+  margin-bottom: 24px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 
   @media (max-width: ${Constants.sizes.mobile}px) {
     display: none;
@@ -283,9 +275,7 @@ export class SlatePreviewBlock extends React.Component {
               <div css={STYLES_TITLE}>{this.props.slate.data.name}</div>
               {this.props.slate.data.body ? (
                 <div css={STYLES_BODY}>
-                  <ViewAllButton noButton fullText={this.props.slate.data.body} maxCharacter={100}>
-                    <ProcessedText text={this.props.slate.data.body} />
-                  </ViewAllButton>
+                  <ProcessedText text={this.props.slate.data.body} />
                 </div>
               ) : (
                 <div style={{ height: "8px" }} />
@@ -329,9 +319,7 @@ export class SlatePreviewBlock extends React.Component {
               <div css={STYLES_TITLE}>{this.props.slate.data.name}</div>
               {this.props.slate.data.body ? (
                 <div css={STYLES_BODY}>
-                  <ViewAllButton noButton fullText={this.props.slate.data.body} maxCharacter={100}>
-                    <ProcessedText text={this.props.slate.data.body} />
-                  </ViewAllButton>
+                  <ProcessedText text={this.props.slate.data.body} />
                 </div>
               ) : (
                 <div style={{ height: "8px" }} />
