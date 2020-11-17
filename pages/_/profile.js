@@ -38,6 +38,7 @@ export default class ProfilePage extends React.Component {
     if (Strings.isEmpty(image)) {
       image = DEFAULT_IMAGE;
     }
+    console.log(this.props);
 
     return (
       <WebsitePrototypeWrapper title={title} description={description} url={url} image={image}>

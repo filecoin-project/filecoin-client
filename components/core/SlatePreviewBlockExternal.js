@@ -406,7 +406,7 @@ export default class SlatePreviewBlocksExternal extends React.Component {
   };
 
   render() {
-    console.log(this.props.slates, "22");
+    console.log("check slates", this.props.slates);
     return (
       <div css={STYLES_SLATES}>
         {this.props.slates.map((slate) => (

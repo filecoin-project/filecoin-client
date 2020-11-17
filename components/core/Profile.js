@@ -85,7 +85,7 @@ const STYLES_PROFILE_IMAGE = css`
   height: 80px;
   flex-shrink: 0;
   border-radius: 4px;
-  margin-right: 24px;
+  margin: 8px 24px 0 0;
 
   @media (max-width: ${Constants.sizes.mobile}px) {
     width: 64px;
@@ -95,13 +95,25 @@ const STYLES_PROFILE_IMAGE = css`
 `;
 
 const STYLES_NAME = css`
-  font-size: ${Constants.typescale.lvl4};
+  font-size: ${Constants.typescale.lvl3};
   font-family: ${Constants.font.medium};
   max-width: 100%;
   font-weight: 400;
-  margin: 8px 24px 8px 0;
+  margin: 8px 24px 0px 0;
   overflow-wrap: break-word;
   white-space: pre-wrap;
+  color: ${Constants.system.black};
+`;
+
+const STYLES_NAME_INTERNAL = css`
+  font-size: ${Constants.typescale.lvl3};
+  font-family: ${Constants.font.semiBold};
+  max-width: 100%;
+  font-weight: 400;
+  margin: 8px 24px 0px 0;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+  color: ${Constants.system.black};
 
   @media (max-width: ${Constants.sizes.mobile}px) {
     margin-bottom: 8px;
@@ -109,18 +121,9 @@ const STYLES_NAME = css`
   }
 `;
 
-const STYLES_NAME_INTERNAL = css`
-  font-size: ${Constants.typescale.lvl3};
-  font-family: ${Constants.font.medium};
-  font-weight: 400;
-  max-width: 100%;
-  margin-top: 8px;
-  overflow-wrap: break-word;
-  white-space: pre-wrap;
-`;
-
 const STYLES_DESCRIPTION = css`
-  font-size: ${Constants.typescale.lvl1};
+  font-size: ${Constants.typescale.lvl0};
+  color: ${Constants.system.darkGray};
   width: 100%;
   overflow-wrap: break-word;
   white-space: pre-wrap;
@@ -131,57 +134,53 @@ const STYLES_DESCRIPTION = css`
 
 const STYLES_STATS = css`
   font-size: ${Constants.typescale.lvl0};
-  line-height: 1.5;
-  margin: 12px 0 24px 0;
+  margin: 16px 0 16px 0;
   display: flex;
   width: 100%;
-  flex-wrap: wrap;
+  color: ${Constants.system.grayBlack};
 `;
 
 const STYLES_STAT = css`
-  margin-right: 16px;
+  margin-right: 8px;
   width: 112px;
   flex-shrink: 0;
 `;
 
 const STYLES_BUTTON = css`
-  padding: 10px 24px;
+  width: 96px;
+  height: 36px;
+  border-radius: 4px;
+  border: 1px solid ${Constants.system.gray};
+  padding: 8px 16px;
   cursor: pointer;
-  font-family: ${Constants.font.semiBold};
+  margin-top: 8px;
+  font-family: ${Constants.font.medium};
   font-weight: 400;
   font-size: 14px;
   text-align: center;
   text-decoration: none;
-  height: 40px;
-  width: 160px;
-  border-radius: 4px;
-  color: ${Constants.system.white};
-  background-color: ${Constants.system.brand};
+  color: ${Constants.system.black};
 
+  :hover {
+    background-color: ${Constants.system.gray};
+    transition: 200ms background-color linear;
+  }
   :visited {
-    color: ${Constants.system.white};
+    color: ${Constants.system.black};
   }
 `;
 
 const STYLES_FLEX = css`
   display: flex;
-  margin-bottom: 12px;
-  align-items: baseline;
-  justify-content: space-between;
+  align-items: center;
   flex-wrap: wrap;
-
-  @media (max-width: ${Constants.sizes.tablet}px) {
-    display: block;
-  }
 `;
 
 const STYLES_EXPLORE = css`
-  padding-top: 8px;
-  margin: 200px auto 24px auto;
-  font-size: ${Constants.typescale.lvl2};
-  font-family: ${Constants.font.medium};
-  font-weight: 400;
-  color: ${Constants.system.black};
+  margin: 160px auto 64px auto;
+  height: 1px;
+  width: 80px;
+  background-color: ${Constants.system.gray};
 `;
 
 export default class Profile extends React.Component {
@@ -189,36 +188,9 @@ export default class Profile extends React.Component {
     exploreSlates: [],
   };
 
-  componentDidMount = async () => {
-    let exploreSlates = [];
-    let response1 = await Actions.getSlateById({ id: "857ad84d-7eff-4861-a988-65c84b62fc23" });
-    let response2 = await Actions.getSlateById({ id: "81fa0b39-0e96-4c7f-8587-38468bb67cb3" });
-    let response3 = await Actions.getSlateById({ id: "c4e8dad7-4ba0-4f25-a92a-c73ef5522d29" });
-    let response4 = await Actions.getSlateById({ id: "857ad84d-7eff-4861-a988-65c84b62fc23" });
-    let response5 = await Actions.getSlateById({ id: "81fa0b39-0e96-4c7f-8587-38468bb67cb3" });
-    let response6 = await Actions.getSlateById({ id: "c4e8dad7-4ba0-4f25-a92a-c73ef5522d29" });
-
-    // @TARA: actual slate content to swap out when pushing to prod.
-    // let response1 = await Actions.getSlateById({ id: "d2861ac4-fc41-4c07-8f21-d0bf06be364c" });
-    // let response2 = await Actions.getSlateById({ id: "9c2c458c-d92a-4e81-a4b6-bf6ab4607470" });
-    // let response3 = await Actions.getSlateById({ id: "7f461144-0647-43d7-8294-788b37ae5979" });
-    // let response4 = await Actions.getSlateById({ id: "f72c2594-b8ac-41f6-91e0-b2da6788ae23" });
-    // let response5 = await Actions.getSlateById({ id: "a0d6e2f2-564d-47ed-bf56-13c42634703d" });
-    // let response6 = await Actions.getSlateById({ id: "0ba92c73-92e7-4b00-900e-afae4856c9ea" });
-    exploreSlates.push(
-      response1.slate,
-      response2.slate,
-      response3.slate,
-      response4.slate,
-      response5.slate,
-      response6.slate
-    );
-    this.setState({ exploreSlates });
-  };
-
   render() {
     let data = this.props.creator ? this.props.creator : this.props.data;
-    console.log(this.state.exploreSlates);
+    let exploreSlates = this.props.exploreSlates;
 
     let total = 0;
     for (let slate of data.slates) {
@@ -239,15 +211,18 @@ export default class Profile extends React.Component {
               </div>
               <div css={STYLES_STATS}>
                 <div css={STYLES_STAT}>
-                  <div style={{ color: `${Constants.system.darkGray}` }}>Public data</div>
-                  <div style={{ fontFamily: `${Constants.font.medium}` }}>{total}</div>
+                  <div style={{ fontFamily: `${Constants.font.text}` }}>
+                    {total}{" "}
+                    <span style={{ color: `${Constants.system.darkGray}` }}>Public data</span>
+                  </div>
                 </div>
                 <div css={STYLES_STAT}>
-                  <div style={{ color: `${Constants.system.darkGray}` }}>Public slates</div>
-                  <div style={{ fontFamily: `${Constants.font.medium}` }}>{data.slates.length}</div>
+                  <div style={{ fontFamily: `${Constants.font.text}` }}>
+                    {data.slates.length}{" "}
+                    <span style={{ color: `${Constants.system.darkGray}` }}>Public slates</span>
+                  </div>
                 </div>
               </div>
-
               {data.data.body ? (
                 <div css={STYLES_DESCRIPTION}>
                   <ProcessedText text={data.data.body} />
@@ -265,24 +240,25 @@ export default class Profile extends React.Component {
               <div css={STYLES_INFO}>
                 <div css={STYLES_FLEX}>
                   <div css={STYLES_NAME}>{Strings.getPresentationName(data)}</div>
-                  <div css={STYLES_BUTTON}>
-                    <a css={STYLES_BUTTON} href={"http://slate.host/_"}>
-                      Follow
-                    </a>
-                  </div>
+                  <a css={STYLES_BUTTON} href={"http://slate.host/_"}>
+                    Follow
+                  </a>
                 </div>
                 <div css={STYLES_STATS}>
                   <div css={STYLES_STAT}>
-                    <div style={{ color: `${Constants.system.darkGray}` }}>Public data</div>
-                    <div style={{ fontFamily: `${Constants.font.medium}` }}>{total}</div>
+                    <div style={{ fontFamily: `${Constants.font.text}` }}>
+                      {total}{" "}
+                      <span style={{ color: `${Constants.system.darkGray}` }}>Public data</span>
+                    </div>
                   </div>
                   <div css={STYLES_STAT}>
-                    <div style={{ color: `${Constants.system.darkGray}` }}>Public slates</div>
-                    <div style={{ fontFamily: `${Constants.font.medium}` }}>
-                      {data.slates.length}
+                    <div style={{ fontFamily: `${Constants.font.text}` }}>
+                      {data.slates.length}{" "}
+                      <span style={{ color: `${Constants.system.darkGray}` }}>Public slates</span>
                     </div>
                   </div>
                 </div>
+
                 {data.data.body ? (
                   <div css={STYLES_DESCRIPTION} style={{ marginBottom: 16 }}>
                     <ProcessedText text={data.data.body} />
@@ -316,11 +292,11 @@ export default class Profile extends React.Component {
             ) : (
               <div>
                 {" "}
-                <p style={{ color: `${Constants.system.darkGray}` }}>
+                <p style={{ marginTop: 40, color: `${Constants.system.darkGray}` }}>
                   No publicly shared slates from @{data.username}.
                 </p>
-                <div css={STYLES_EXPLORE}>Explore slates</div>
-                <SlatePreviewBlocksExternal slates={this.state.exploreSlates} />
+                <div css={STYLES_EXPLORE} />
+                <SlatePreviewBlocksExternal slates={exploreSlates} />
               </div>
             )}
           </div>
