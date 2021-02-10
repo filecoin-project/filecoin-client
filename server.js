@@ -61,6 +61,9 @@ const EXTERNAL_RESOURCES = {
     : Environment.RESOURCE_URI_STORAGE_UPLOAD,
   pubsub: Strings.isEmpty(Environment.RESOURCE_URI_PUBSUB) ? null : Environment.RESOURCE_URI_PUBSUB,
   search: Strings.isEmpty(Environment.RESOURCE_URI_SEARCH) ? null : Environment.RESOURCE_URI_SEARCH,
+  adobeViewerClientId: Strings.isEmpty(Environment.ADOBE_DC_VIEW_CLIENT_ID)
+    ? null
+    : Environment.ADOBE_DC_VIEW_CLIENT_ID,
 };
 
 let exploreSlates = [];

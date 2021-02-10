@@ -51,6 +51,19 @@ const STYLES_IMAGE = css`
   max-height: 100%;
 `;
 
+const STYLES_PDF_OBJECT = css`
+  width: 100%;
+  max-width: calc(100% - 70px);
+
+  @media (min-width: 768px) {
+    max-width: 70vw;
+  }
+
+  @media (min-width: 1024px) {
+    max-width: 60%;
+  }
+`;
+
 const typeMap = {
   "video/quicktime": "video/mp4",
 };
@@ -60,6 +73,7 @@ export default class SlateMediaObject extends React.Component {
     const url = this.props.data.url;
     const type = this.props.data.type ? this.props.data.type : "LEGACY_NO_TYPE";
     const playType = typeMap[type] ? typeMap[type] : type;
+    const clientId = this.props.adobeViewerClientId;
 
     let element = <div css={STYLES_FAILURE}>No Preview</div>;
 
@@ -67,8 +81,9 @@ export default class SlateMediaObject extends React.Component {
       return (
         <PDFViewer
           file={url}
+          clientId={clientId}
           key={url}
-          style={{ width: "calc(100% - 64px)" }}
+          css={STYLES_PDF_OBJECT}
           onClick={(e) => {
             e.stopPropagation();
           }}

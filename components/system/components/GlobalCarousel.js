@@ -260,7 +260,12 @@ export class GlobalCarousel extends React.Component {
     } else if (this.props.carouselType === "DATA") {
       data.url = Strings.getCIDGatewayURL(data.cid);
     }
-    let slide = <SlateMediaObject data={data} />;
+    let slide = (
+      <SlateMediaObject
+        data={data}
+        adobeViewerClientId={this.props.resources.adobeViewerClientId}
+      />
+    );
     return (
       <div css={STYLES_ROOT}>
         <Alert

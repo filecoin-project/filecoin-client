@@ -1,13 +1,10 @@
 import * as React from "react";
-import { Document, Page, pdfjs } from "react-pdf";
+
+import Head from "next/head";
 
 import { css } from "@emotion/react";
 
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
-
 const STYLES_DOCUMENT = css`
-  display: grid;
-  place-items: center;
   margin: 0;
   padding: 20px 0 0;
   width: 100%;
@@ -27,31 +24,52 @@ const STYLES_PAGE = css`
   margin-bottom: 20px;
 `;
 
-export default class PDFViewer extends React.Component {
-  state = {
-    numPages: 0,
+const PDFViewer = ({ file, clientId, ...rest }) => {
+  const viewerConfig = {
+    showAnnotationTools: false,
+    enableFormFilling: false,
+    showLeftHandPanel: false,
+    showDownloadPDF: false,
+    showPrintPDF: false,
+    showPageControls: false,
+    dockPageControls: false,
+    embedMode: "IN_LINE",
   };
 
-  onDocumentLoadSuccess({ numPages }) {
-    this.setState({
-      numPages,
+  const initializeViewer = () => {
+    var adobeDCView = new AdobeDC.View({
+      clientId,
+      divId: "adobe-dc-view",
     });
-  }
 
-  render() {
-    const { numPages } = this.state;
-
-    return (
-      <Document
-        file={this.props.file}
-        onLoadSuccess={this.onDocumentLoadSuccess.bind(this)}
-        {...this.props}
-        css={STYLES_DOCUMENT}
-      >
-        {Array.from(new Array(numPages), (el, index) => (
-          <Page key={`page_${index + 1}`} pageNumber={index + 1} css={STYLES_PAGE} />
-        ))}
-      </Document>
+    adobeDCView.previewFile(
+      {
+        content: {
+          location: {
+            url: file,
+          },
+        },
+        metaData: { fileName: "title" },
+      },
+      viewerConfig
     );
-  }
-}
+  };
+
+  React.useEffect(() => {
+    document.addEventListener("adobe_dc_view_sdk.ready", initializeViewer);
+  });
+
+  return (
+    <>
+      <Head>
+        <script src="https://documentcloud.adobe.com/view-sdk/main.js" />
+      </Head>
+
+      <div css={STYLES_DOCUMENT} {...rest}>
+        <div id="adobe-dc-view" />
+      </div>
+    </>
+  );
+};
+
+export default PDFViewer;
