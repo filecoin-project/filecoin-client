@@ -14,18 +14,17 @@ const STYLES_DOCUMENT = css`
   overflow-y: scroll;
   -ms-overflow-style: none;
   scrollbar-width: none;
-
-  ::-webkit-scrollbar {
-    display: none;
-  }
+  display: grid;
+  place-items: center;
 `;
 
-const STYLES_PAGE = css`
-  margin-bottom: 20px;
+const STYLES_WRAPPER = css`
+  width: calc(100% - 120px);
+  max-width: 850px;
 `;
 
-const PDFViewer = ({ file, clientId, ...rest }) => {
-  const viewerConfig = {
+const PDFViewer = ({ file, clientId, viewerConfig, ...rest }) => {
+  viewerConfig = {
     showAnnotationTools: false,
     enableFormFilling: false,
     showLeftHandPanel: false,
@@ -37,7 +36,7 @@ const PDFViewer = ({ file, clientId, ...rest }) => {
   };
 
   const initializeViewer = () => {
-    var adobeDCView = new AdobeDC.View({
+    let adobeDCView = new AdobeDC.View({
       clientId,
       divId: "adobe-dc-view",
     });
@@ -66,7 +65,9 @@ const PDFViewer = ({ file, clientId, ...rest }) => {
       </Head>
 
       <div css={STYLES_DOCUMENT} {...rest}>
-        <div id="adobe-dc-view" />
+        <div css={STYLES_WRAPPER}>
+          <div id="adobe-dc-view" />
+        </div>
       </div>
     </>
   );

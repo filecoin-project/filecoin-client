@@ -51,19 +51,6 @@ const STYLES_IMAGE = css`
   max-height: 100%;
 `;
 
-const STYLES_PDF_OBJECT = css`
-  width: 100%;
-  max-width: calc(100% - 70px);
-
-  @media (min-width: 768px) {
-    max-width: 70vw;
-  }
-
-  @media (min-width: 1024px) {
-    max-width: 60%;
-  }
-`;
-
 const typeMap = {
   "video/quicktime": "video/mp4",
 };
@@ -83,7 +70,6 @@ export default class SlateMediaObject extends React.Component {
           file={url}
           clientId={clientId}
           key={url}
-          css={STYLES_PDF_OBJECT}
           onClick={(e) => {
             e.stopPropagation();
           }}
