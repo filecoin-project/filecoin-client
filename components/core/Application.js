@@ -507,10 +507,10 @@ export default class ApplicationPage extends React.Component {
     const id = Window.getQueryParameterByName("scene");
     const user = Window.getQueryParameterByName("user");
     const slate = Window.getQueryParameterByName("slate");
-    const cid = Window.getQueryParameterByName("cid");
+    const shortid = Window.getQueryParameterByName("shortid");
 
     if (!Strings.isEmpty(id) && this.state.viewer) {
-      this._handleNavigateTo({ id, user, slate, cid }, null, true);
+      this._handleNavigateTo({ id, user, slate, shortid }, null, true);
       return true;
     }
     if (!this.state.loaded) {

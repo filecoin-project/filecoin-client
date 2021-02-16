@@ -494,6 +494,82 @@ app.prepare().then(async () => {
     });
   });
 
+  server.get("/:username/:slatename/:shortid", async (req, res) => {
+    // TODO(jim): Temporary workaround
+    if (!Validations.userRoute(req.params.username)) {
+      return handler(req, res, req.url);
+    }
+
+    const id = Utilities.getIdFromCookie(req);
+
+    const shouldViewerRedirect = await ViewerManager.shouldRedirect({ id });
+    console.log("shouldViewerRedirect", shouldViewerRedirect);
+    const newURL = `/_${Strings.createQueryParams({
+      scene: "NAV_SLATE",
+      user: req.params.username,
+      slate: req.params.slatename,
+      shortid: req.params.shortid,
+    })}`;
+
+    console.log("newURL", newURL);
+
+    if (shouldViewerRedirect) {
+      return res.redirect(
+        `/_${Strings.createQueryParams({
+          scene: "NAV_SLATE",
+          user: req.params.username,
+          slate: req.params.slatename,
+          shortid: req.params.shortid,
+        })}`
+      );
+    }
+
+    const slate = await Data.getSlateByName({
+      slatename: req.params.slatename,
+      username: req.params.username,
+    });
+
+    if (!slate) {
+      return res.redirect("/404");
+    }
+
+    if (slate.error) {
+      return res.redirect("/404");
+    }
+
+    if (!slate.data.public && slate.data.ownerId !== id) {
+      return res.redirect("/403");
+    }
+
+    const creator = await Data.getUserById({ id: slate.data.ownerId });
+
+    if (!creator) {
+      return res.redirect("/404");
+    }
+
+    if (creator.error) {
+      return res.redirect("/404");
+    }
+
+    if (req.params.username !== creator.username) {
+      return res.redirect("/403");
+    }
+
+    let viewer = null;
+    if (id) {
+      viewer = await ViewerManager.getById({
+        id,
+      });
+    }
+
+    return app.render(req, res, "/_/slate", {
+      viewer,
+      creator: Serializers.user(creator),
+      slate,
+      cid: req.params.cid,
+    });
+  });
+
   server.all("*", async (r, s) => handler(r, s, r.url));
 
   const listenServer = server.listen(Environment.PORT, async (e) => {
