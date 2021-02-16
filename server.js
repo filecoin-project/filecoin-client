@@ -428,6 +428,7 @@ app.prepare().then(async () => {
     });
   });
 
+  // TODO(daniel): redirect old cid links to shortid here
   server.get("/:username/:slatename/cid::cid", async (req, res) => {
     // TODO(jim): Temporary workaround
     if (!Validations.userRoute(req.params.username)) {
