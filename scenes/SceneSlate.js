@@ -223,6 +223,10 @@ class SlatePage extends React.Component {
     }
   }
 
+  componentDidMount() {
+    this._handleURLRedirect();
+  }
+
   _handleFollow = () => {
     this.setState({ isFollowing: !this.state.isFollowing });
     Actions.createSubscription({
@@ -300,6 +304,31 @@ class SlatePage extends React.Component {
     setTimeout(() => {
       this.setState({ copying: false });
     }, 1000);
+  };
+
+  _handleURLRedirect = () => {
+    const {
+      page: { shortid },
+    } = this.props;
+
+    if (shortid) {
+      const index = this.getItemIndexById(shortid);
+
+      Events.dispatchCustomEvent({
+        name: "slate-global-open-carousel",
+        detail: { index },
+      });
+
+      return;
+    }
+  };
+
+  getItemIndexById = (shortid) => {
+    const { current } = this.props;
+    const objects = current.data.objects;
+    const index = objects.findIndex((object) => object.shortid === shortid);
+
+    return index;
   };
 
   render() {
