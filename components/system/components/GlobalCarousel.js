@@ -164,14 +164,14 @@ export class GlobalCarousel extends React.Component {
     }
   };
 
-  setWindowState = (cid) => {
+  setWindowState = (shortid) => {
     let baseURL = window.location.pathname.split("/");
     baseURL.length = 3;
     baseURL = baseURL.join("/");
     window.history.replaceState(
-      { ...window.history.state, cid: cid },
+      { ...window.history.state, shortid: shortid },
       null,
-      cid ? `${baseURL}/cid:${cid}` : baseURL
+      shortid ? `${baseURL}/${shortid}` : baseURL
     );
   };
 
@@ -185,7 +185,7 @@ export class GlobalCarousel extends React.Component {
     });
     if (this.props.carouselType === "SLATE") {
       const data = this.props.objects[e.detail.index];
-      this.setWindowState(data.cid);
+      this.setWindowState(data.shortid);
     }
   };
 

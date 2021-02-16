@@ -128,6 +128,7 @@ export default async (req, res) => {
       unityGameConfig: each.unityGameConfig,
       unityGameLoader: each.unityGameLoader,
       url,
+      shortid: each.shortid,
     };
   });
 
