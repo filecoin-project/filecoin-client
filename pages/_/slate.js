@@ -184,11 +184,11 @@ export default class SlatePage extends React.Component {
         carouselType: "slate",
         slides: this.props.slate.data.objects.map((each, index) => {
           const url = each.url;
-          const cid = Strings.getCIDFromIPFS(url);
-          CIDMap[cid] = index;
+          const shortid = each.shortid;
+          CIDMap[shortid] = index;
 
           return {
-            cid,
+            shortid,
             id: each.id,
             data: each,
             isOwner: false,
@@ -198,8 +198,8 @@ export default class SlatePage extends React.Component {
       },
     });
 
-    if (!Strings.isEmpty(this.props.cid)) {
-      const index = CIDMap[this.props.cid];
+    if (!Strings.isEmpty(this.props.shortid)) {
+      const index = CIDMap[this.props.shortid];
 
       if (index || index === 0) {
         Events.dispatchCustomEvent({

@@ -503,16 +503,6 @@ app.prepare().then(async () => {
     const id = Utilities.getIdFromCookie(req);
 
     const shouldViewerRedirect = await ViewerManager.shouldRedirect({ id });
-    console.log("shouldViewerRedirect", shouldViewerRedirect);
-    const newURL = `/_${Strings.createQueryParams({
-      scene: "NAV_SLATE",
-      user: req.params.username,
-      slate: req.params.slatename,
-      shortid: req.params.shortid,
-    })}`;
-
-    console.log("newURL", newURL);
-
     if (shouldViewerRedirect) {
       return res.redirect(
         `/_${Strings.createQueryParams({
@@ -566,7 +556,7 @@ app.prepare().then(async () => {
       viewer,
       creator: Serializers.user(creator),
       slate,
-      cid: req.params.cid,
+      shortid: req.params.shortid,
     });
   });
 
