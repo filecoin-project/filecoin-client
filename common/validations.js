@@ -159,7 +159,10 @@ export const isUnityFile = async (file) => {
     // NOTE(daniel): every Unity game file will have this file
     const unityRegex = new RegExp(/unityloader.js/i);
 
-    return fileNames.some((file) => unityRegex.test(file));
+    const isUnityLoaderFile = (fileName) =>
+      [/unityloader.js/i, /(.*)\.loader.js/i].some((item) => item.test(fileName));
+
+    return fileNames.some((file) => isUnityLoaderFile(file));
   } catch (e) {
     return false;
   }
