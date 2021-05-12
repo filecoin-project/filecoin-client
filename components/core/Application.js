@@ -50,6 +50,7 @@ import ApplicationHeader from "~/components/core/ApplicationHeader";
 import ApplicationLayout from "~/components/core/ApplicationLayout";
 import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
 
+import { v4 as uuid } from "uuid";
 import { GlobalModal } from "~/components/system/components/GlobalModal";
 import { OnboardingModal } from "~/components/core/OnboardingModal";
 import { SearchModal } from "~/components/core/SearchModal";
@@ -106,6 +107,7 @@ export default class ApplicationPage extends React.Component {
     isMobile: this.props.isMobile,
     loaded: false,
     activeUsers: null,
+    optimisticFiles: [],
   };
 
   async componentDidMount() {
@@ -224,6 +226,7 @@ export default class ApplicationPage extends React.Component {
         return;
       }
     }
+
     this.setState(
       {
         viewer: { ...this.state.viewer, ...newViewerState },
@@ -347,6 +350,8 @@ export default class ApplicationPage extends React.Component {
       return;
     }
 
+    files = await this._handleOptimisticUpload({ files, slate });
+
     const resolvedFiles = [];
     for (let i = 0; i < files.length; i++) {
       if (Store.checkCancelled(`${files[i].lastModified}-${files[i].name}`)) {
@@ -360,12 +365,54 @@ export default class ApplicationPage extends React.Component {
       let response;
       try {
         response = await FileUtilities.upload({
+          fileId: files[i]?.id,
           file: files[i],
           context: this,
           routes: this.props.resources,
         });
       } catch (e) {
         console.log(e);
+
+        let optimisticFiles = this.state.optimisticFiles;
+        let updatedOptimisticFiles = optimisticFiles.filter((item) => {
+          if (item.id === e.failedFile.id) {
+            return false;
+          }
+
+          return true;
+        });
+
+        this.setState({ optimisticFiles: updatedOptimisticFiles });
+
+        if (slate && slate.id) {
+          let slates = this.state.viewer.slates;
+          for (let item of slates) {
+            if (item.id === slate.id) {
+              item.objects = item.objects.filter((child) => {
+                if (child.id === e.failedFile.id) {
+                  return false;
+                }
+
+                return true;
+              });
+            }
+          }
+
+          this._handleUpdateViewer({ slates });
+
+          return;
+        }
+
+        let library = this.state.viewer.library;
+        library = library.filter((child) => {
+          if (child.id === e.failedFile.id) {
+            return false;
+          }
+
+          return true;
+        });
+
+        this._handleUpdateViewer({ library });
       }
 
       if (!response || response.error) {
@@ -422,6 +469,99 @@ export default class ApplicationPage extends React.Component {
     Events.dispatchMessage({ message, status: !added ? null : "INFO" });
 
     this._handleRegisterLoadingFinished({ keys });
+  };
+
+  _handleOptimisticUpload = async ({ files, slate }) => {
+    let optimisticFiles = [];
+
+    for (let i = 0; i < files.length; i++) {
+      let id = uuid();
+      let dataURL = await this._handleLoadDataURL(files[i]);
+      let data = {
+        id,
+        filename: files[i].name,
+        data: {
+          name: files[i].name,
+          type: files[i].type,
+          size: files[i].size,
+        },
+        decorator: "OPTIMISTIC-FILE",
+        dataURL,
+      };
+
+      optimisticFiles.push(data);
+
+      files[i].id = id;
+    }
+
+    this.setState({ optimisticFiles });
+
+    if (slate && slate.id) {
+      const slates = this.state.viewer.slates;
+
+      for (let item of slates) {
+        if (item.id === slate.id) {
+          item.objects = [...item.objects, ...optimisticFiles];
+          break;
+        }
+      }
+
+      this._handleUpdateViewer({ slates });
+      return files;
+    }
+
+    let update = [...optimisticFiles, ...this.state.viewer?.library];
+    let library = this.props.viewer?.library;
+    library = update;
+    this._handleUpdateViewer({ library });
+
+    return files;
+  };
+
+  _handleLoadDataURL = (file) =>
+    new Promise((resolve, reject) => {
+      if (file.type.startsWith("application/pdf")) {
+        resolve(URL.createObjectURL(file));
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        resolve(reader.result);
+      };
+
+      reader.onerror = () => {
+        reject({ error: true });
+        reader.abort();
+      };
+
+      reader.readAsDataURL(file);
+    });
+
+  _handleSuccessfulUpload = ({ succeeded }) => {
+    let optimisticFiles = this.state.optimisticFiles;
+    // let optimisticFilesNames = this.state.optimisticFiles.map(item => item.name);
+    let library = this.state.viewer.library;
+    let update = succeeded.map((item) => {
+      let data = item.json?.data;
+
+      let itemToUpdateIndex = library[0].children.findIndex((item) => item.id === data.id);
+      if (itemToUpdateIndex > -1) {
+        let updatedItem = { ...library[0].children[itemToUpdateIndex], ...data };
+
+        let optimisticFileIndex = optimisticFiles.findIndex((item) => item.id === data.id);
+        optimisticFiles.splice(optimisticFileIndex, 1);
+
+        return updatedItem;
+      }
+    });
+
+    this.setState({ optimisticFiles });
+
+    update = [...update, ...library[0].children];
+    library[0].children = update;
+
+    this._handleUpdateViewer({ library });
   };
 
   _handleRegisterFileLoading = ({ fileLoading }) => {

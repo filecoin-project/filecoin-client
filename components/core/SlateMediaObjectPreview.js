@@ -91,9 +91,9 @@ export default class SlateMediaObjectPreview extends React.Component {
     let coverImage = this.props.file.data.coverImage;
     let url;
     if (type && Validations.isPreviewableImage(type)) {
-      url = Strings.getURLfromCID(this.props.file.cid);
+      url = this.props.file?.dataURL || Strings.getURLfromCID(this.props.file.cid);
     } else if (coverImage) {
-      url = Strings.getURLfromCID(coverImage.cid);
+      url = this.props.file?.dataURL || Strings.getURLfromCID(coverImage.cid);
     }
     if (url) {
       const img = new Image();
@@ -108,9 +108,9 @@ export default class SlateMediaObjectPreview extends React.Component {
     const coverImage = this.props.file.data.coverImage;
     let url;
     if (type && Validations.isPreviewableImage(type)) {
-      url = Strings.getURLfromCID(this.props.file.cid);
+      url = this.props.file?.dataURL || Strings.getURLfromCID(this.props.file.cid);
     } else if (coverImage) {
-      url = Strings.getURLfromCID(coverImage.cid);
+      url = this.props.file?.dataURL || Strings.getURLfromCID(coverImage.cid);
     }
 
     if (url) {

@@ -428,6 +428,10 @@ class CarouselSidebar extends React.Component {
   };
 
   _handleDownload = () => {
+    if (this.props.data.decorator?.startsWith("OPTIMISTIC")) {
+      return;
+    }
+
     if (this.props.data.data.type === "application/unity") {
       this.setState({ isDownloading: true }, async () => {
         const response = await UserBehaviors.downloadZip(this.props.data);
@@ -440,6 +444,10 @@ class CarouselSidebar extends React.Component {
   };
 
   _handleCreateSlate = async () => {
+    if (this.props.data.decorator?.startsWith("OPTIMISTIC")) {
+      return;
+    }
+
     if (this.props.external) return;
     this.props.onClose();
     this.props.onAction({
@@ -450,7 +458,12 @@ class CarouselSidebar extends React.Component {
   };
 
   _handleDelete = () => {
-    if (this.props.external || !this.props.isOwner) return;
+    if (
+      this.props.external ||
+      !this.props.isOwner ||
+      this.props.data.decorator.startsWith("OPTIMISTIC")
+    )
+      return;
     const message =
       "Are you sure you want to delete this? It will be removed from your collections as well";
     if (!window.confirm(message)) {
@@ -477,6 +490,10 @@ class CarouselSidebar extends React.Component {
   };
 
   _handleAdd = async (slate) => {
+    if (this.props.data.decorator?.startsWith("OPTIMISTIC")) {
+      return;
+    }
+
     let inPublicSlates = this.state.inPublicSlates;
     if (this.state.selected[slate.id]) {
       if (slate.isPublic) {
@@ -521,6 +538,10 @@ class CarouselSidebar extends React.Component {
   };
 
   _handleToggleVisibility = async (e) => {
+    if (this.props.data.decorator?.startsWith("OPTIMISTIC")) {
+      return;
+    }
+
     if (this.props.external || !this.props.isOwner) return;
     const isVisible = this.state.isPublic || this.state.inPublicSlates > 0;
     let selected = cloneDeep(this.state.selected);
@@ -574,7 +595,7 @@ class CarouselSidebar extends React.Component {
     const isUnityGame = type === "application/unity";
 
     const elements = [];
-    if (editingAllowed && !isUnityGame) {
+    if (editingAllowed && !isUnityGame && !file.decorator?.startsWith("OPTIMISTIC")) {
       elements.push(
         <div key="sidebar-media-object-info" style={{ marginTop: 8 }}>
           <Input
@@ -719,7 +740,11 @@ class CarouselSidebar extends React.Component {
       </div>
     );
 
-    if (!this.props.external && (!this.props.isOwner || this.props.isRepost)) {
+    if (
+      !this.props.external &&
+      (!this.props.isOwner || this.props.isRepost) &&
+      !file.decorator?.startsWith("OPTIMISTIC")
+    ) {
       actions.push(
         <div key="save-copy" css={STYLES_ACTION} onClick={() => this._handleSaveCopy(file)}>
           <SVG.Save height="24px" />
@@ -734,7 +759,12 @@ class CarouselSidebar extends React.Component {
       );
     }
 
-    if (this.props.carouselType === "SLATE" && !this.props.external && this.props.isOwner) {
+    if (
+      this.props.carouselType === "SLATE" &&
+      !this.props.external &&
+      this.props.isOwner &&
+      !file.decorator?.startsWith("OPTIMISTIC")
+    ) {
       actions.push(
         <div key="remove" css={STYLES_ACTION} onClick={this._handleRemove}>
           <SVG.DismissCircle height="24px" />

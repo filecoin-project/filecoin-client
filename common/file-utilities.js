@@ -44,7 +44,14 @@ const getCookie = (name) => {
   if (match) return match[2];
 };
 
-export const upload = async ({ file, context, bucketName, routes, excludeFromLibrary }) => {
+export const upload = async ({
+  fileId = null,
+  file,
+  context,
+  bucketName,
+  routes,
+  excludeFromLibrary,
+}) => {
   let formData = new FormData();
   const HEIC2ANY = require("heic2any");
 
@@ -65,9 +72,9 @@ export const upload = async ({ file, context, bucketName, routes, excludeFromLib
       quality: 1,
     }); //TODO(martina): figure out how to cancel an await if upload has been cancelled
 
-    formData.append("data", converted);
+    formData.append(fileId, converted);
   } else {
-    formData.append("data", file);
+    formData.append(fileId, file);
   }
 
   if (Store.checkCancelled(`${file.lastModified}-${file.name}`)) {
@@ -121,8 +128,9 @@ export const upload = async ({ file, context, bucketName, routes, excludeFromLib
         try {
           return resolve(JSON.parse(event.target.response));
         } catch (e) {
-          return resolve({
+          return reject({
             error: "SERVER_UPLOAD_ERROR",
+            failedFile: file,
           });
         }
       };

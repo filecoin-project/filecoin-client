@@ -431,6 +431,7 @@ export const Tag = ({
   dropdownStyles,
   onChange,
   handleClick,
+  isDisabled = false,
 }) => {
   const [value, setValue] = React.useState("");
   const [open, setOpen] = React.useState(false);
@@ -504,6 +505,7 @@ export const Tag = ({
           onKeyPress={_handleKeyPress}
           onPaste={_handlePaste}
           onFocus={_handleFocus}
+          disabled={isDisabled}
         />
         <Dropdown
           type={type}

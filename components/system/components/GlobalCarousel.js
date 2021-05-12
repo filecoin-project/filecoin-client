@@ -288,6 +288,8 @@ export class GlobalCarousel extends React.Component {
       isRepost = this.props.current?.ownerId !== data.ownerId;
     }
 
+    /*  data.url = data?.dataURL || Strings.getCIDGatewayURL(data.cid); */
+
     let slide = <SlateMediaObject file={data} isMobile={isMobile} />;
 
     return (

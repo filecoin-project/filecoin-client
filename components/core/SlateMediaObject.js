@@ -84,7 +84,7 @@ export default class SlateMediaObject extends React.Component {
 
   render() {
     const { file, isMobile } = this.props;
-    const url = Strings.getURLfromCID(file.cid);
+    const url = file?.dataURL || Strings.getURLfromCID(file.cid);
     const type = file.data.type || "";
     const playType = typeMap[type] ? typeMap[type] : type;
 
