@@ -3,6 +3,7 @@ import * as Constants from "~/common/constants";
 import * as SVG from "~/common/svg";
 import * as Events from "~/common/custom-events";
 
+import { v4 as uuid } from "uuid";
 import { css, keyframes } from "@emotion/react";
 
 const STYLES_TOOLTIP = css`
@@ -32,13 +33,102 @@ export class GlobalTooltip extends React.Component {
     window.removeEventListener("resize", this._handleResize);
   };
 
+  _isOffScreenHorizontally = (leftPosition, rightPosition) =>
+    leftPosition < 0 || rightPosition > window.innerWidth;
+
+  _isOffScreenVertically = (topPosition, bottomPosition) => {
+    const body = document.body;
+    const documentHeight = Math.max(body.scrollHeight, body.offsetHeight);
+
+    return topPosition < 0 || bottomPosition > documentHeight;
+  };
+
+  getXPosition = (rect, bubbleRect, horizontal) => {
+    let currentHorizontalProp = horizontal;
+    let xOffset = this.props.elementRef ? this.props.elementRef.scrollLeft : window.pageXOffset;
+    let padding = 8;
+
+    const getFarLeft = () => rect.left - bubbleRect.width + xOffset - padding;
+    const getLeft = () => rect.right - bubbleRect.width + xOffset;
+    const getCenter = () => rect.left + 0.5 * rect.width - 0.5 * bubbleRect.width + xOffset;
+    const getRight = () => rect.left + xOffset;
+    const getFarRight = () => rect.right + xOffset + padding;
+    const getDefault = () => padding;
+
+    const getResponsivePosition = (directions) => {
+      for (const [i, direction] of directions.entries()) {
+        const currentOption = direction[0];
+        const getPosition = direction[1];
+        if (currentOption !== currentHorizontalProp) continue;
+
+        const position = getPosition();
+
+        if (!this._isOffScreenHorizontally(position, position + bubbleRect.width))
+          return { horizontal: currentHorizontalProp, coord: position };
+
+        /** NOTE(Amine): if all horizontal options are offscreen 
+                         then we return 0px */
+        if (i + 1 >= directions.length)
+          return { horizontal: currentHorizontalProp, coord: getDefault() };
+        /**NOTE(Amine): if the current horizontal is off screen
+         *              and there is still more option then we check for the next option*/
+        currentHorizontalProp = directions[i + 1][0];
+      }
+    };
+
+    if (["far-left", "left"].includes(horizontal)) {
+      return getResponsivePosition([
+        ["far-left", getFarLeft],
+        ["left", getLeft],
+        ["center", getCenter],
+        ["right", getRight],
+        ["far-right", getFarRight],
+      ]);
+    }
+
+    if (horizontal === "center") {
+      return getResponsivePosition([
+        ["center", getCenter],
+        ["left", getLeft],
+        ["right", getRight],
+      ]);
+    }
+
+    return getResponsivePosition([
+      ["far-right", getFarRight],
+      ["right", getRight],
+      ["center", getCenter],
+      ["left", getLeft],
+      ["far-left", getFarLeft],
+    ]);
+  };
+
   getStyle = (rect, bubbleRect, vertical, horizontal) => {
     let yOffset = this.props.elementRef ? this.props.elementRef.scrollTop : window.pageYOffset;
-    let xOffset = this.props.elementRef ? this.props.elementRef.scrollLeft : window.pageXOffset;
+    let padding = 8;
     let style = { position: "absolute" };
+
+    const xPosition = this.getXPosition(rect, bubbleRect, horizontal);
+
+    style.left = xPosition.coord;
+    /** NOTE(Amine): if we updated the horizontal prop then
+     *               we should update the vertical as well */
+    if (xPosition.horizontal !== horizontal && horizontal !== "above") {
+      vertical = "below";
+    }
+
     switch (vertical) {
+      case "below":
+        const position = rect.bottom + yOffset + padding;
+        // NOTE(Amine): if below position is offscreen then go to 'above' position
+        if (
+          !this._isOffScreenVertically(position + bubbleRect.height, position + bubbleRect.height)
+        ) {
+          style.top = `${position}px`;
+          break;
+        }
       case "above":
-        style.top = `${rect.top - bubbleRect.height + yOffset}px`;
+        style.top = `${rect.top - bubbleRect.height + yOffset - padding}px`;
         break;
       case "up":
         style.top = `${rect.bottom - bubbleRect.height + yOffset}px`;
@@ -49,27 +139,25 @@ export class GlobalTooltip extends React.Component {
       case "down":
         style.top = `${rect.top + yOffset}px`;
         break;
-      case "below":
-        style.top = `${rect.bottom + yOffset}px`;
-        break;
     }
-    switch (horizontal) {
-      case "far-left":
-        style.left = `${rect.left - bubbleRect.width + xOffset}px`;
-        break;
-      case "left":
-        style.left = `${rect.right - bubbleRect.width + xOffset}px`;
-        break;
-      case "center":
-        style.left = `${rect.left + 0.5 * rect.width - 0.5 * bubbleRect.width + xOffset}px`;
-        break;
-      case "right":
-        style.left = `${rect.left + xOffset}px`;
-        break;
-      case "far-right":
-        style.left = `${rect.right + xOffset}px`;
-        break;
-    }
+
+    // switch (horizontal) {
+    //   case "far-left":
+    //     style.left = `${rect.left - bubbleRect.width + xOffset - padding}px`;
+    //     break;
+    //   case "left":
+    //     style.left = `${rect.right - bubbleRect.width + xOffset}px`;
+    //     break;
+    //   case "center":
+    //     style.left = `${rect.left + 0.5 * rect.width - 0.5 * bubbleRect.width + xOffset}px`;
+    //     break;
+    //   case "right":
+    //     style.left = `${rect.left + xOffset}px`;
+    //     break;
+    //   case "far-right":
+    //     style.left = `${rect.right + xOffset + padding}px`;
+    //     break;
+    // }
     return style;
   };
 
@@ -259,6 +347,30 @@ const STYLES_TOOLTIP_BUBBLE = css`
   animation: ${fadein} 200ms ease-out 1;
 `;
 
+const STYLES_EXPANDED_TOOLTIP = css`
+  box-sizing: border-box;
+  max-width: 256px;
+  font-size: 0.75rem;
+  border-radius: 2px;
+  background-color: ${Constants.system.white};
+  color: ${Constants.system.black};
+  animation: ${fadein} 200ms ease-out 1;
+  box-shadow: 0px 8px 24px rgba(178, 178, 178, 0.2);
+`;
+const STYLES_EXPANDED_TOOLTIP_TITLE = css`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: ${Constants.font.medium};
+  font-weight: 400;
+  padding: 8px 16px;
+  box-shadow: inset 0px -1px 0px rgba(0, 0, 0, 0.05);
+`;
+
+const STYLES_EXPANDED_TOOLTIP_CONTENT = css`
+  padding: 8px 16px 12px;
+`;
+
 const STYLES_TOOLTIP_ANCHOR = css`
   box-sizing: border-box;
   display: inline-flex;
@@ -269,12 +381,69 @@ const STYLES_TOOLTIP_ANCHOR = css`
   cursor: pointer;
 `;
 
-export class TooltipAnchor extends React.Component {
+export class ExpandedTooltip extends React.Component {
+  constructor() {
+    super();
+    this._id = uuid();
+  }
+
   _handleMouseEnter = (e) => {
     Events.dispatchCustomEvent({
       name: "show-tooltip",
       detail: {
-        id: this.props.id,
+        id: this._id,
+        type: this.props.type,
+      },
+    });
+  };
+
+  _handleClick = (e) => {
+    Events.dispatchCustomEvent({
+      name: "hide-tooltip",
+      detail: {
+        id: this._id,
+        type: this.props.type,
+      },
+    });
+  };
+
+  render() {
+    let content = (
+      <div css={STYLES_EXPANDED_TOOLTIP}>
+        <div css={STYLES_EXPANDED_TOOLTIP_TITLE}>
+          <div>{this.props.title}</div>
+          <div onClick={this._handleClick}>
+            <SVG.Dismiss height="12px" style={{ padding: "4px", marginRight: "-4px" }} />
+          </div>
+        </div>
+        <div css={STYLES_EXPANDED_TOOLTIP_CONTENT}>{this.props.content}</div>
+      </div>
+    );
+    return (
+      <TooltipWrapper
+        id={this._id}
+        content={content}
+        horizontal={this.props.horizontal}
+        vertical={this.props.vertical}
+        type={this.props.type}
+      >
+        <span onMouseEnter={this._handleMouseEnter}>{this.props.children}</span>
+      </TooltipWrapper>
+    );
+  }
+}
+
+export class TooltipAnchor extends React.Component {
+  constructor() {
+    super();
+    this._id = uuid();
+  }
+
+  _handleMouseEnter = (e) => {
+    Events.dispatchCustomEvent({
+      name: "show-tooltip",
+      detail: {
+        id: this._id,
         type: this.props.type,
       },
     });
@@ -284,7 +453,7 @@ export class TooltipAnchor extends React.Component {
     Events.dispatchCustomEvent({
       name: "hide-tooltip",
       detail: {
-        id: this.props.id,
+        id: this._id,
         type: this.props.type,
       },
     });
@@ -298,7 +467,7 @@ export class TooltipAnchor extends React.Component {
     );
     return (
       <TooltipWrapper
-        id={this.props.id}
+        id={this._id}
         content={content}
         horizontal={this.props.horizontal}
         vertical={this.props.vertical}

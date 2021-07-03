@@ -189,17 +189,63 @@ import { GlobalTooltip, TooltipWrapper, TooltipAnchor } from "slate-react-system
         <br />
         <System.P>
           For a pre-styled tooltip that accepts a string and handles dispatchCustomEvent and styling
-          for you, use the <System.CodeText>TooltipAnchor</System.CodeText> component. Be sure to
-          give it a unique id.
+          for you, use the <System.CodeText>TooltipAnchor</System.CodeText>
         </System.P>
         <br />
-        <System.TooltipAnchor type="body" id="another-unique-tooltip-id" tooltip="Hello friends!" />
+        <System.TooltipAnchor type="body" tooltip="Hello friends!" />
         <br />
         <br />
         <CodeBlock>
           {`class ExampleTwo extends React.Component {
   render() {
-    return <TooltipAnchor id="another-unique-tooltip-id" tooltip="Hello friends!" />;
+    return <TooltipAnchor tooltip="Hello friends!" />;
+  }
+}`}
+        </CodeBlock>
+        <br />
+        <br />
+        <br />
+        <System.H2>Expanded Tooltip</System.H2>
+        <hr />
+        <br />
+        <System.P>
+          For expanded tooltip that accepts a title component and content component.
+        </System.P>
+        <br />
+        <System.ExpandedTooltip
+          id="expanded-tooltip"
+          horizontal="far-left"
+          vertical="center"
+          title={<div>This is a tooltip title </div>}
+          content={
+            <div>
+              Here’s some text explaining the thing that your’e looking at so the app can start to
+              make sense as you use it.
+            </div>
+          }
+        >
+          <System.ButtonPrimary>New feature</System.ButtonPrimary>
+        </System.ExpandedTooltip>
+        <br />
+        <br />
+        <CodeBlock>
+          {`class ExampleTwo extends React.Component {
+  render() {
+    return (
+       <System.ExpandedTooltip
+          horizontal="far-left"
+          vertical="center"
+          title={<div>This is a tooltip title </div>}
+          content={
+            <div>
+              Here’s some text explaining the thing that your’e looking at so the app can start to
+              make sense as you use it.
+            </div>
+          }
+        >
+          <System.ButtonPrimary>New feature</System.ButtonPrimary>
+        </System.ExpandedTooltip>
+    );
   }
 }`}
         </CodeBlock>
@@ -305,41 +351,34 @@ import { GlobalTooltip, TooltipWrapper, TooltipAnchor } from "slate-react-system
               rows: [
                 {
                   id: 1,
-                  a: <span style={{ fontFamily: Constants.font.semiBold }}>id</span>,
-                  b: "string",
-                  c: "null",
-                  d: "Unique id to identify the tooltip.",
-                },
-                {
-                  id: 2,
                   a: "tooltip",
                   b: "string",
                   c: "null",
                   d: "Output text on the tooltip bubble.",
                 },
                 {
-                  id: 3,
+                  id: 2,
                   a: "height",
                   b: "number",
                   c: "24px",
                   d: "Height of the tooltip anchor icon.",
                 },
                 {
-                  id: 4,
+                  id: 3,
                   a: "style",
                   b: "Object",
                   c: "null",
                   d: "Style applied to the tooltip bubble.",
                 },
                 {
-                  id: 5,
+                  id: 4,
                   a: "anchorStyle",
                   b: "Object",
                   c: "null",
                   d: "Style applied to the tooltip anchor.",
                 },
                 {
-                  id: 6,
+                  id: 5,
                   a: "children",
                   b: "Object",
                   c: "null",
@@ -347,7 +386,7 @@ import { GlobalTooltip, TooltipWrapper, TooltipAnchor } from "slate-react-system
                     "Will be rendered instead of the default question mark SVG as the tooltip anchor.",
                 },
                 {
-                  id: 7,
+                  id: 6,
                   a: "horizontal",
                   b: "string",
                   c: "center",
@@ -355,7 +394,67 @@ import { GlobalTooltip, TooltipWrapper, TooltipAnchor } from "slate-react-system
                     "Horizontal positioning of the tooltip relative to the anchor (far-left, left, center, right, far-right)",
                 },
                 {
-                  id: 8,
+                  id: 7,
+                  a: "vertical",
+                  b: "string",
+                  c: "above",
+                  d:
+                    "Vertical positioning of the tooltip relative to the anchor (above, up, center, down, below)",
+                },
+              ],
+            }}
+          />
+        </Group>
+        <br />
+        <br />
+        <Group title="ExpandedTooltip Properties">
+          <System.Table
+            data={{
+              columns: [
+                { key: "a", name: "Name", width: "128px" },
+                { key: "b", name: "Type", width: "88px", type: "OBJECT_TYPE" },
+                { key: "c", name: "Default", width: "88px" },
+                { key: "d", name: "Description", width: "100%" },
+              ],
+              rows: [
+                {
+                  id: 1,
+                  a: "tooltip",
+                  b: "string",
+                  c: "null",
+                  d: "Output text on the tooltip bubble.",
+                },
+                {
+                  id: 2,
+                  a: "title",
+                  b: "Component",
+                  c: "null",
+                  d: "Component rendered as the tooltip title",
+                },
+                {
+                  id: 3,
+                  a: "contents",
+                  b: "Component",
+                  c: "null",
+                  d: "Component rendered as the tooltip body",
+                },
+                {
+                  id: 4,
+                  a: "children",
+                  b: "Object",
+                  c: "null",
+                  d: "Expanded tooltip anchor",
+                },
+                {
+                  id: 5,
+                  a: "horizontal",
+                  b: "string",
+                  c: "center",
+                  d:
+                    "Horizontal positioning of the tooltip relative to the anchor (far-left, left, center, right, far-right)",
+                },
+                {
+                  id: 6,
                   a: "vertical",
                   b: "string",
                   c: "above",

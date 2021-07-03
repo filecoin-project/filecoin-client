@@ -71,6 +71,7 @@ import { CodeText } from "~/components/system/components/fragments/CodeText";
 import {
   GlobalTooltip,
   TooltipAnchor,
+  ExpandedTooltip,
   TooltipWrapper,
 } from "~/components/system/components/fragments/GlobalTooltip";
 import { DescriptionGroup } from "~/components/system/components/fragments/DescriptionGroup";
@@ -156,6 +157,7 @@ export {
   TableContent,
   TableColumn,
   TooltipAnchor,
+  ExpandedTooltip,
   TooltipWrapper,
   // NOTE(jim): System values
   Constants,
