@@ -5,7 +5,7 @@ import JSZip from "jszip";
 
 const USERNAME_REGEX = new RegExp("^[a-z0-9_]{0,}[a-z]+[0-9]*$");
 const MIN_PASSWORD_LENGTH = 8;
-const EMAIL_REGEX = /^[\w.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9_]+?\.[a-zA-Z]{2,50}$/;
+const EMAIL_REGEX = /^[\w.!#$%&'*+\/=?^_`{|}~-]+@[-a-zA-Z0-9_.]+?\.[a-zA-Z]{2,50}$/;
 const CONTAINS_DIGIT_REGEX = /\d/;
 const CONTAINS_UPPERCASE_REGEX = /[A-Z]/;
 const CONTAINS_LOWERCASE_REGEX = /[a-z]/;
