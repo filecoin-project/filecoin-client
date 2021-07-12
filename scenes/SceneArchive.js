@@ -14,7 +14,6 @@ import ScenePageHeader from "~/components/core/ScenePageHeader";
 import SceneSettings from "~/scenes/SceneSettings";
 import SceneDeals from "~/scenes/SceneDeals";
 import SceneWallet from "~/scenes/SceneWallet";
-import SceneSentinel from "~/scenes/SceneSentinel";
 import SceneMiners from "~/scenes/SceneMiners";
 
 const STYLES_SPINNER_CONTAINER = css`
@@ -130,7 +129,6 @@ export default class SceneArchive extends React.Component {
             tabs={[
               { title: "Archive Settings", value: { tab: "archive" } },
               { title: "Wallet", value: { tab: "wallet" } },
-              { title: "API", value: { tab: "api" } },
               { title: "Miners", value: { tab: "miners" } },
             ]}
             value={tab}
@@ -218,18 +216,6 @@ export default class SceneArchive extends React.Component {
                   <br />
                   {this.state.dealsLoaded ? (
                     <SceneDeals deals={this.state.deals} dealsLoaded={this.state.dealsLoaded} />
-                  ) : (
-                    <div css={STYLES_SPINNER_CONTAINER}>
-                      <LoaderSpinner style={{ height: 32, width: 32 }} />
-                    </div>
-                  )}
-                </React.Fragment>
-              ) : null}
-
-              {tab === "api" ? (
-                <React.Fragment>
-                  {this.state.routes ? (
-                    <SceneSentinel routes={this.state.routes} />
                   ) : (
                     <div css={STYLES_SPINNER_CONTAINER}>
                       <LoaderSpinner style={{ height: 32, width: 32 }} />
