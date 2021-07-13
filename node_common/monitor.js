@@ -151,7 +151,7 @@ export const subscribeSlate = ({ user, targetSlate }) => {
   if (!targetSlate.isPublic) return;
   try {
     const userURL = getUserURL(user);
-    const targetSlateURL = `<https://slate.host/$/${targetSlate.id}|${targetSlate.slateId}>`;
+    const targetSlateURL = `<https://slate.host/$/${targetSlate.id}|${targetSlate.data.name}>`;
 
     const message = `*${userURL}* subscribed to ${targetSlateURL}`;
 
