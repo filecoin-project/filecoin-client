@@ -14,7 +14,6 @@ import ScenePageHeader from "~/components/core/ScenePageHeader";
 import SceneSettings from "~/scenes/SceneSettings";
 import SceneDeals from "~/scenes/SceneDeals";
 import SceneWallet from "~/scenes/SceneWallet";
-import SceneMiners from "~/scenes/SceneMiners";
 
 const STYLES_SPINNER_CONTAINER = css`
   width: 100%;
@@ -66,26 +65,6 @@ export default class SceneArchive extends React.Component {
     }
 
     this.setState({ deals, dealsLoaded: true });
-
-    let routes;
-    try {
-      const response = await fetch("https://sentinel.slate.host/api");
-      const json = await response.json();
-      routes = json.data;
-    } catch (e) {}
-    this.setState({ routes });
-
-    let miners = [];
-    try {
-      const response = await fetch("https://sentinel.slate.host/api/mapped-static-global-miners");
-      const json = await response.json();
-      const sources = json.data;
-
-      sources.forEach((group) => {
-        miners = [...group.minerAddresses, ...miners];
-      });
-    } catch (e) {}
-    this.setState({ miners });
   }
 
   _handleCheckboxChange = (e) => {
@@ -129,7 +108,6 @@ export default class SceneArchive extends React.Component {
             tabs={[
               { title: "Archive Settings", value: { tab: "archive" } },
               { title: "Wallet", value: { tab: "wallet" } },
-              { title: "Miners", value: { tab: "miners" } },
             ]}
             value={tab}
             onAction={this.props.onAction}
@@ -216,18 +194,6 @@ export default class SceneArchive extends React.Component {
                   <br />
                   {this.state.dealsLoaded ? (
                     <SceneDeals deals={this.state.deals} dealsLoaded={this.state.dealsLoaded} />
-                  ) : (
-                    <div css={STYLES_SPINNER_CONTAINER}>
-                      <LoaderSpinner style={{ height: 32, width: 32 }} />
-                    </div>
-                  )}
-                </React.Fragment>
-              ) : null}
-
-              {tab === "miners" ? (
-                <React.Fragment>
-                  {this.state.miners ? (
-                    <SceneMiners miners={this.state.miners} />
                   ) : (
                     <div css={STYLES_SPINNER_CONTAINER}>
                       <LoaderSpinner style={{ height: 32, width: 32 }} />
