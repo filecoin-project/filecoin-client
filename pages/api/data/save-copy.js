@@ -17,7 +17,7 @@ export default async (req, res) => {
 
   let decorator = "SERVER_SAVE_COPY";
 
-  let { buckets, bucketKey, bucketRoot, bucketName } = await Utilities.getBucketAPIFromUserToken({
+  let { buckets, bucketKey, bucketRoot } = await Utilities.getBucketAPIFromUserToken({
     user,
   });
 
@@ -28,7 +28,7 @@ export default async (req, res) => {
     });
   }
 
-  const files = req.body.data.files;
+  const { files } = req.body.data;
   if (!files?.length) {
     return res.status(400).send({
       decorator: "SERVER_SAVE_COPY_NO_CIDS",
@@ -57,7 +57,7 @@ export default async (req, res) => {
 
   filteredFiles = filteredFiles
     .filter((file) => foundCids.includes(file.cid)) //NOTE(martina): make sure the file being copied exists
-    .map(({ createdAt, id, likeCount, downloadCount, saveCount, ...keepAttrs }) => {
+    .map(({ createdAt, likeCount, downloadCount, saveCount, ...keepAttrs }) => {
       //NOTE(martina): remove the old file's id, ownerId, createdAt, and privacy so new fields can be used
       return { ...keepAttrs, isPublic: slate?.isPublic || false };
     });
@@ -70,15 +70,16 @@ export default async (req, res) => {
       continue;
     }
 
+    const { id, ...rest } = file;
     let response = await Utilities.addExistingCIDToData({
       buckets,
       key: bucketKey,
       path: bucketRoot.path,
-      cid: file.cid,
+      cid: rest.cid,
     });
-
+    Data.incrementFileSavecount({ id });
     if (response && !response.error) {
-      copiedFiles.push(file);
+      copiedFiles.push(rest);
     }
   }
 

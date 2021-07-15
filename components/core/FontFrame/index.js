@@ -86,7 +86,7 @@ export default function FontFrame({ cid, fallback, ...props }) {
           isSettingsVisible={currentState.context.showSettings}
         />
       </div>
-      <div style={{ position: "relative", flexGrow: 1, overflowY: "scroll" }}>
+      <div style={{ position: "relative", flexGrow: 1, overflowY: "auto" }}>
         {isFontLoading && <FontLoader />}
         <FontView
           view={currentState.view}

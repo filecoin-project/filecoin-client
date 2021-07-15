@@ -6,8 +6,7 @@ import { css } from "@emotion/react";
 
 const STYLES_CONTAINER = css`
   border-radius: 4px;
-  box-shadow: 0 0 0 1px ${Constants.semantic.borderLight} inset,
-    0 0 40px 0 ${Constants.shadow.lightSmall};
+  box-shadow: 0 0 0 1px ${Constants.semantic.borderLight} inset, ${Constants.shadow.lightSmall};
   padding: 32px;
   max-width: 100%;
   width: 100%;
@@ -103,7 +102,6 @@ export const DataMeter = (props) => {
         used
       </div>
       <DataMeterBar bytes={props.stats.bytes} maximumBytes={props.stats.maximumBytes} />
-      <div css={STYLES_NOTE}>50GB coming soon when we add email verification</div>
     </div>
   );
 };

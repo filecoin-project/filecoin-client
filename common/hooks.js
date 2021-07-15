@@ -1,5 +1,7 @@
 import * as React from "react";
 import * as Logging from "~/common/logging";
+import * as Actions from "~/common/actions";
+import * as Events from "~/common/custom-events";
 
 export const useMounted = () => {
   const isMounted = React.useRef(true);
@@ -39,10 +41,12 @@ export const useForm = ({
   });
 
   const _hasError = (obj) => Object.keys(obj).some((name) => obj[name]);
-  const _mergeEventHandlers = (events = []) => (e) =>
-    events.forEach((event) => {
-      if (event) event(e);
-    });
+  const _mergeEventHandlers =
+    (events = []) =>
+    (e) =>
+      events.forEach((event) => {
+        if (event) event(e);
+      });
 
   /** ---------- NOTE(amine): Input Handlers ---------- */
   const handleFieldChange = (e) =>
@@ -162,10 +166,12 @@ export const useField = ({
     touched: undefined,
   });
 
-  const _mergeEventHandlers = (events = []) => (e) =>
-    events.forEach((event) => {
-      if (event) event(e);
-    });
+  const _mergeEventHandlers =
+    (events = []) =>
+    (e) =>
+      events.forEach((event) => {
+        if (event) event(e);
+      });
 
   /** ---------- NOTE(amine): Input Handlers ---------- */
   const handleFieldChange = (e) =>
@@ -176,14 +182,14 @@ export const useField = ({
       touched: false,
     }));
 
-  const handleOnBlur = (e) => {
+  const handleOnBlur = () => {
     // NOTE(amine): validate the inputs onBlur and touch the current input
     let error = {};
     if (validateOnBlur && validate) error = validate(state.value);
     setState((prev) => ({ ...prev, touched: validateOnBlur, error }));
   };
 
-  const handleFormOnSubmit = (e) => {
+  const handleFormOnSubmit = () => {
     //NOTE(amine): touch all inputs
     setState((prev) => ({ ...prev, touched: true }));
 
@@ -218,4 +224,170 @@ export const useField = ({
   });
 
   return { getFieldProps, value: state.value, isSubmitting: state.isSubmitting };
+};
+
+export const useIntersection = ({ onIntersect, ref }, dependencies = []) => {
+  // NOTE(amine): fix for stale closure caused by hooks
+  const onIntersectRef = React.useRef();
+  onIntersectRef.current = onIntersect;
+
+  React.useLayoutEffect(() => {
+    if (!ref.current) return;
+    const lazyObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          if (onIntersectRef.current) onIntersectRef.current(lazyObserver, ref);
+        }
+      });
+    });
+    // start to observe element
+    lazyObserver.observe(ref.current);
+    return () => lazyObserver.unobserve(ref.current);
+  }, dependencies);
+};
+
+// NOTE(amine): the intersection will be called one time
+export const useInView = ({ ref }) => {
+  const [isInView, setInView] = React.useState(false);
+  useIntersection({
+    ref,
+    onIntersect: (lazyObserver, ref) => {
+      setInView(true);
+      lazyObserver.unobserve(ref.current);
+    },
+  });
+  return { isInView };
+};
+
+// NOTE(amine): manage like state
+export const useLikeHandler = ({ file, viewer }) => {
+  const likedFile = React.useMemo(() => viewer?.likes?.find((item) => item.id === file.id), []);
+  const [state, setState] = React.useState({
+    isLiked: !!likedFile,
+    // NOTE(amine): viewer will have the hydrated state
+    likeCount: likedFile?.likeCount ?? file.likeCount,
+  });
+
+  const handleLikeState = () => {
+    setState((prev) => {
+      if (prev.isLiked) {
+        return {
+          isLiked: false,
+          likeCount: prev.likeCount - 1,
+        };
+      }
+      return {
+        isLiked: true,
+        likeCount: prev.likeCount + 1,
+      };
+    });
+  };
+  const like = async () => {
+    if (!viewer) {
+      Events.dispatchCustomEvent({ name: "slate-global-open-cta", detail: {} });
+      return;
+    }
+    // NOTE(amine): optimistic update
+    handleLikeState();
+    const response = await Actions.like({ id: file.id });
+    if (Events.hasError(response)) {
+      // NOTE(amine): revert back to old state if there is an error
+      handleLikeState();
+      return;
+    }
+  };
+
+  return { like, ...state };
+};
+
+// NOTE(amine): manage file saving state
+export const useSaveHandler = ({ file, viewer }) => {
+  const savedFile = React.useMemo(() => viewer?.libraryCids[file.cid], [viewer]);
+  const [state, setState] = React.useState({
+    isSaved: !!savedFile,
+    // NOTE(amine): viewer will have the hydrated state
+    saveCount: file.saveCount,
+  });
+
+  const handleSaveState = () => {
+    setState((prev) => {
+      if (prev.isSaved) {
+        return {
+          isSaved: false,
+          saveCount: prev.saveCount - 1,
+        };
+      }
+      return {
+        isSaved: true,
+        saveCount: prev.saveCount + 1,
+      };
+    });
+  };
+
+  const save = async () => {
+    if (!viewer) {
+      Events.dispatchCustomEvent({ name: "slate-global-open-cta", detail: {} });
+      return;
+    }
+    // NOTE(amine): optimistic update
+    handleSaveState();
+    const response =
+      state.isSaved && savedFile
+        ? await Actions.deleteFiles({ ids: [savedFile.id] })
+        : await Actions.saveCopy({ files: [file] });
+    if (Events.hasError(response)) {
+      // NOTE(amine): revert back to old state if there is an error
+      handleSaveState();
+      return;
+    }
+  };
+
+  return { save, ...state };
+};
+
+export const useFollowProfileHandler = ({ user, viewer, onAction }) => {
+  const [isFollowing, setFollowing] = React.useState(
+    !viewer
+      ? false
+      : !!viewer?.following.some((entry) => {
+          return entry.id === user.id;
+        })
+  );
+
+  const handleFollow = async (userId) => {
+    if (!viewer) {
+      Events.dispatchCustomEvent({ name: "slate-global-open-cta", detail: {} });
+      return;
+    }
+
+    setFollowing((prev) => !prev);
+    const response = await Actions.createSubscription({
+      userId,
+    });
+
+    if (Events.hasError(response)) {
+      setFollowing((prev) => !prev);
+      return;
+    }
+
+    onAction({
+      type: "UPDATE_VIEWER",
+      viewer: {
+        following: isFollowing
+          ? viewer.following.filter((user) => user.id !== userId)
+          : viewer.following.concat([
+              {
+                id: user.id,
+                data: user.data,
+                fileCount: user.fileCount,
+                followerCount: user.followerCount + 1,
+                slateCount: user.slateCount,
+                username: user.username,
+              },
+            ]),
+      },
+    });
+  };
+
+  return { handleFollow, isFollowing };
 };

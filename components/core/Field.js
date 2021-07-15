@@ -54,14 +54,14 @@ const STYLES_INPUT_ERROR = (theme) => css`
   background-color: rgba(242, 242, 247, 0.5);
   border: 1px solid ${theme.system.red};
   &::placeholder {
-    color: ${theme.system.textGrayDark};
+    color: ${theme.semantic.textGrayDark};
   }
 `;
 const STYLES_INPUT_SUCCESS = (theme) => css`
   background-color: rgba(242, 242, 247, 0.5);
   border: 1px solid ${theme.system.green};
   &::placeholder {
-    color: ${theme.system.textGrayDark};
+    color: ${theme.semantic.textGrayDark};
   }
 `;
 

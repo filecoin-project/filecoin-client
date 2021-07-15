@@ -70,13 +70,6 @@ export default class SidebarFAQ extends React.Component {
         </div>
 
         <div css={STYLES_GROUPING}>
-          <System.P1 css={STYLES_HEADER}>When will more storage be available?</System.P1>
-          <System.P1 css={STYLES_TEXT}>
-            50GB of storage free will be coming to Slate soon with email verification!
-          </System.P1>
-        </div>
-
-        <div css={STYLES_GROUPING}>
           <System.P1 css={STYLES_HEADER}>Can I get involved?</System.P1>
           <System.P1 css={STYLES_TEXT}>
             Yes! All of Slate is built out in the open by a community of contributors around the

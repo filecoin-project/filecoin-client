@@ -176,7 +176,7 @@ app.prepare().then(async () => {
     // if (viewer) {
     //   return res.redirect("/_/data");
     // } else {
-    //   return res.redirect("/_/explore");
+    //   return res.redirect("/_/activity");
     // }
 
     // let page = NavigationData.getById(null, viewer);

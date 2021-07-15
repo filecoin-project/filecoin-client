@@ -125,7 +125,7 @@ const STYLES_CREATE_NEW = css`
 
 const STYLES_BLOCK = css`
   border-radius: 4px;
-  box-shadow: 0 0 40px 0 ${Constants.shadow.lightSmall};
+  box-shadow: ${Constants.shadow.lightSmall};
   padding: 24px;
   font-size: 12px;
   text-align: left;

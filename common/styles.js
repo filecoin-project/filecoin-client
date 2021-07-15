@@ -47,7 +47,6 @@ export const H2 = css`
 export const H3 = css`
   font-family: ${Constants.font.text};
   font-size: 1.25rem;
-  font-weight: medium;
   line-height: 1.5;
   letter-spacing: -0.017px;
 
@@ -57,7 +56,6 @@ export const H3 = css`
 export const H4 = css`
   font-family: ${Constants.font.text};
   font-size: 1rem;
-  font-weight: medium;
   line-height: 1.5;
   letter-spacing: -0.011px;
 
@@ -67,7 +65,6 @@ export const H4 = css`
 export const H5 = css`
   font-family: ${Constants.font.text};
   font-size: 0.875rem;
-  font-weight: medium;
   line-height: 1.5;
   letter-spacing: -0.006px;
 
@@ -81,6 +78,14 @@ export const P1 = css`
   line-height: 1.5;
   letter-spacing: -0.011px;
 
+  @media (max-width: ${Constants.sizes.mobile}px) {
+    font-family: ${Constants.font.text};
+    font-size: 0.875rem;
+    font-weight: regular;
+    line-height: 1.5;
+    letter-spacing: -0.006px;
+  }
+
   ${TEXT}
 `;
 
@@ -90,6 +95,14 @@ export const P2 = css`
   font-weight: regular;
   line-height: 1.5;
   letter-spacing: -0.006px;
+
+  @media (max-width: ${Constants.sizes.mobile}px) {
+    font-family: ${Constants.font.text};
+    font-size: 0.75rem;
+    font-weight: normal;
+    line-height: 1.3;
+    letter-spacing: 0px;
+  }
 
   ${TEXT}
 `;
@@ -204,5 +217,47 @@ export const MOBILE_ONLY = css`
   @media (min-width: ${Constants.sizes.mobile}px) {
     display: none;
     pointer-events: none;
+  }
+`;
+
+/* COMMON GRIDS */
+export const OBJECTS_PREVIEW_GRID = (theme) => css`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(${theme.grids.object.desktop.width}px, 1fr));
+  grid-gap: 24px ${theme.grids.object.desktop.rowGap}px;
+
+  @media (max-width: ${Constants.sizes.mobile}px) {
+    grid-gap: 20px ${theme.grids.object.mobile.rowGap}px;
+    grid-template-columns: repeat(auto-fill, minmax(${theme.grids.object.mobile.width}px, 1fr));
+  }
+`;
+
+export const BUTTON_RESET = css`
+  padding: 0;
+  margin: 0;
+  background-color: unset;
+  border: none;
+  ${HOVERABLE}
+`;
+
+export const COLLECTIONS_PREVIEW_GRID = (theme) => css`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(${theme.grids.collection.desktop.width}px, 1fr));
+  grid-gap: 24px ${theme.grids.collection.desktop.rowGap}px;
+
+  @media (max-width: ${Constants.sizes.desktop}px) {
+    grid-gap: 20px ${theme.grids.collection.mobile.rowGap}px;
+    grid-template-columns: repeat(auto-fill, minmax(${theme.grids.collection.mobile.width}px, 1fr));
+  }
+`;
+
+export const PROFILE_PREVIEW_GRID = (theme) => css`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(${theme.grids.profile.desktop.width}px, 1fr));
+  grid-gap: 24px ${theme.grids.profile.desktop.rowGap}px;
+
+  @media (max-width: ${Constants.sizes.mobile}px) {
+    grid-gap: 20px ${theme.grids.profile.mobile.rowGap}px;
+    grid-template-columns: repeat(auto-fill, minmax(${theme.grids.profile.mobile.width}px, 1fr));
   }
 `;

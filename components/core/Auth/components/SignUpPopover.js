@@ -22,7 +22,7 @@ const STYLES_POPOVER = (theme) => css`
 
   background-color: white;
 
-  @supports ((-webkit-backdrop-filter: blur(25px)) or (backdrop-filter: blur(25px))) {
+  @supports ((-webkit-backdrop-filter: blur(75px)) or (backdrop-filter: blur(75px))) {
     background: radial-gradient(
       80.79% 80.79% at 50% 50%,
       rgba(242, 242, 247, 0.5) 0%,

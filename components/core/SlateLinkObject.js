@@ -21,7 +21,7 @@ const STYLES_IFRAME = (theme) => css`
   width: 100%;
   height: 100%;
   ${"" /* NOTE(Amine): lightbackground as fallback when html file doesn't have any */}
-  background-color: ${theme.system.wallLight};
+  background-color: ${theme.system.grayLight5Light};
 `;
 
 export default class SlateLinkObject extends React.Component {

@@ -10,10 +10,15 @@ export const useFont = ({ cid }, deps) => {
   const [fetchState, setFetchState] = React.useState({ loading: false, error: null });
   const prevName = React.useRef(cid);
 
-  if (!window.$SLATES_LOADED_FONTS) window.$SLATES_LOADED_FONTS = [];
-  const alreadyLoaded = window.$SLATES_LOADED_FONTS.includes(cid);
+  if (typeof window !== "undefined" && !window.$SLATES_LOADED_FONTS) {
+    window.$SLATES_LOADED_FONTS = [];
+  }
+  const alreadyLoaded =
+    (typeof window !== "undefined" && window.$SLATES_LOADED_FONTS.includes(cid)) || false;
 
   React.useEffect(() => {
+    if (!window) return;
+
     if (alreadyLoaded) {
       setFetchState((prev) => ({ ...prev, error: null }));
       return;

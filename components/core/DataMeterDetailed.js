@@ -6,12 +6,11 @@ import { css } from "@emotion/react";
 
 const STYLES_CONTAINER = css`
   border-radius: 4px;
-  box-shadow: 0 0 0 1px ${Constants.semantic.borderLight} inset,
-    0 0 40px 0 ${Constants.shadow.lightSmall};
+  box-shadow: 0 0 0 1px ${Constants.semantic.borderLight} inset, ${Constants.shadow.lightSmall};
   padding: 32px;
   max-width: 100%;
   width: 100%;
-  background-color: ${Constants.system.white};
+  ${"" /* background-color: ${Constants.system.white}; */}
 
   @media (max-width: ${Constants.sizes.mobile}px) {
     padding: 24px;
@@ -172,8 +171,6 @@ export const DataMeterDetailed = (props) => {
           <div css={STYLES_DATA_METER_KEY_LABEL}>Audio</div>
         </div>
       </div>
-
-      <div css={STYLES_NOTE}>50GB coming soon when we add email verification</div>
       {props.buttons ? <div style={{ marginTop: 24 }}>{props.buttons}</div> : null}
     </div>
   );

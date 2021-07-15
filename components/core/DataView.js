@@ -1,27 +1,26 @@
 import * as React from "react";
 import * as Constants from "~/common/constants";
 import * as Strings from "~/common/strings";
-import * as System from "~/components/system";
 import * as SVG from "~/common/svg";
 import * as Window from "~/common/window";
 import * as UserBehaviors from "~/common/user-behaviors";
 import * as Events from "~/common/custom-events";
+import * as Styles from "~/common/styles";
 
 import { Link } from "~/components/core/Link";
 import { css } from "@emotion/react";
 import { Boundary } from "~/components/system/components/fragments/Boundary";
 import { PopoverNavigation } from "~/components/system/components/PopoverNavigation";
-import { LoaderSpinner } from "~/components/system/components/Loaders";
 import { CheckBox } from "~/components/system/components/CheckBox";
 import { Table } from "~/components/core/Table";
 import { FileTypeIcon } from "~/components/core/FileTypeIcon";
 import { ButtonPrimary, ButtonWarning } from "~/components/system/components/Buttons";
 import { GroupSelectable, Selectable } from "~/components/core/Selectable/";
-
-import SlateMediaObjectPreview from "~/components/core/SlateMediaObjectPreview";
-import FilePreviewBubble from "~/components/core/FilePreviewBubble";
-import isEqual from "lodash/isEqual";
 import { ConfirmationModal } from "~/components/core/ConfirmationModal";
+
+import FilePreviewBubble from "~/components/core/FilePreviewBubble";
+import ObjectPreview from "~/components/core/ObjectPreview";
+import isEqual from "lodash/isEqual";
 
 const STYLES_CONTAINER_HOVER = css`
   display: flex;
@@ -163,12 +162,11 @@ const STYLES_COPY_INPUT = css`
 
 const STYLES_IMAGE_GRID = css`
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-column-gap: 20px;
-  grid-row-gap: 20px;
-  width: 100%;
+  grid-template-columns: repeat(auto-fill, minmax(248px, 1fr));
+  grid-gap: 20px 12px;
+
   @media (max-width: ${Constants.sizes.mobile}px) {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
   }
 `;
 
@@ -185,7 +183,7 @@ const STYLES_IMAGE_BOX = css`
   }
   :hover {
     box-shadow: 0px 0px 0px 1px ${Constants.semantic.borderLight} inset,
-      0 0 40px 0 ${Constants.shadow.lightSmall};
+      ${Constants.shadow.lightSmall};
   }
 `;
 
@@ -562,6 +560,7 @@ export default class DataView extends React.Component {
     const url = Strings.getURLfromCID(object.cid);
     const title = object.filename || object.data.name;
     const type = object.data.type;
+    console.log(e.dataTransfer, e.dataTransfer.setData);
     e.dataTransfer.setData("DownloadURL", `${type}:${title}:${url}`);
   };
 
@@ -711,7 +710,7 @@ export default class DataView extends React.Component {
       return (
         <React.Fragment>
           <GroupSelectable onSelection={this._handleDragAndSelect}>
-            <div css={STYLES_IMAGE_GRID} ref={this.gridWrapperEl}>
+            <div css={Styles.OBJECTS_PREVIEW_GRID} ref={this.gridWrapperEl}>
               {this.props.items.slice(0, this.state.viewLimit).map((each, i) => {
                 return (
                   <Link
@@ -729,43 +728,42 @@ export default class DataView extends React.Component {
                       }}
                       onDragEnd={this._enableDragAndDropUploadEvent}
                       selectableKey={i}
-                      css={STYLES_IMAGE_BOX}
-                      style={{
-                        width: this.state.imageSize,
-                        height: this.state.imageSize,
-                        boxShadow: numChecked
-                          ? `0px 0px 0px 1px ${Constants.semantic.borderLight} inset,
-      0 0 40px 0 ${Constants.shadow.lightSmall}`
-                          : "",
-                      }}
                       onMouseEnter={() => this._handleCheckBoxMouseEnter(i)}
                       onMouseLeave={() => this._handleCheckBoxMouseLeave(i)}
                     >
-                      <SlateMediaObjectPreview file={each} />
-                      <span css={STYLES_MOBILE_HIDDEN} style={{ pointerEvents: "auto" }}>
-                        {numChecked || this.state.hover === i || this.state.menu === each.id ? (
-                          <React.Fragment>
-                            <div onClick={(e) => this._handleCheckBox(e, i)}>
-                              <CheckBox
-                                name={i}
-                                value={!!this.state.checked[i]}
-                                boxStyle={{
-                                  height: 24,
-                                  width: 24,
-                                  backgroundColor: this.state.checked[i]
-                                    ? Constants.system.blue
-                                    : "rgba(255, 255, 255, 0.75)",
-                                }}
-                                style={{
-                                  position: "absolute",
-                                  bottom: 8,
-                                  left: 8,
-                                }}
-                              />
-                            </div>
-                          </React.Fragment>
-                        ) : null}
-                      </span>
+                      <div style={{ position: "relative" }}>
+                        <ObjectPreview
+                          viewer={this.props.viewer}
+                          file={each}
+                          owner={this.props.user}
+                          onAction={this.props.onAction}
+                          isSelected={i in this.state.checked}
+                        />
+                        <span css={STYLES_MOBILE_HIDDEN} style={{ pointerEvents: "auto" }}>
+                          {numChecked || this.state.hover === i || this.state.menu === each.id ? (
+                            <React.Fragment>
+                              <div
+                                style={{ position: "absolute", zIndex: 1, left: 16, top: 16 }}
+                                onClick={(e) => this._handleCheckBox(e, i)}
+                              >
+                                <CheckBox
+                                  name={i}
+                                  value={!!this.state.checked[i]}
+                                  boxStyle={{
+                                    height: 24,
+                                    width: 24,
+                                    borderRadius: "8px",
+                                    boxShadow: `0 0 0 1px ${Constants.system.white}`,
+                                    backgroundColor: this.state.checked[i]
+                                      ? Constants.system.blue
+                                      : "rgba(255, 255, 255, 0.75)",
+                                  }}
+                                />
+                              </div>
+                            </React.Fragment>
+                          ) : null}
+                        </span>
+                      </div>
                     </Selectable>
                   </Link>
                 );

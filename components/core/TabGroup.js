@@ -107,7 +107,7 @@ export class SecondaryTabGroup extends React.Component {
                   color: disabled || selected ? Constants.system.black : "rgba(0,0,0,0.25)",
                   cursor: disabled ? "auto" : "pointer",
                   ...this.props.itemStyle,
-                  backgroundColor: selected ? Constants.system.white : "transparent",
+                  backgroundColor: selected ? Constants.semantic.bgLight : "transparent",
                 }}
                 // onClick={disabled || selected ? () => {} : () => this.props.onChange(tab.value)}
               >

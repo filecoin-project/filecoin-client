@@ -43,6 +43,7 @@ export default async ({ owner, files, saveCopy = false }) => {
           }
         }
       }
+      console.log({ activityItems });
 
       if (activityItems.length) {
         const activityQuery = await DB.insert(activityItems).into("activity");

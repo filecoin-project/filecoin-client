@@ -40,7 +40,7 @@ const STYLES_HEADER = css`
 `;
 
 const STYLES_CONTENT = css`
-  background: ${Constants.semantic.bgLight};
+  background: ${Constants.system.white};
   width: 100%;
   min-width: 10%;
   min-height: 100vh;
@@ -95,7 +95,7 @@ const STYLES_MODAL = css`
   left: 0;
   padding: ${MODAL_MARGIN}px;
 
-  background-color: ${Constants.system.bgBlurLight};
+  background-color: ${Constants.semantic.bgBlurLight6};
 
   @supports ((-webkit-backdrop-filter: blur(25px)) or (backdrop-filter: blur(25px))) {
     -webkit-backdrop-filter: blur(25px);

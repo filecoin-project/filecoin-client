@@ -31,6 +31,7 @@ export const sanitizeSlate = (entity) => {
     ownerId: entity.ownerId,
     isPublic: entity.isPublic,
     objects: entity.objects,
+    owner: entity.owner,
     user: entity.user, //NOTE(martina): this is not in the database. It is added after
     data: {
       name: entity.data?.name,

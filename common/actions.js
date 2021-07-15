@@ -366,6 +366,13 @@ export const removeFileFromSlate = async (data) => {
   });
 };
 
+export const like = async (data) => {
+  return await returnJSON(`/api/data/like`, {
+    ...DEFAULT_OPTIONS,
+    body: JSON.stringify({ data }),
+  });
+};
+
 export const generateAPIKey = async () => {
   await Websockets.checkWebsocket();
   return await returnJSON(`/api/keys/generate`, {

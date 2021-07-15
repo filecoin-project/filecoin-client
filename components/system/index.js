@@ -98,6 +98,8 @@ import * as SVG from "~/common/svg";
 
 import ViewSourceLink from "~/components/system/ViewSourceLink";
 
+import { AspectRatio } from "~/components/system/components/AspectRatio";
+
 // NOTE(jim): Export everything.
 export {
   // NOTE(martina): Actions
@@ -164,6 +166,7 @@ export {
   LI,
   A,
   ViewSourceLink,
+  AspectRatio,
   // NOTE(jim): Fragments, not meant to be used.
   Boundary,
   DescriptionGroup,

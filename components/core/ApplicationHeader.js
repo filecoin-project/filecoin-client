@@ -47,9 +47,10 @@ const STYLES_NAV_LINK = css`
   }
 `;
 
-const STYLES_APPLICATION_HEADER_CONTAINER = css`
+const STYLES_APPLICATION_HEADER_CONTAINER = (theme) => css`
   width: 100%;
-  background-color: ${Constants.system.white};
+  background-color: ${theme.system.white};
+  box-shadow: 0 0 0 1px ${theme.semantic.bgGrayLight};
 
   @supports ((-webkit-backdrop-filter: blur(25px)) or (backdrop-filter: blur(25px))) {
     -webkit-backdrop-filter: blur(25px);

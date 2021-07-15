@@ -28,6 +28,7 @@ export default function ThemeProvider({ children }) {
       font: Constants.font,
       typescale: Constants.typescale,
       semantic: Constants.semantic,
+      grids: Constants.grids,
       ...theme,
     }),
     [theme]

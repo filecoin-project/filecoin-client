@@ -195,3 +195,27 @@ export const filetypes = {
 };
 
 export const linkPreviewSizeLimit = 5000000; //NOTE(martina): 5mb limit for twitter preview images
+
+// NOTE(amine): used to calculate how many cards will fit into a row in sceneActivity
+export const grids = {
+  activity: {
+    profileInfo: {
+      width: 260,
+    },
+  },
+  object: {
+    desktop: { width: 248, rowGap: 16 },
+    mobile: { width: 166, rowGap: 8 },
+  },
+  collection: {
+    desktop: { width: 432, rowGap: 16 },
+    mobile: { width: 300, rowGap: 8 },
+  },
+  profile: {
+    desktop: { width: 432, rowGap: 16 },
+    mobile: { width: 344, rowGap: 8 },
+  },
+};
+
+export const profileDefaultPicture =
+  "https://slate.textile.io/ipfs/bafkreick3nscgixwfpq736forz7kzxvvhuej6kszevpsgmcubyhsx2pf7i";

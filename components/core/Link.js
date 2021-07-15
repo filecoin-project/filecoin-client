@@ -75,6 +75,8 @@ export class Link extends React.Component {
           css={this.props.css}
           target={this.props.target}
           href={this.state.href}
+          aria-label={this.props["aria-label"]}
+          title={this.props.title}
         >
           {this.props.children}
         </a>

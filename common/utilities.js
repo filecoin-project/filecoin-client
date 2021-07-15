@@ -83,3 +83,53 @@ export const coerceToArray = (input) => {
     return [input];
   }
 };
+
+export const getFileExtension = (filename) => filename?.split(".").pop();
+
+export const getTimeDifferenceFromNow = (date, format = {}) => {
+  const defaultFormats = {
+    seconds: (time) => time + "s",
+    minutes: (time) => time + "m",
+    hours: (time) => time + "h",
+    days: (time) => time + "d",
+    currentYear: (month, day) => `${month} ${day}`,
+    default: (month, day, year) => `${month} ${day}, ${year}`,
+  };
+
+  const formatDate = { ...defaultFormats, ...format };
+
+  const pastDate = new Date(date);
+  const now = new Date();
+
+  const differenceInSeconds = Math.floor((now - pastDate) / 1000);
+  if (differenceInSeconds < 60) {
+    return formatDate.seconds(differenceInSeconds);
+  }
+
+  const differenceInMinutes = Math.floor(differenceInSeconds / 60);
+  if (differenceInMinutes < 60) {
+    return formatDate.minutes(differenceInMinutes);
+  }
+
+  const differenceInHours = Math.floor(differenceInMinutes / 60);
+  if (differenceInHours < 24) {
+    return formatDate.hours(differenceInHours);
+  }
+
+  const differenceInDays = Math.floor(differenceInHours / 24);
+  if (differenceInDays < 24) {
+    return formatDate.days(differenceInDays);
+  }
+
+  const currentYear = now.getFullYear();
+
+  const day = pastDate.getDay();
+  const month = pastDate.toLocaleString("default", { month: "short" });
+  const year = pastDate.getFullYear();
+
+  if (year === currentYear) {
+    return formatDate.currentYear(month, day);
+  }
+
+  return formatDate.default(month, day, year);
+};

@@ -245,6 +245,17 @@ export const isUnityType = (type = "") => {
   return type === "application/unity";
 };
 
+export const is3dFile = (filename = "") => {
+  return endsWithAny(
+    [".stl", ".obj", ".fbx", ".blend", ".c4d", ".glb", ".dae", ".3ds", ".wrl"],
+    filename.toLowerCase()
+  );
+};
+
+export const isCodeFile = (filename = "") => {
+  return endsWithAny([".js"], filename.toLowerCase());
+};
+
 export const isFontFile = (fileName = "") => {
   return endsWithAny([".ttf", ".otf", ".woff", ".woff2"], fileName.toLowerCase());
 };

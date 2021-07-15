@@ -44,7 +44,7 @@ const websocketSend = async (type, data) => {
 
 export const hydratePartial = async (
   id,
-  { viewer, slates, keys, library, subscriptions, following, followers }
+  { viewer, slates, keys, library, subscriptions, following, followers, likes }
 ) => {
   if (!id) return;
 
@@ -57,6 +57,8 @@ export const hydratePartial = async (
         id,
         includeFiles: true,
       });
+      update.libraryCids =
+        user?.library?.reduce((acc, file) => ({ ...acc, [file.cid]: file }), {}) || {};
     } else {
       user = await Data.getUserById({
         id,
@@ -101,6 +103,11 @@ export const hydratePartial = async (
   if (followers) {
     const followers = await Data.getFollowersByUserId({ userId: id });
     update.followers = followers;
+  }
+
+  if (likes) {
+    const likes = await Data.getLikesByUserId({ ownerId: id });
+    update.likes = likes;
   }
 
   websocketSend("UPDATE", update);
@@ -155,6 +162,9 @@ export const getById = async ({ id }) => {
   const subscriptions = await Data.getSubscriptionsByUserId({ ownerId: id });
   const following = await Data.getFollowingByUserId({ ownerId: id });
   const followers = await Data.getFollowersByUserId({ userId: id });
+  const likes = await Data.getLikesByUserId({ ownerId: id });
+  const libraryCids =
+    user?.library?.reduce((acc, file) => ({ ...acc, [file.cid]: file }), {}) || {};
 
   let cids = {};
   let bytes = 0;
@@ -178,7 +188,7 @@ export const getById = async ({ id }) => {
     } else if (each.data.type && each.data.type.startsWith("application/pdf")) {
       pdfBytes += each.data.size;
     }
-    let coverImage = each.data.coverImage;
+    let { coverImage } = each.data;
     if (coverImage && !cids[coverImage.cid]) {
       imageBytes += coverImage.data.size;
       cids[coverImage.cid] = true;
@@ -223,6 +233,8 @@ export const getById = async ({ id }) => {
     subscriptions,
     following,
     followers,
+    likes,
+    libraryCids,
   };
 
   return viewer;

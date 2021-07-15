@@ -27,6 +27,7 @@ import deleteFilesByUserId from "~/node_common/data/methods/delete-files-by-user
 import updateFileById from "~/node_common/data/methods/update-file-by-id";
 import updateFilePrivacy from "~/node_common/data/methods/update-file-privacy";
 import updateFilesPublic from "~/node_common/data/methods/update-files-public";
+import incrementFileSavecount from "~/node_common/data/methods/increment-file-savecount";
 
 // NOTE(martina):
 // Like postgres queries
@@ -122,6 +123,7 @@ export {
   updateFileById,
   updateFilePrivacy,
   updateFilesPublic,
+  incrementFileSavecount,
   // NOTE(martina): Like postgres queries
   createLike,
   deleteLikeByFile,

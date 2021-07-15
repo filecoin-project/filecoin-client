@@ -11,7 +11,7 @@ export default async ({ ownerId }) => {
       const query = await DB.select(...Serializers.fileProperties)
         .from("files")
         .join("likes", "likes.fileId", "=", "files.id")
-        .where({ "likes.userId": ownerId, "files.isPublic": true })
+        .where({ "likes.userId": ownerId })
         .groupBy("files.id");
 
       if (!query || query.error) {

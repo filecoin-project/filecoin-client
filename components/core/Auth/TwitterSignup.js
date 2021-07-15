@@ -15,7 +15,7 @@ import { SignUpPopover, Verification, AuthCheckBox } from "~/components/core/Aut
 const STYLES_SMALL = (theme) => css`
   font-size: ${theme.typescale.lvlN1};
   text-align: center;
-  color: ${theme.system.textGrayDark};
+  color: ${theme.semantic.textGrayDark};
   max-width: 228px;
   margin: 0 auto;
 `;
