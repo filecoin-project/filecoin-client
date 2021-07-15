@@ -13,6 +13,7 @@ import ScenePage from "~/components/core/ScenePage";
 import ScenePageHeader from "~/components/core/ScenePageHeader";
 import EmptyState from "~/components/core/EmptyState";
 import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
+import ProfilePhoto from "~/components/core/ProfilePhoto"; 
 
 const STYLES_USER_ENTRY = css`
   display: grid;
@@ -119,7 +120,11 @@ function UserEntry({ user, button, onClick, message, checkStatus }) {
   return (
     <div key={user.username} css={STYLES_USER_ENTRY}>
       <div css={STYLES_USER} onClick={onClick}>
-        <div css={STYLES_PROFILE_IMAGE} style={{ backgroundImage: `url(${user.data.photo})` }}>
+        <div css={STYLES_PROFILE_IMAGE}>
+          <ProfilePhoto
+            user={user}
+            size={24}
+          />
           {isOnline ? <div css={STYLES_STATUS_INDICATOR} /> : null}
         </div>
         <span css={STYLES_NAME}>

@@ -23,6 +23,7 @@ import SlatePreviewBlocks from "~/components/core/SlatePreviewBlock";
 import CTATransition from "~/components/core/CTATransition";
 import DataView from "~/components/core/DataView";
 import EmptyState from "~/components/core/EmptyState";
+import ProfilePhoto from "~/components/core/ProfilePhoto"; 
 
 const STYLES_PROFILE_BACKGROUND = css`
   background-color: ${Constants.system.white};
@@ -247,10 +248,11 @@ function UserEntry({ user, button, onClick, message, checkStatus }) {
   return (
     <div key={user.username} css={STYLES_USER_ENTRY}>
       <div css={STYLES_USER} onClick={onClick}>
-        <div
-          css={STYLES_DIRECTORY_PROFILE_IMAGE}
-          style={{ backgroundImage: `url(${user.data.photo})` }}
-        >
+        <div css={STYLES_DIRECTORY_PROFILE_IMAGE}>
+          <ProfilePhoto 
+            user={user} 
+            size={24} 
+          />
           {isOnline && <div css={STYLES_DIRECTORY_STATUS_INDICATOR} />}
         </div>
         <span css={STYLES_DIRECTORY_NAME}>
@@ -595,12 +597,11 @@ export default class Profile extends React.Component {
         />
         <div css={STYLES_PROFILE_BACKGROUND}>
           <div css={STYLES_PROFILE_INFO}>
-            <div
-              css={STYLES_PROFILE_IMAGE}
-              style={{
-                backgroundImage: `url('${user.data.photo}')`,
-              }}
-            >
+            <div css={STYLES_PROFILE_IMAGE}>
+              <ProfilePhoto 
+                user={user} 
+                size={120} 
+              />
               {showStatusIndicator && this.checkStatus({ id: user.id }) && (
                 <div css={STYLES_STATUS_INDICATOR} />
               )}

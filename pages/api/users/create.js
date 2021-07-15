@@ -77,19 +77,12 @@ export default async (req, res) => {
       .send({ decorator: "SERVER_CREATE_USER_BUCKET_INIT_FAILURE", error: true });
   }
 
-  const photo = await SlateManager.getRandomSlateElementURL({
-    id: Environment.AVATAR_SLATE_ID,
-    fallback:
-      "https://slate.textile.io/ipfs/bafkreick3nscgixwfpq736forz7kzxvvhuej6kszevpsgmcubyhsx2pf7i",
-  });
-
   const user = await Data.createUser({
     password: hash,
     salt,
     username: newUsername,
     email: newEmail,
     data: {
-      photo,
       body: "",
       settings: {
         settings_deals_auto_approve: false,

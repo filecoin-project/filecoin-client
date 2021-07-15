@@ -17,7 +17,7 @@ import { ConfirmationModal } from "~/components/core/ConfirmationModal";
 import WebsitePrototypeWrapper from "~/components/core/WebsitePrototypeWrapper";
 import ScenePage from "~/components/core/ScenePage";
 import ScenePageHeader from "~/components/core/ScenePageHeader";
-import Avatar from "~/components/core/Avatar";
+import ProfilePhoto from "~/components/core/ProfilePhoto";
 
 const STYLES_FILE_HIDDEN = css`
   height: 1px;
@@ -198,7 +198,10 @@ export default class SceneEditAccount extends React.Component {
             <div>
               <div css={STYLES_HEADER}>Your Avatar</div>
 
-              <Avatar size={256} url={this.props.viewer.data.photo} />
+              <ProfilePhoto 
+                user={this.props.viewer}
+                size={256} 
+              />
 
               <div style={{ marginTop: 24 }}>
                 <input

@@ -17,6 +17,7 @@ import { Boundary } from "~/components/system/components/fragments/Boundary";
 import { PopoverNavigation } from "~/components/system/components/PopoverNavigation";
 import { FileTypeIcon } from "~/components/core/FileTypeIcon";
 import { useIntercom } from "react-use-intercom";
+import ProfilePhoto from "~/components/core/ProfilePhoto"; 
 
 const STYLES_MOBILE_HIDDEN = css`
   @media (max-width: ${Constants.sizes.mobile}px) {
@@ -83,7 +84,12 @@ const UserEntry = ({ user }) => {
   return (
     <div css={STYLES_ENTRY}>
       <div css={STYLES_ENTRY_CONTAINER}>
-        <div style={{ backgroundImage: `url(${user.data.photo})` }} css={STYLES_PROFILE_PREVIEW} />
+        <div css={STYLES_PROFILE_PREVIEW}>
+          <ProfilePhoto 
+            user={this.props.viewer}
+            size={48} 
+          />
+        </div>
         <div css={STYLES_TEXT_ROWS}>
           {user.data.name ? (
             <React.Fragment>
@@ -113,7 +119,14 @@ const STYLES_PROFILE_IMAGE = css`
 const UserPreview = ({ user }) => {
   return (
     <div>
-      <div css={STYLES_PROFILE_IMAGE} style={{ backgroundImage: `url('${user.data.photo}')` }} />
+      <div css={STYLES_PROFILE_IMAGE}>
+        <ProfilePhoto 
+          photo={user.data.photo}
+          userId={user.id} 
+          size={182} 
+        />
+      </div>
+
       {user.data.name ? <div css={STYLES_PREVIEW_TEXT}>{user.data.name}</div> : null}
       <div css={STYLES_PREVIEW_TEXT}>@{user.username}</div>
       {user.data.slates ? (
