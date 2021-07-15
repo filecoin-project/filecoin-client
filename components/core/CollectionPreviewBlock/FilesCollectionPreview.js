@@ -2,6 +2,7 @@ import * as React from "react";
 import * as Strings from "~/common/strings";
 import * as Typography from "~/components/system/components/Typography";
 import * as Styles from "~/common/styles";
+import * as Constants from "~/common/constants";
 
 import { Divider } from "~/components/system/components/Divider";
 import { Logo } from "~/common/logo";
@@ -10,6 +11,7 @@ import { LikeButton, SaveButton } from "~/components/core/ObjectPreview/componen
 import { useLikeHandler, useSaveHandler } from "~/common/hooks";
 import { FollowButton } from "~/components/core/CollectionPreviewBlock/components";
 import { useFollowHandler } from "~/components/core/CollectionPreviewBlock/hooks";
+import { Link } from "~/components/core/Link";
 
 import ObjectPlaceholder from "~/components/core/ObjectPreview/placeholders";
 
@@ -152,7 +154,7 @@ const useCollectionCarrousel = ({ objects }) => {
   return { selectBatchIdx, selectedBatch, selectedIdx };
 };
 
-export default function CollectionPreview({ collection, viewer }) {
+export default function CollectionPreview({ collection, viewer, owner, onAction }) {
   const { follow, followCount, isFollowed } = useFollowHandler({ collection, viewer });
   const filePreviews = React.useMemo(() => {
     const files = collection?.objects || [];
@@ -242,16 +244,34 @@ export default function CollectionPreview({ collection, viewer }) {
               {followCount}
             </Typography.P1>
           </div>
-          <div css={Styles.CONTAINER_CENTERED}>
-            <img
-              css={STYLES_PROFILE_IMAGE}
-              src="https://slate.textile.io/ipfs/bafkreick3nscgixwfpq736forz7kzxvvhuej6kszevpsgmcubyhsx2pf7i"
-              alt="owner profile"
-            />
-            <Typography.P2 style={{ marginLeft: 8 }} color="textGrayDark">
-              Wes Anderson
-            </Typography.P2>
-          </div>
+
+          {owner && (
+            <div style={{ alignItems: "end" }} css={Styles.CONTAINER_CENTERED}>
+              <Link
+                href={`/$/user/${owner.id}`}
+                onAction={onAction}
+                aria-label={`Visit ${owner.username}'s profile`}
+                title={`Visit ${owner.username}'s profile`}
+              >
+                <img
+                  css={STYLES_PROFILE_IMAGE}
+                  src={owner.data.photo}
+                  alt={`${owner.username} profile`}
+                  onError={(e) => (e.target.src = Constants.profileDefaultPicture)}
+                />
+              </Link>
+              <Link
+                href={`/$/user/${owner.id}`}
+                onAction={onAction}
+                aria-label={`Visit ${owner.username}'s profile`}
+                title={`Visit ${owner.username}'s profile`}
+              >
+                <Typography.P2 style={{ marginLeft: 8 }} color="textGrayDark">
+                  {owner.username}
+                </Typography.P2>
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -71,7 +71,12 @@ export default function ActivityCollectionGroup({
         <div css={Styles.COLLECTIONS_PREVIEW_GRID}>
           {elements.map((collection) => (
             <Link key={collection.id} href={`/$/slate/${collection.id}`} onAction={onAction}>
-              <CollectionPreviewBlock collection={collection} viewer={viewer} />
+              <CollectionPreviewBlock
+                collection={collection}
+                viewer={viewer}
+                owner={collection.owner}
+                onAction={onAction}
+              />
             </Link>
           ))}
           {showMore &&
@@ -84,12 +89,22 @@ export default function ActivityCollectionGroup({
                   key={collection.id}
                 >
                   <Link key={collection.id} href={`/$/slate/${collection.id}`} onAction={onAction}>
-                    <CollectionPreviewBlock collection={collection} viewer={viewer} />
+                    <CollectionPreviewBlock
+                      collection={collection}
+                      viewer={viewer}
+                      owner={collection.owner}
+                      onAction={onAction}
+                    />
                   </Link>
                 </motion.div>
               ) : (
                 <Link key={collection.id} href={`/$/slate/${collection.id}`} onAction={onAction}>
-                  <CollectionPreviewBlock collection={collection} viewer={viewer} />
+                  <CollectionPreviewBlock
+                    collection={collection}
+                    viewer={viewer}
+                    owner={collection.owner}
+                    onAction={onAction}
+                  />
                 </Link>
               )
             )}

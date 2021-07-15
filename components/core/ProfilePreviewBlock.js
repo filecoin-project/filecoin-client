@@ -2,6 +2,7 @@ import * as React from "react";
 import * as Styles from "~/common/styles";
 import * as Typography from "~/components/system/components/Typography";
 import * as Strings from "~/common/strings";
+import * as Constants from "~/common/constants";
 
 import { Divider } from "~/components/system/components/Divider";
 import { Logo } from "~/common/logo";
@@ -142,7 +143,12 @@ export default function ProfilePreviewBlock({ onAction, viewer, profile }) {
   return (
     <div css={STYLES_CONTAINER}>
       <div css={[STYLES_PROFILE_DESCRIPTION, Styles.HORIZONTAL_CONTAINER]}>
-        <img css={STYLES_PROFILE_PREVIEW} src={profile.data.photo} alt={`${profile.username}`} />
+        <img
+          css={STYLES_PROFILE_PREVIEW}
+          src={profile.data.photo}
+          alt={`${profile.username}`}
+          onError={(e) => (e.target.src = Constants.profileDefaultPicture)}
+        />
         <div style={{ marginLeft: 16 }} css={Styles.VERTICAL_CONTAINER}>
           <div>
             <Typography.H4>{profile.username}</Typography.H4>

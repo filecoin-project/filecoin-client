@@ -2,6 +2,7 @@ import * as React from "react";
 import * as Styles from "~/common/styles";
 import * as Utilities from "~/common/utilities";
 import * as Strings from "~/common/strings";
+import * as Constants from "~/common/constants";
 
 import { Link } from "~/components/core/Link";
 import { css } from "@emotion/react";
@@ -58,7 +59,12 @@ export default function ProfileInfo({ owner, viewer, time, action, onAction }) {
   return (
     <Link href={`/$/user/${owner.id}`} onAction={onAction}>
       <div css={STYLES_PROFILE_CONTAINER}>
-        <img src={photo} alt={`${username} profile`} css={STYLES_PROFILE} />
+        <img
+          src={photo}
+          alt={`${username} profile`}
+          css={STYLES_PROFILE}
+          onError={(e) => (e.target.src = Constants.profileDefaultPicture)}
+        />
         <div css={STYLES_MOBILE_ALIGN}>
           <span>
             <H4 color="textBlack" css={[STYLES_TEXT_BLACK, Styles.HEADING_04]}>

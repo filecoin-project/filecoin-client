@@ -159,6 +159,7 @@ export default function ObjectPreviewPremitive({
                     css={STYLES_PROFILE_IMAGE}
                     src={owner.data.photo}
                     alt={`${owner.username} profile`}
+                    onError={(e) => (e.target.src = Constants.profileDefaultPicture)}
                   />
                 </Link>
               )}

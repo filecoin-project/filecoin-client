@@ -216,3 +216,6 @@ export const grids = {
     mobile: { width: 344, rowGap: 8 },
   },
 };
+
+export const profileDefaultPicture =
+  "https://slate.textile.io/ipfs/bafkreick3nscgixwfpq736forz7kzxvvhuej6kszevpsgmcubyhsx2pf7i";

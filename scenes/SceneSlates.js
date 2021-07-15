@@ -72,6 +72,8 @@ export default class SceneSlates extends React.Component {
                         key={slate.id}
                         collection={slate}
                         viewer={this.props.viewer}
+                        owner={this.props.viewer}
+                        onAction={this.props.onAction}
                       />
                     </Link>
                   ))}
@@ -101,7 +103,9 @@ export default class SceneSlates extends React.Component {
                       <CollectionPreviewBlock
                         key={slate.id}
                         collection={slate}
+                        owner={slate.owner}
                         viewer={this.props.viewer}
+                        onAction={this.props.onAction}
                       />
                     </Link>
                   ))}

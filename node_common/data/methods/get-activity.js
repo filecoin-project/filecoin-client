@@ -30,8 +30,20 @@ export default async ({
   const slateFilesFields = ["files", "slate_files.createdAt", "files.id", "objects"];
   const slateFilesQuery = `coalesce(json_agg(?? order by ?? asc) filter (where ?? is not null), '[]') as ??`;
 
-  const slateFields = [
+  const slateOwnerFields = [
     "slate_table",
+    "slate_with_objects.*",
+    ...Constants.userPreviewProperties,
+    "owner",
+    "slate_with_objects",
+    "users",
+    "slate_with_objects.ownerId",
+    "users.id",
+  ];
+  const slateOwnerQuery = `?? as (SELECT ??, json_build_object('id', ??, 'data', ??, 'username', ??) as ?? FROM ?? LEFT JOIN ?? ON ?? = ?? ) `;
+
+  const slateFields = [
+    "slate_with_objects",
     "slates.id",
     "slates.slatename",
     "slates.data",
@@ -48,11 +60,13 @@ export default async ({
     "files.id",
     "slate_files.fileId",
     "slates.id",
+    ...slateOwnerFields,
   ];
-  const slateQuery = `WITH ?? as (SELECT ??, ??, ??, ??, ??, ??, ??, ${slateFilesQuery} FROM ?? LEFT JOIN ?? on ?? = ?? LEFT JOIN ?? on ?? = ?? GROUP BY ??)`;
+  const slateQuery = `WITH ?? as (SELECT ??, ??, ??, ??, ??, ??, ??, ${slateFilesQuery} FROM ?? LEFT JOIN ?? on ?? = ?? LEFT JOIN ?? on ?? = ?? GROUP BY ??), ${slateOwnerQuery}`;
 
   const userFilesFields = ["files", "files.createdAt", "files.id", "objects"];
   const userFilesQuery = `coalesce(json_agg(?? order by ?? asc) filter (where ?? is not null), '[]') as ??`;
+
   const userFields = [
     "user_table",
     "users.id",
